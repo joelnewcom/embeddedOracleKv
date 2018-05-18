@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Guidelines for Updating the SSL key/certificate</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Security Guide" />
+    <link rel="up" href="security_guidelines.html" title="Chapter 12. Keeping Oracle NoSQL Database Secure" />
+    <link rel="prev" href="update_kerbpass.html" title="Guidelines for Updating Kerberos Passwords" />
+    <link rel="next" href="cert_external.html" title="Guidelines for Configuring External Certificates for a new Installation" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Guidelines for Updating the SSL key/certificate</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="update_kerbpass.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 12. Keeping Oracle NoSQL Database Secure</th>
+          <td width="20%" align="right"> <a accesskey="n" href="cert_external.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="update_cert"></a>Guidelines for Updating the SSL key/certificate</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            Follow these steps to update the SSL key/certificate. The store can remain
+            online during the update process:
+        </p>
+      <div class="orderedlist">
+        <ol type="1">
+          <li>
+            <p>
+                    On the configuration host, run securityconfig to create a
+                    new configuration in a directory in parallel to the standard
+                    configuration directory. The new configuration needs to specify
+                    the same keystore password as your standard configuration.
+                    If no password is specified with the <code class="literal">-kspwd</code> option,
+                    then the utility will prompt you to set a password.
+                </p>
+            <pre class="programlisting"></pre>
+          </li>
+          <li>
+            <p>
+                    On the configuration host, merge the truststore entries
+                    by using the <code class="literal">config merge-trust</code> command:
+                </p>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar
+securityconfig \
+config merge-trust -root &lt;standard config dir&gt; \
+-source-root &lt;new config dir&gt;</pre>
+            <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+              <h3 class="title">Note</h3>
+              <p>
+		   In a multiple Storage Node deployment, you need to copy the new configuration
+		   to each host's new configuration directory and run merge-trust
+		   on each host like in the example above.
+		</p>
+            </div>
+          </li>
+          <li>
+            <p>
+                   Copy the updated client.trust file to the security directory on each host
+                   so that clients can use it to access the store.
+                </p>
+          </li>
+          <li>
+            <p>
+                   Check that all Replication Nodes are online and then
+                   restart each Storage Node one by one using the following
+                   commands:
+                </p>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar stop -root KVROOT </pre>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar start -root KVROOT&amp;</pre>
+          </li>
+          <li>
+            <p>
+                    Copy the updated store.keys file to the security directory on
+                    each host. Then, check that all Replication Nodes are online and
+                    restart each Storage Node one by one using the following
+                    commands:
+                </p>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar stop -root KVROOT </pre>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar start -root KVROOT&amp;</pre>
+          </li>
+          <li>
+            <p>
+                    For all Storage Nodes, remove the obsolete certificate "mykey" in
+                    store.trust. Also, rename the new certificate "mykey_2" to "mykey"
+                    using the following command:
+                </p>
+            <pre class="programlisting">keytool -delete -keystore KVROOT/security/store.trust \
+-alias mykey </pre>
+            <pre class="programlisting">keytool -changealias -keystore \
+KVROOT/security/store.trust -alias mykey_2 -destalias mykey </pre>
+          </li>
+          <li>
+            <p>
+                    Verify that the new certificate is the only one used using
+                    the following command:
+                </p>
+            <pre class="programlisting">keytool -list -keystore KVROOT/security/store.trust </pre>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="update_kerbpass.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="security_guidelines.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="cert_external.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Guidelines for Updating Kerberos Passwords </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Guidelines for Configuring External Certificates for a new Installation</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

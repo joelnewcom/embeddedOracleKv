@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Wildcard Types and JSON Data</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="introduction_sql.html" title="Chapter 1. The SQL for Oracle NoSQL Database Data Model" />
+    <link rel="prev" href="datatypes.html" title="Data Types and Values" />
+    <link rel="next" href="jsondata.html" title="JSON Data" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Wildcard Types and JSON Data</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="datatypes.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 1. The SQL for Oracle NoSQL Database Data Model</th>
+          <td width="20%" align="right"> <a accesskey="n" href="jsondata.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="wildcards"></a>Wildcard Types and JSON Data</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            The Oracle NoSQL data model includes the following wildcard types:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    Any
+                </p>
+            <p>
+                    All possible values.
+                </p>
+          </li>
+          <li>
+            <p>
+                    AnyAtomic
+                </p>
+            <p>
+                    All possible atomic values.
+                </p>
+          </li>
+          <li>
+            <p>
+                    AnyJsonAtomic
+                </p>
+            <p>
+                    All atomic values that are valid JSON values. This is the union of all numeric
+                    values, all string values, the 2 boolean values, and the JNULL value.
+                </p>
+          </li>
+          <li>
+            <p>
+                    JSON
+                </p>
+            <p>
+                    All possible JSON values. The domain set is
+                    defined recursively as follows: 
+                </p>
+            <div class="orderedlist">
+              <ol type="1">
+                <li>
+                  <p>
+                            All AnyJsonAtomic values.
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            All arrays whose elements are included in AnyJsonAtomic values.
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            All maps whose field values are those described
+                            in (1) and (2) of this list. 
+                        </p>
+                </li>
+              </ol>
+            </div>
+          </li>
+          <li>
+            <p>
+                    AnyRecord
+                </p>
+            <p>
+                    All possible record values.
+                </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+            With the exception of JNULL items (which pair the JNULL value
+            with the JSON type), no item can have a wildcard type as its
+            type. Wildcard types should be viewed as abstract types.
+            However, items may have an imprecise type. For example, an item
+            may have <code class="literal">Map(JSON)</code> as its type, indicating
+            that its value is a map that can store field values of
+            different types, as long as all of these values belong to the
+            JSON type. In fact, <code class="literal">Map(JSON)</code> is the type
+            that represents all JSON objects (JSON documents), and
+            <code class="literal">Array(JSON)</code> is the type that represents all
+            JSON arrays.
+        </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+                A type is called precise if it is not one of the wildcard
+                types and, in case of complex types, all of its constituent
+                types are also precise. Items that have precise types are
+                said to be strongly typed.
+            </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="datatypes.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="introduction_sql.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="jsondata.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Data Types and Values </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> JSON Data</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

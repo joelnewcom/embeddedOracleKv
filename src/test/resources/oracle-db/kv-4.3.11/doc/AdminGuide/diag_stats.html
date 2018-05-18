@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Key Distribution Statistics Utility</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="diag_util.html" title="Appendix G. Diagnostics Utility" />
+    <link rel="prev" href="diag_verify.html" title="Verifying Storage Node configuration" />
+    <link rel="next" href="thirdpartylicenses.html" title="Appendix H. Third Party Licenses" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Key Distribution Statistics Utility</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="diag_verify.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix G. Diagnostics Utility</th>
+          <td width="20%" align="right"> <a accesskey="n" href="thirdpartylicenses.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="diag_stats"></a>Key Distribution Statistics Utility</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+         If enabled, your KVStore automatically gathers key distribution
+         statistics. 
+      </p>
+      <p> 
+         Oracle NoSQL Database uses four system tables to store key distribution data.
+         System tables are internally managed and maintained by Oracle NoSQL Database. They are
+         read-only when security is enabled on the store. Regardless of
+         security, the schema for system tables is immutable. The name of system
+         tables is defined with the prefix <code class="literal">SYS$</code>. You are not
+         allowed to create any other table name using this reserved prefix.
+      </p>
+      <p> 
+         The four system tables used to store key distribution data are:
+      </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p> 
+               SYS$IndexStatsLease 
+            </p>
+          </li>
+          <li>
+            <p>
+               SYS$PartitionStatsLease
+            </p>
+          </li>
+          <li>
+            <p> 
+               SYS$TableStatsIndex
+            </p>
+          </li>
+          <li>
+            <p> 
+               SYS$TableStatsPartition 
+            </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+         <code class="literal">SYS$TableStatsPartition</code> stores the distribution of
+         primary keys and table <code class="literal">SYS$TableStatsIndex</code> stores
+         the distribution of index keys. All four tables are forbidden to
+         modify, delete and insert. 
+      </p>
+      <p>
+         To enable statistics gathering you need to set the
+            <code class="literal">rnStatisticsEnabled</code> parameter to true:
+      </p>
+      <pre class="programlisting">plan change-parameters -wait -all-rns 
+-params "rnStatisticsEnabled=true"</pre>
+      <p> 
+         Then, you can query any of the four tables to get key distribution
+         data or review the gathering process.
+      </p>
+      <p>
+         To modify the behavior of the utility, use the following
+         parameters: 
+      </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+               rnStatisticsEnabled
+            </p>
+            <p> 
+               Used to enable or disable the statistics gathering. The
+               default value is true, which enables statistics gathering.
+            </p>
+          </li>
+          <li>
+            <p> 
+               rnStatisticsGatherInterval
+            </p>
+            <p>
+               Specifies the interval time between updates of table level
+               statistics. The default value is 24 hours. 
+            </p>
+          </li>
+          <li>
+            <p> 
+               rnStatisticsLeaseDuration 
+            </p>
+            <p>
+               Specifies the duration of a lease. A Replication Node must
+               hold a lease associated with a partition or a shard-index before
+               it can update the associated statistics. The default value is 10
+               minutes. 
+            </p>
+          </li>
+          <li>
+            <p>
+               rnStatisticsLowActivePeriod
+            </p>
+            <p> 
+               Specifies the period for which activity must be below the
+               threshold defined by
+                  <code class="literal">rnStatisticsRequestThreshold</code> before
+               statistics gathering activity is initiated. The default value is
+               2 minutes. 
+            </p>
+          </li>
+          <li>
+            <p>
+               rnStatisticsRequestThreshold
+            </p>
+            <p>
+               Specifies the threshold number of requests used to initiate
+               statistics gathering. Statistics gathering is initiated if the
+               sampled number of requests is below this threshold over the
+               period defined by <code class="literal">rnStatisticsLowActivePeriod</code>.
+               The default value is 2 requests. 
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="diag_verify.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="diag_util.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="thirdpartylicenses.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Verifying Storage Node configuration </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Appendix H. Third Party Licenses</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

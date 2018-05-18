@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Guidelines for Configuring External Certificates for an Existing Default Secure Installation</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Security Guide" />
+    <link rel="up" href="security_guidelines.html" title="Chapter 12. Keeping Oracle NoSQL Database Secure" />
+    <link rel="prev" href="cert_external.html" title="Guidelines for Configuring External Certificates for a new Installation" />
+    <link rel="next" href="uptodate_external.html" title="Guidelines for Updating the External Certificates" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Guidelines for Configuring External Certificates for an Existing Default Secure Installation</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="cert_external.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 12. Keeping Oracle NoSQL Database Secure</th>
+          <td width="20%" align="right"> <a accesskey="n" href="uptodate_external.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="external_running"></a>Guidelines for Configuring External Certificates for an Existing Default Secure Installation</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            Follow these steps to install external certificates in an existing secure NoSQL database installation that uses a default security configuration and a self-signed certificate:
+        </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+            This procedure assumes you already have a Java keystore and truststore setup. For more information see
+            <a class="xref" href="keystore_prep.html" title="Appendix C. Java KeyStore Preparation">Java KeyStore Preparation</a>.
+          </p>
+      </div>
+      <div class="orderedlist">
+        <ol type="1">
+          <li>
+            <p>
+                  Create a new security configuration that uses external certificates:
+                </p>
+            <pre class="programlisting">security-&gt; config create -root NEW_KVROOT \
+-pwdmgr wallet -kspwd sslPwd \
+-param "client:serverIdentityAllowed=dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-param "internal:serverIdentityAllowed=dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-param "internal:clientIdentityAllowed=dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-param "ha:serverIdentityAllowed=dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-param "ha:clientIdentityAllowed=dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)"</pre>
+            <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+              <h3 class="title">Note</h3>
+              <p>
+              <code class="literal">NEW_KVROOT</code> should be a
+               temporary directory that only holds the generated
+               security files.
+            </p>
+            </div>
+          </li>
+          <li>
+            <p>
+                    Replace the keystore and truststore files with your own on each server that will host a Storage Node. For example:
+                </p>
+            <pre class="programlisting">copy store.keys store.trust client.trust NEW_KVROOT/security/ </pre>
+          </li>
+          <li>
+            <p>
+                 It is easier to install an external certificate if the existing store does not needs to be kept accessible during the certificate installation. To do this, you only need to copy the entire new security security configuration to each Storage Node and then restart all of the Storage Nodes.
+               </p>
+            <pre class="programlisting">copy -r NEW_KVROOT/security KVROOT
+java -jar KVHOME/lib/kvstore.jar stop -root KVROOT
+java -jar KVHOME/lib/kvstore.jar start -root KVROOT&amp; </pre>
+          </li>
+          <li>
+            <p>
+                  If the existing store need to be kept accessible during the credential changes instead, then you should create an interim truststore and modify the security
+                  parameters having <code class="literal">dnmatch</code> field. On the configuration host, merge the truststore entries
+                  by using the <code class="literal">config merge-trust</code> command,
+                  and also import the root and intermediate certificate:
+               </p>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar
+securityconfig \
+config merge-trust -root KVROOT -source-root NEW_KVROOT
+keytool -import -keystore KVROOT/security/store.trust -file
+ca.cert.pem -alias root
+keytool -import -keystore KVROOT/security/store.trust -file
+intermediate.cert.pem -alias intermediate
+copy KVROOT/security/store.trust KVROOT/security/client.trust</pre>
+            <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+              <h3 class="title">Note</h3>
+              <p>
+                   In a multiple Storage Node deployment, you need to copy the new configuration to each host's new configuration directory and run merge-trust on each host like in the example above.
+              </p>
+            </div>
+          </li>
+          <li>
+            <p>
+                  Copy the updated client.trust file to the security directory on each host so that clients can use it to access the store.
+              </p>
+          </li>
+          <li>
+            <p>
+                  To keep the store accessible during the process, change the dnmatch value in the security configuration to be a compatible one. The values specified in the various dnmatch(xxx) expressions are a regular expression, as specified by java.util.regex.Pattern.
+                  The compatible "dnmatch" value should be in the form of
+                  <code class="literal">old certificate DN | new certificate DN</code>. In this case, the <code class="literal">CN=NoSQL|</code> represents the DN of the original self-signed certificate.
+              </p>
+            <pre class="programlisting">security-&gt; config update \
+-secdir KVROOT/security \
+-param "client:serverIdentityAllowed=dnmatch
+(CN=NoSQL|CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-param "internal:serverIdentityAllowed=dnmatch
+(CN=NoSQL|CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-param "internal:clientIdentityAllowed=dnmatch
+(CN=NoSQL|CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-param "ha:serverIdentityAllowed=dnmatch
+(CN=NoSQL|CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-param "ha:clientIdentityAllowed=dnmatch
+(CN=NoSQL|CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)"</pre>
+            <p>
+                  If clients set the login property
+                  <code class="literal">oracle.kv.ssl.hostnameVerifier</code>, change the value of the dnmatch field. For example:
+              </p>
+            <pre class="programlisting">oracle.kv.ssl.trustStore=client.trust
+oracle.kv.transport=ssl
+oracle.kv.ssl.protocols=TLSv1.2,TLSv1.1,TLSv1
+oracle.kv.ssl.hostnameVerifier=dnmatch(CN\=NoSQL|CN\=myhost,
+OU\=TeamA, O\=MyCompany, L\=Unknown, ST\=California, C\=US)</pre>
+          </li>
+          <li>
+            <p>
+                 Check that all Replication Nodes are online and then
+                 restart each Storage Node one by one using the following
+                 commands:
+              </p>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar stop -root KVROOT </pre>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar start -root KVROOT&amp;</pre>
+          </li>
+          <li>
+            <p>
+                  Copy the updated store.keys file to the security directory on
+                  each host. Then, check that all Replication Nodes are online and restart each Storage Node one by one using the following
+                  commands:
+              </p>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar stop -root KVROOT </pre>
+            <pre class="programlisting">java -jar KVHOME/lib/kvstore.jar start -root KVROOT&amp;</pre>
+          </li>
+          <li>
+            <p>
+                  For all Storage Nodes, remove the obsolete certificate <code class="literal">mykey</code> in store.trust. Also, rename the new certificate <code class="literal">mykey_2</code> to <code class="literal">mykey</code> using the following command:
+              </p>
+            <pre class="programlisting">keytool -delete -keystore KVROOT/security/store.trust \
+-alias mykey </pre>
+            <pre class="programlisting">keytool -changealias -keystore \
+KVROOT/security/store.trust -alias mykey_2 -destalias mykey </pre>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="cert_external.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="security_guidelines.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="uptodate_external.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Guidelines for Configuring External Certificates for a new Installation </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Guidelines for Updating the External Certificates</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

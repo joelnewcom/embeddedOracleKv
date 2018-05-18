@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>load</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="history.html" title="history" />
+    <link rel="next" href="logtail.html" title="logtail" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">load</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="history.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="logtail.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="load"></a>load</h2>
+          </div>
+        </div>
+      </div>
+      <pre class="programlisting">load -file &lt;path to file&gt; </pre>
+      <p>
+                Loads the named file and interpret its contents as
+                a script of commands to be executed. If any of the
+                commands in the script fail, execution will stop at
+                that point.
+            </p>
+      <p>
+                For example, suppose the following commands are
+                collected in the script file
+                <code class="literal">load-contacts-5.txt</code>:
+            </p>
+      <pre class="programlisting">### Begin Script ###
+put -key /contact/Bob/Walker -value "{\"phone\":\"857-431-9361\", \
+\"email\":\"Nunc@Quisque.com\",\"city\":\"Turriff\"}" \
+-json example.ContactInfo
+put -key /contact/Craig/Cohen -value "{\"phone\":\"657-486-0535\", \
+\"email\":\"sagittis@metalcorp.net\",\"city\":\"Hamoir\"}" \
+-json example.ContactInfo
+put -key /contact/Lacey/Benjamin -value "{\"phone\":\"556-975-3364\", \
+\"email\":\"Duis@laceyassociates.ca\",\"city\":\"Wasseiges\"}" \
+-json example.ContactInfo
+put -key /contact/Preston/Church -value "{\"phone\":\"436-396-9213\", \
+\"email\":\"preston@mauris.ca\",\"city\":\"Helmsdale\"}" \
+-json example.ContactInfo
+put -key /contact/Evan/Houston -value "{\"phone\":\"028-781-1457\", \
+\"email\":\"evan@texfoundation.org\",\"city\":\"Geest-G\"}" \
+-json example.ContactInfo
+exit
+### End Script ###</pre>
+      <p>
+                Then, the script can be run by using the
+                <code class="literal">load</code> command in the data
+                command line interface:
+            </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+                    A schema must be loaded to the store before
+                    this script can successfully run. For more
+                    information on adding schema, see "Adding Schema"
+                    section in Oracle NoSQL Database Getting Started.
+
+                </p>
+      </div>
+      <pre class="programlisting">&gt; java -Xmx256m -Xms256m \
+-jar KVHOME/lib/kvstore.jar runadmin -host node01 -port 5000 \
+-security \
+KVROOT/securtiy/client.security \
+-store mystore
+kv-&gt; load -file ./load-contacts-5.txt
+Operation successful, record inserted.
+Operation successful, record inserted.
+Operation successful, record inserted.
+Operation successful, record inserted.
+Operation successful, record inserted.</pre>
+      <p>
+                The following schema was previously added to the
+                store:
+            </p>
+      <pre class="programlisting">{
+     "type": "record",
+     "name": "ContactInfo",
+     "namespace": "example",
+     "fields": [
+         {"name": "phone", "type": "string", "default": ""},
+         {"name": "email", "type": "string", "default": ""},
+         {"name": "city", "type": "string", "default": ""}
+     ]
+} </pre>
+      <p>
+                For more information on using the load command, see
+                <a class="xref" href="deploy-script.html" title="Using a Script to Configure the Store">Using a Script to Configure the Store</a>.
+            </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="history.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="logtail.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">history </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> logtail</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

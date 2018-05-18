@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>snapshot</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="show.html" title="show" />
+    <link rel="next" href="table.html" title="table" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">snapshot</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="show.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="table.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="snapshot"></a>snapshot</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="snapshot.html#snapshot_create">snapshot create</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="snapshot.html#snapshot_remove">snapshot remove</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+                Encapsulates commands that create and delete
+                snapshots, which are used for backup and restore. The
+                subcommands are as follows:
+            </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                        <a class="xref" href="snapshot.html#snapshot_create" title="snapshot create">snapshot create</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="snapshot.html#snapshot_remove" title="snapshot remove">snapshot remove</a>
+                    </p>
+          </li>
+        </ul>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="snapshot_create"></a>snapshot create</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">snapshot create -name &lt;name&gt; </pre>
+        <p>
+                    Creates a new snapshot using the specified name
+                    as the prefix.
+                </p>
+        <p>
+                    Use the <code class="literal">-name</code> option to
+                    specify the name of the snapshot that you want to
+                    create.
+                </p>
+        <p>
+                    Snapshots should not be taken while any
+                    configuration (topological) changes are being
+                    made, because the snapshot might be inconsistent
+                    and not usable.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="snapshot_remove"></a>snapshot remove</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">snapshot remove -name &lt;name&gt; | -all </pre>
+        <p>
+                    Removes the named snapshot. If -all is
+                    specified, remove all snapshots.
+                </p>
+        <p>
+                    Use the <code class="literal">-name</code> option to
+                    specify the name of the snapshot that you want to
+                    remove.
+                </p>
+        <p>
+                    If the <code class="literal">-all</code> option is
+                    specified, remove all snapshots.
+                </p>
+        <p>
+                    To create a backup of your store using a
+                    snapshot see <a class="xref" href="procedures.html#takesnapshot" title="Taking a Snapshot">Taking a Snapshot</a>.
+                </p>
+        <p>
+                    To recover your store from a previously created
+                    snapshot you can use the load utility or restore
+                    directly from a snapshot. For more information, see
+                    <a class="xref" href="recovery.html#usingload" title="Using the Load Program">Using the Load Program</a> or <a class="xref" href="recovery.html#restoredirect" title="Restoring Directly from a Snapshot">Restoring Directly from a Snapshot</a>.
+                </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="show.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="table.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">show </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> table</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

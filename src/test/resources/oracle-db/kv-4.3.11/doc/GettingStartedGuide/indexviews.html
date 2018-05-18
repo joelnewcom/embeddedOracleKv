@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Chapter 13. Index Views</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with Oracle NoSQL Database Key/Value API" />
+    <link rel="up" href="index.html" title="Getting Started with Oracle NoSQL Database Key/Value API" />
+    <link rel="prev" href="sequence-exec.html" title="Executing a Sequence" />
+    <link rel="next" href="keyonlyindexviews.html" title="Using Key-Only Records" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Chapter 13. Index Views</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="sequence-exec.html">Prev</a> </td>
+          <th width="60%" align="center"> </th>
+          <td width="20%" align="right"> <a accesskey="n" href="keyonlyindexviews.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="chapter" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title"><a id="indexviews"></a>Chapter 13. Index Views</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <p>
+          <b>Table of Contents</b>
+        </p>
+        <dl>
+          <dt>
+            <span class="sect1">
+              <a href="indexviews.html#keydataindexviews">Using Traditional Key/Data Pairs</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="keyonlyindexviews.html">Using Key-Only Records</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect2">
+                  <a href="keyonlyindexviews.html#complexindexname">Complex Index Names</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect2">
+                  <a href="keyonlyindexviews.html#indexviewmetadata">Managing Index View Metadata</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect2">
+                  <a href="keyonlyindexviews.html#usingviewsmeta">Using Index View Records and Metadata Together</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect2">
+                  <a href="keyonlyindexviews.html#keysizeconsideration">Key Size Consideration</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="sect1">
+              <a href="viewconsiderations.html">General Index Views Considerations</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect2">
+                  <a href="viewconsiderations.html#additionalwrite">Additional Write Activity</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect2">
+                  <a href="viewconsiderations.html#nonatomic">Non-Atomic Updates</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect2">
+                  <a href="viewconsiderations.html#secondary-consistency">Decoupled Consistency</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="sect1">
+              <a href="secondaryexample.html">Example</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+            Index views are a design pattern you use to create auxiliary
+            records that are reflective of information contained in your
+            primary records. There are many ways you can create index
+            views.  This document describes two of them.
+        </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+                This article assumes that you are using Oracle NoSQL Database's Key/Value
+                API and have read and understood the
+                <em class="citetitle">Oracle NoSQL Database Getting Started with the Key/Value API</em> guide. If you have not read
+                that manual, you should do so before reading this document.
+            </p>
+        <p>
+                Users of the Tables API have a built-in indexing mechanism
+                available, and so this article is not meant for them.
+            </p>
+      </div>
+      <p>
+            As described in 
+            <a class="xref" href="recordget.html" title="Chapter 5. Reading Records">Reading Records</a>
+            records are generally retrieved from the store using their key
+            major and minor paths. You can either retrieve a single record
+            using its key, or you can retrieve multiple records using part
+            of a major path and then iterate over the result.
+        </p>
+      <p>
+            For example, suppose your store contains records related to
+            users. The key might contain user organization information and
+            other identifying information such as a user ID.  Each record's
+            data, however, would likely contain additional details about
+            people such as names, addresses, phone numbers, and so forth.
+            While your application may frequently want to query a person by
+            user ID (that is, by the information stored as a part of the
+            key path), it may also on occasion want to locate people by,
+            say, their name.
+        </p>
+      <p>
+            Rather than iterating through all of the records in your store,
+            examining each in turn for a given person's name, you can
+            instead create application-managed index views. There are
+            multiple ways to implement index views, but in general they are
+            simply key/value pairs where the key relates to some
+            information within your primary record, and the value
+            identifies the primary record where that information can be
+            found.
+        </p>
+      <p>
+            That is, if you had a record which contained the name
+            <code class="literal">Peter</code>, then the key for its index view would
+            contain <code class="literal">Peter</code> and the value would contain
+            the major and minor key paths to that record.
+        </p>
+      <div class="sect1" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="keydataindexviews"></a>Using Traditional Key/Data Pairs</h2>
+            </div>
+          </div>
+        </div>
+        <p>
+            This method of creating index views is, intuitively, the way many developers familiar
+            with key/value stores will think to implement views.
+        </p>
+        <p>
+            For a different approach to building index views, see
+            <a class="xref" href="keyonlyindexviews.html" title="Using Key-Only Records">Using Key-Only Records</a>.
+        </p>
+        <p>
+            When you use traditional key/data pair records to build index
+            views, you create records where:
+        </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                    The record's key path is some information in your primary data records that
+                    you want to quickly query.
+                </p>
+            </li>
+            <li>
+              <p>
+                    The record's data is the key path to a record which has the
+                    information contained in the key path.
+                </p>
+            </li>
+          </ul>
+        </div>
+        <p>
+            For example, suppose you had records that used the following
+            schema:
+        </p>
+        <pre class="programlisting">
+{
+    "type": "record",
+    "name": "PrimaryDBValue",
+    "namespace": "oracle.kv.indexView",
+    "fields": [
+        {"name": "name", "type": "string", "default": ""},
+        {"name": "email", "type": "string", "default": ""},
+        {"name": "phone", "type": "string", "default": ""},
+        {"name": "date", "type": "string", "default": ""}, 
+        {"name": "org", "type": "string", "default": ""}, 
+        {"name": "cost", "type": "long", "default": 0} 
+    ]
+}
+</pre>
+        <p>
+        Further, suppose these records are stored using the employee's
+        unique identifier. For example, these records might use key paths 
+        which end with an employee unique identifier, like this:
+    </p>
+        <pre class="programlisting">/Corporate/people/10012
+/Corporate/people/10013
+/Corporate/people/10014</pre>
+        <p>
+        In this case, in order to find all people who belong to the
+        organization called "Support," you would have to iterate over 
+        every record whose key begins with <code class="literal">/Corporate/people</code>,
+        examine each in turn for the proper organization name, and
+        construct a list of those people who belong to that organization.
+        Depending on the number of people contained in your store, this
+        could be a lengthy operation.
+    </p>
+        <p>
+        The alternative is to create an index view that is keyed by the
+        organization name. For example:
+    </p>
+        <pre class="programlisting">/IndexView/People/Organization/Engineering
+/IndexView/People/Organization/Sales
+/IndexView/People/Organization/Support</pre>
+        <p>
+        There are two ways to handle the data portion of these records. One
+        way is for each record to contain a list of keys corresponding to
+        the people records belonging to that organization. That is, the
+        key:
+    </p>
+        <pre class="programlisting">/IndexView/People/Organization/Support</pre>
+        <p>
+        would return a data item with was a list of major keys for all those
+        people entries containing an 'org' of 'Support'. As an Avro schema,
+        you would represent the data item in the following way:
+    </p>
+        <pre class="programlisting">{
+    "type": "record",
+    "name": "SecondaryDBValue",
+    "namespace": "oracle.kv.indexView",
+    "fields": [
+        {"name": "arrays", 
+         "type": {"type" : "array", "items" : "string"}, 
+         "default" : []}
+  ]
+} </pre>
+        <p>
+            While this approach will work for small-to-medium sized
+            indexes, it ultimately suffers from an inability to scale.
+            It would be far too easy to create a view whose list of primary
+            keys is too large to be easily handled by your code. In fact,
+            it could easily grow so large that it could not fit into
+            available memory. Given the size of the datasets for which
+            Oracle NoSQL Database is designed, this is a very real consideration.
+        </p>
+        <p>
+            A different approach would be to create index views where each
+            record referred to one and only one primary record. That is,
+            the data portion of the record contains a simple string
+            representing the key path to a primary record. (You could also
+            carry this information as an array of key path components.)
+            However, you cannot duplicate keys in Oracle NoSQL Database, so in this case
+            the key needs to somehow be unique, based on the information
+            found in the primary record. As an example, you could create
+            keys that contains both the organization name, as well as the
+            user's UID:
+        </p>
+        <pre class="programlisting">/IndexView/People/Organization/Support/-/10012</pre>
+        <p>
+            refers to the primary record:
+        </p>
+        <pre class="programlisting">/Corporate/People/10012</pre>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="sequence-exec.html">Prev</a> </td>
+          <td width="20%" align="center"> </td>
+          <td width="40%" align="right"> <a accesskey="n" href="keyonlyindexviews.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Executing a Sequence </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Using Key-Only Records</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Exists Operator</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="operators.html" title="Chapter 4. Operators" />
+    <link rel="prev" href="sequence_operator.html" title="Sequence Comparison Operators" />
+    <link rel="next" href="isoftype_operator.html" title="Is-Of-Type Operator" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Exists Operator</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="sequence_operator.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 4. Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="isoftype_operator.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="exists_operator"></a>Exists Operator</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            The exists operator checks whether a sequence is empty. True is
+            returned if the sequence is not empty.
+        </p>
+      <p>
+            Note that this operator returns true even if the sequence contains 
+            null data. So for strongly type data (that is, non-JSON data columns), 
+            this operator will always return true because on data import
+            the column will be always at minimum populated with null.
+        </p>
+      <p>
+            For an examples of using the exists operator, see
+            <a class="xref" href="existsexample.html" title="Using Exists with JSON">Using Exists with JSON</a>.
+        </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="sequence_operator.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="operators.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="isoftype_operator.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Sequence Comparison Operators </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Is-Of-Type Operator</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

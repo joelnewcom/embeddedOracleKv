@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Data Types and Values</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="introduction_sql.html" title="Chapter 1. The SQL for Oracle NoSQL Database Data Model" />
+    <link rel="prev" href="introduction_sql.html" title="Chapter 1. The SQL for Oracle NoSQL Database Data Model" />
+    <link rel="next" href="wildcards.html" title="Wildcard Types and JSON Data" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Data Types and Values</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="introduction_sql.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 1. The SQL for Oracle NoSQL Database Data Model</th>
+          <td width="20%" align="right"> <a accesskey="n" href="wildcards.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="datatypes"></a>Data Types and Values</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+        </p>
+      <p>
+            In SQL for Oracle NoSQL Database data is modeled as typed items. A typed item
+            (or simply item) is a value and an associated type that
+            contains the value. A type is a definition of a set of values
+            that are said to belong to (or be instances of) that type.
+        </p>
+      <p>
+            Values can be atomic or complex. An atomic value is a single,
+            indivisible unit of data. A complex value is a value that contains
+            or consists of other values and provides access to its nested
+            values. Similarly, the types supported by SQL for Oracle NoSQL Database can be
+            characterized as atomic types (containing atomic values only) or
+            complex types (containing complex values only).
+        </p>
+      <p>
+            The data model supports the following kinds of atomic values and
+            associated data types:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    Integer
+                </p>
+            <p>
+                    4-byte long integer number.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Long
+                </p>
+            <p>
+                    8-byte long integer number.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Float
+                </p>
+            <p>
+                    4-byte long real number.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Double
+                </p>
+            <p>
+                    8-byte long real number.
+                </p>
+          </li>
+          <li>
+            <p>
+                    String
+                </p>
+            <p>
+                    Sequence of unicode characters.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Boolean
+                </p>
+            <p>
+                    Values are either <code class="literal">true</code> or <code class="literal">false</code>.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Binaries
+                </p>
+            <p>
+                    An uninterpreted sequence of zero or more bytes.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Enums
+                </p>
+            <p>
+                    Values are symbolic identifiers (tokens). Enums are stored
+                    as strings, but are not considered to be strings.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Timestamp
+                </p>
+            <p>
+                    Represents a point in time as a date and, optionally, a time. 
+                    See <a class="xref" href="timestamp.html" title="Timestamp">Timestamp</a>
+                    for details.
+                </p>
+          </li>
+          <li>
+            <p>
+                    JSON null value (JNULL)
+                </p>
+            <p>
+                    Special value that indicates the absence of an actual
+                    value within a JSON datatype such as an object, map, or
+                    array.
+                </p>
+          </li>
+          <li>
+            <p>
+                    SQL NULL
+                </p>
+            <p>
+                    Special value that is used to indicate the
+                    absence of an actual value, or the fact that a value is
+                    unknown or inapplicable.
+                </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+            SQL for Oracle NoSQL Database also supports the following complex types:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    Array
+                </p>
+            <p>
+                    An array is an ordered collection of zero or more
+                    items. Normally all elements of an array have the same
+                    type. Also, normally arrays cannot contain NULL items.
+                    However, arrays of type JSON can contain a mix of
+                    JSON datatypes, as well as NULL items.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Map
+                </p>
+            <p>
+                    An unordered collection of zero or more key-item pairs,
+                    where all keys are strings and all the items normally
+                    have the same type. Also, normally Maps cannot contain
+                    NULL items. However, if the map is of type JSON, then
+                    it can contain a mix of datatypes for the items, as
+                    well as NULL items.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Record
+                </p>
+            <p>
+                    An ordered collection of one or more key-item pairs,
+                    where all keys are strings and the items associated
+                    with different keys may have different types. Also, 
+                    record items may be NULL.
+                </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+            Another difference between records and maps is that the keys in
+            records are fixed and known in advance (they are part of the record
+            type definition), whereas maps can contain arbitrary keys (the map
+            keys are not part of the map type).
+        </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="introduction_sql.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="introduction_sql.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="wildcards.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Chapter 1. The SQL for Oracle NoSQL Database Data Model </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Wildcard Types and JSON Data</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>pool</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="plan.html" title="plan" />
+    <link rel="next" href="put_command.html" title="put" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">pool</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="plan.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="put_command.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="pool"></a>pool</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="pool.html#pool_clone">pool clone</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="pool.html#pool_create">pool create</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="pool.html#pool_join">pool join</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="pool.html#pool_leave">pool leave</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="pool.html#pool_remove">pool remove</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+                Encapsulates commands that manipulates Storage Node
+                pools, which are used for resource allocations. The
+                subcommands are as follows:
+            </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                      <a class="xref" href="pool.html#pool_clone" title="pool clone">pool clone</a>
+                  </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="pool.html#pool_create" title="pool create">pool create</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="pool.html#pool_join" title="pool join">pool join</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="pool.html#pool_leave" title="pool leave">pool leave</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="pool.html#pool_remove" title="pool remove">pool remove</a>
+                    </p>
+          </li>
+        </ul>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="pool_clone"></a>pool clone</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">pool clone -name &lt;name&gt; -from &lt;source pool name&gt; [-json] </pre>
+        <p>
+                    Clone an existing Storage Node pool to a new Storage
+                    Node pool to be used for resource distribution when
+                    creating or modifying a store.
+                </p>
+        <p>
+                    For more information on using a cloned Storage Node
+                    pool when contracting a topology, see <a class="xref" href="managing-topology.html#topologycontract" title="Contracting a Topology">Contracting a Topology</a>.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="pool_create"></a>pool create</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">pool create -name &lt;name&gt; </pre>
+        <p>
+                    Creates a new Storage Node pool to be used for
+                    resource distribution when creating or modifying a
+                    store.
+                </p>
+        <p>
+                    For more information on creating a Storage Node
+                    pool, see <a class="xref" href="cli-createpool.html" title="Create a Storage Node Pool">Create a Storage Node Pool</a>.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="pool_join"></a>pool join</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">pool join -name &lt;name&gt; [-sn &lt;snX&gt;]* [-json] </pre>
+        <p>
+                    Adds Storage Nodes to an existing Storage Node
+                    pool.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="pool_leave"></a>pool leave</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">pool leave -name &lt;name&gt; [-sn &lt;snX&gt;]* [-json] </pre>
+        <p>
+                    Remove Storage Nodes from an existing Storage Node pool.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="pool_remove"></a>pool remove</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">pool remove -name &lt;name&gt; </pre>
+        <p>
+                    Removes a Storage Node pool.
+                </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="plan.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="put_command.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">plan </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> put</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

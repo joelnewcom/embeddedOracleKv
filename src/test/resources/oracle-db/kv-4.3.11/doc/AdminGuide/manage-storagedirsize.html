@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Managing Storage Directory Sizes</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="procedures.html" title="Chapter 6. Administrative Procedures" />
+    <link rel="prev" href="increasecapacity.html" title="Increasing the capacity of a Storage Node" />
+    <link rel="next" href="replacefailedsn.html" title="Replacing a Failed Storage Node" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Managing Storage Directory Sizes</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="increasecapacity.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 6. Administrative Procedures</th>
+          <td width="20%" align="right"> <a accesskey="n" href="replacefailedsn.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="manage-storagedirsize"></a>Managing Storage Directory Sizes</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            By default, Oracle NoSQL Database evenly distributes data across all
+            the Storage Nodes in your store. It does this because
+            it assumes all of the hardware in your store is
+            homogenous, and so all the Storage Nodes are equal in
+            terms of disk capacity. 
+        </p>
+      <p>
+            However, if you are running a store in an environment where
+            some Storage Nodes have more disk capacity than other
+            Storage Nodes, then you can indicate that to Oracle NoSQL Database and it
+            will place more data on the Storage Nodes with more
+            capacity. Be aware than this can result in increased
+            workload for the Storage Nodes with the larger storage
+            capacity because (depending on your data access patterns)
+            those Storage Nodes could see more read and/or write
+            activity. Be sure to size your hardware to support that
+            additional workload, if any. 
+        </p>
+      <p>
+            To specify storage capacity, use 
+            <code class="literal">plan change-storagedir</code> as described
+            in <a class="xref" href="increasecapacity.html" title="Increasing the capacity of a Storage Node">Increasing the capacity of a Storage Node</a>. 
+            When you use <code class="literal">plan change-storagedir</code> be
+            sure to specify the <code class="literal">-storagedirsize</code>
+            parameter so as to indicate how large the new storage
+            directory is.
+        </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+                You must either specify the storage size for every
+                storage directory in use for your store, or specify
+                it for none of the directories in your store. It is
+                an error to specify storage size for some but not
+                all storage directories.
+            </p>
+      </div>
+      <p>
+            The value specified for this parameter must be a
+            long, followed optionally by a unit string.
+            Accepted unit strings are: KB, MB, GB, and TB,
+            corresponding to 1024, 1024^2, 1024^3, 1024^4
+            respectively. Acceptable strings are case insensitive.
+            Valid delimiters between the long value and
+            the unit string are " ", "-", or "_".
+        </p>
+      <p>
+            For example:
+        </p>
+      <pre class="programlisting">kv-&gt; verbose
+Verbose mode is now on
+kv-&gt; show topology
+store=mystore  numPartitions=300 sequence=308
+  zn: id=zn1 name=Manhattan repFactor=3 type=PRIMARY 
+allowArbiters=false
+
+  sn=[sn1] zn:[id=zn1 name=Manhattan] node1:9000 capacity=1 RUNNING
+    [rg1-rn1] RUNNING  /storage-dir/sn1 0
+              No performance info available
+  sn=[sn2] zn:[id=zn1 name=Manhattan] node2:9000 capacity=1 RUNNING
+    [rg1-rn2] RUNNING  /storage-dir/sn2 0
+            single-op avg latency=0.0 ms   multi-op avg latency=0.0 ms
+  sn=[sn3] zn:[id=zn1 name=Manhattan] node3:9000 capacity=1 RUNNING
+    [rg1-rn3] RUNNING  /storage-dir/sn3 0
+              No performance info available
+
+  shard=[rg1] num partitions=300
+    [rg1-rn1] sn=sn1 haPort=node1:9010
+    [rg1-rn2] sn=sn2 haPort=node2:9010
+    [rg1-rn3] sn=sn3 haPort=node3:9010
+    partitions=1-300
+
+kv-&gt; plan change-storagedir -sn sn1 -storagedir /storage-dir/sn1 \
+-storagedirsize "200 gb" -add -wait
+Executed plan 7, waiting for completion...
+Plan 7 ended successfully
+kv-&gt; plan change-storagedir -sn sn2 -storagedir /storage-dir/sn2 \
+-storagedirsize "300 gb" -add -wait
+Executed plan 8, waiting for completion...
+Plan 8 ended successfully
+kv-&gt; plan change-storagedir -sn sn3 -storagedir /storage-dir/sn3 \
+-storagedirsize "400 gb" -add -wait
+Executed plan 9, waiting for completion...
+Plan 9 ended successfully
+kv-&gt; show topology
+store=mystore  numPartitions=300 sequence=308
+  zn: id=zn1 name=Manhattan repFactor=3 type=PRIMARY 
+allowArbiters=false
+
+  sn=[sn1] zn:[id=zn1 name=Manhattan] node1:9000 capacity=1 RUNNING
+    [rg1-rn1] RUNNING  /storage-dir/sn1 214748364800
+              No performance info available
+  sn=[sn2] zn:[id=zn1 name=Manhattan] node2:9000 capacity=1 RUNNING
+    [rg1-rn2] RUNNING  /storage-dir/sn2 322122547200
+            single-op avg latency=0.0 ms   multi-op avg latency=0.0 ms
+  sn=[sn3] zn:[id=zn1 name=Manhattan] node3:9000 capacity=1 RUNNING
+    [rg1-rn3] RUNNING  /storage-dir/sn3 429496729600
+            single-op avg latency=0.0 ms   multi-op avg latency=0.0 ms
+
+  shard=[rg1] num partitions=300
+    [rg1-rn1] sn=sn1 haPort=node1:9010
+    [rg1-rn2] sn=sn2 haPort=node2:9010
+    [rg1-rn3] sn=sn3 haPort=node3:9010
+    partitions=1-300
+</pre>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+                If one or more of your Storage Nodes stores its data in the
+                root directory, then instead of 
+                <code class="literal">plan change-storagedir</code>, set the
+                <code class="literal">rootDirSize</code> parameter instead. For
+                example:
+            </p>
+        <pre class="programlisting">kv-&gt; plan change-parameters -service sn1 -params rootDirSize=200_gb</pre>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="increasecapacity.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="procedures.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="replacefailedsn.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Increasing the capacity of a Storage Node </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Replacing a Failed Storage Node</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

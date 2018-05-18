@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Limiting and Offsetting Results</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="simple_expressions.html" title="Chapter 7. Simple Select-From-Where Queries" />
+    <link rel="prev" href="ordering_results.html" title="Ordering Results" />
+    <link rel="next" href="using_variables.html" title="Using External Variables" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Limiting and Offsetting Results</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="ordering_results.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 7. Simple Select-From-Where Queries</th>
+          <td width="20%" align="right"> <a accesskey="n" href="using_variables.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="limit_offset"></a>Limiting and Offsetting Results</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+          Use the <code class="literal">LIMIT</code> clause to limit the number
+          of results returned in a SQL statement. Suppose you had 10000
+          rows in the Users table, but you only wanted to return the
+          first 4 rows. Do this:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT * from Users ORDER BY id LIMIT 4;
+ +----+-----------+----------+-----+--------+
+ | id | firstname | lastname | age | income |
+ +----+-----------+----------+-----+--------+
+ |  1 | David     | Morrison |  25 | 100000 |
+ |  2 | John      | Anderson |  35 | 100000 |
+ |  3 | John      | Morgan   |  38 | 200000 |
+ |  4 | Peter     | Smith    |  38 |  80000 |
+ +----+-----------+----------+-----+--------+
+
+4 rows returned </pre>
+      <p>
+        Suppose you only wanted to show results 3 and 4 out of the
+        10000 rows. To do this, first use the <code class="literal">LIMIT</code>
+        clause to limit the results to two. Then, use the
+        <code class="literal">OFFSET</code> clause to skip the first two rows.
+        For example:
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT * from Users ORDER BY id LIMIT 2 OFFSET 2;
+ +----+-----------+----------+-----+--------+
+ | id | firstname | lastname | age | income |
+ +----+-----------+----------+-----+--------+
+ |  3 | John      | Morgan   |  38 | 200000 |
+ |  4 | Peter     | Smith    |  38 |  80000 |
+ +----+-----------+----------+-----+--------+
+
+2 rows returned </pre>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+            It is recommended to use LIMIT and OFFSET with an ORDER BY
+            clause. Otherwise, the results will be returned in a random
+            order, producing unexpected results.
+          </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="ordering_results.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="simple_expressions.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="using_variables.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Ordering Results </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Using External Variables</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

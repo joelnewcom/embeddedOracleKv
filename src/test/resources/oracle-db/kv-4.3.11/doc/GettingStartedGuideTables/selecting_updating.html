@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Using a query to update data</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with Oracle NoSQL Database Tables" />
+    <link rel="up" href="sql_tables.html" title="Chapter 4. Introduction to SQL for Oracle NoSQL Database" />
+    <link rel="prev" href="access_metadata.html" title="Accessing metadata" />
+    <link rel="next" href="primaryshardkeys.html" title="Chapter 5. Primary and Shard Key Design" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Using a query to update data</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="access_metadata.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 4. Introduction to SQL for Oracle NoSQL Database</th>
+          <td width="20%" align="right"> <a accesskey="n" href="primaryshardkeys.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="selecting_updating"></a>Using a query to update data</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+       You can also form queries to SELECT records that you can then use to update
+       or insert data in Oracle NoSQL Database.
+    </p>
+      <p>
+       For example, to update a field using a result record from the SELECT statement:
+    </p>
+      <pre class="programlisting">// kvstore handle creation omitted.
+
+TableAPI tableAPI = store.getTableAPI();
+Table table = tableAPI.getTable("Users");
+
+StatementResult result = store.executeSync("SELECT * FROM Users WHERE
+(age &gt; 13 and age &lt; 17)");
+
+for( RecordValue record : result ) {
+
+    // Update a field
+    record.put("age", record.get("age").asInteger().get() + 1 );
+    tableAPI.put(record.asRow(), null, null);
+}</pre>
+      <p>
+       For example, to create a new row using a result record from the SELECT statement:
+    </p>
+      <pre class="programlisting">// kvstore handle creation omitted.
+
+TableAPI tableAPI = store.getTableAPI();
+Table table = tableAPI.getTable("Users");
+
+StatementResult result = store.executeSync("SELECT * FROM Users WHERE
+(age &gt; 25 and age &lt; 37)");
+
+for( RecordValue record : result ) {
+
+    // Create a new row
+    Row row = table.createRow();
+    row.put("id", record.get("id"));
+    row.put("age", record.get("age").asInteger().get() + 100);
+    // Any other fields will be null
+    tableAPI.put(row, null, null);
+}</pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="access_metadata.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="sql_tables.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="primaryshardkeys.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Accessing metadata </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Chapter 5. Primary and Shard Key Design</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

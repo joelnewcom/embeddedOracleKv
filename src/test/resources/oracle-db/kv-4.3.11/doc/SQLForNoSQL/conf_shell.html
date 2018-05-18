@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Configuring the shell</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="appendixshell.html" title="Appendix A. Introduction to the SQL for Oracle NoSQL Database Shell" />
+    <link rel="prev" href="appendixshell.html" title="Appendix A. Introduction to the SQL for Oracle NoSQL Database Shell" />
+    <link rel="next" href="shell_command_reference.html" title="Shell Utility Commands" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Configuring the shell</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="appendixshell.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix A. Introduction to the SQL for Oracle NoSQL Database Shell</th>
+          <td width="20%" align="right"> <a accesskey="n" href="shell_command_reference.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="conf_shell"></a>Configuring the shell</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+      You can also set the shell start-up arguments by modifying the
+      configuration file <code class="literal">.kvclirc</code> found in your home
+      directory.
+    </p>
+      <p>
+      Arguments can be configured in the <code class="literal">.kvclirc</code> file
+      using the <code class="literal">name=value</code> format. This file is shared by all
+      shells, each having its named section. <code class="literal">[sql]</code> is
+      used for the Query shell, while <code class="literal">[kvcli]</code> is used for the
+      Admin Command Line Interface (CLI).
+    </p>
+      <p>
+      For example, the <code class="literal">.kvclirc</code> file would then contain
+      content like this:
+    </p>
+      <pre class="programlisting">[sql]
+helper-hosts=node01:5000
+store=kvstore
+timeout=10000
+consistency=NONE_REQUIRED
+durability=COMMIT_NO_SYNC
+username=root
+security=/tmp/login_root
+
+[kvcli]
+host=node01
+port=5000
+store=kvstore
+admin-host=node01
+admin-port=5001
+username=user1
+security=/tmp/login_user
+admin-username=root
+admin-security=/tmp/login_root
+timeout=10000
+consistency=NONE_REQUIRED
+durability=COMMIT_NO_SYNC </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="appendixshell.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="appendixshell.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="shell_command_reference.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Appendix A. Introduction to the SQL for Oracle NoSQL Database Shell </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Shell Utility Commands</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

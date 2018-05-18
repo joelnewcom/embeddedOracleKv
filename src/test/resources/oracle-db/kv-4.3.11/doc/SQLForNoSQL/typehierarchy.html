@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Type Hierarchy</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="introduction_sql.html" title="Chapter 1. The SQL for Oracle NoSQL Database Data Model" />
+    <link rel="prev" href="timestamp.html" title="Timestamp" />
+    <link rel="next" href="whatisasequence.html" title="SQL for Oracle NoSQL Database Sequences" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Type Hierarchy</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="timestamp.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 1. The SQL for Oracle NoSQL Database Data Model</th>
+          <td width="20%" align="right"> <a accesskey="n" href="whatisasequence.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="typehierarchy"></a>Type Hierarchy</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="typehierarchy.html#subtype-sub-exception">Subtype-Substitution Rule Exception</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+            SQL for Oracle NoSQL Database defines a subtype-supertype relationship among
+            the types such that types are arranged in a hierarchy. For
+            example, every type is a subtype of <code class="literal">ANY</code>.
+            Any atomic type is a subtype of AnyAtomic. Integer is a subtype
+            of Long.  An array is a subtype of JSON if its element type is
+            JSON or another subtype of JSON.
+        </p>
+      <p>
+            A data item is an instance of a type (T) if the
+            data item's type is (T) or a subtype of (T).
+        </p>
+      <p>
+            This relationship is important because the usual
+            subtype-substitution rule is supported by SQL for Oracle NoSQL Database. If
+            an operation expects input items of type (T), or produces items
+            of type (T), then it can also operate on or produce items of
+            type (S) if (S) is a subtype of (T). (There is an
+            exception to this rule. See 
+            <a class="xref" href="typehierarchy.html#subtype-sub-exception" title="Subtype-Substitution Rule Exception">Subtype-Substitution Rule Exception</a>).
+        </p>
+      <p>
+            The following figure illustrates this data hierarchy. Dotted
+            boxes in the figure represent collections of types.
+        </p>
+      <div class="mediaobject">
+        <img src="datahierarchy.jpg" />
+      </div>
+      <p>
+            In addition to the subtype relationships described here, the following
+            relationships are also defined:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    Every type is a subtype of itself. A type (T) is a
+                    proper subtype of another type (S) if (T) is a subtype
+                    of (S) and (T) is not equal to (S).
+                </p>
+          </li>
+          <li>
+            <p>
+                    An enum type is a subtype of another enum type if both
+                    types contain the same tokens and in the same order, in
+                    which case the types are actually considered equal.
+                </p>
+          </li>
+          <li>
+            <p>
+                    Timestamp(p1) is a subtype of Timestamp(p2) if p1 &lt;= p2.
+                </p>
+          </li>
+          <li>
+            <p>
+                    A record type (S) is a subtype of another record type (T)
+                    if: 
+                </p>
+            <div class="orderedlist">
+              <ol type="1">
+                <li>
+                  <p>
+                            both types contain the same field names in the same order; and
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            for each field, its value type in (s) is a
+                            subtype of its value type in (T); and
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            nullable fields in (S), are also nullable in (T).
+                        </p>
+                </li>
+              </ol>
+            </div>
+          </li>
+          <li>
+            <p>
+                    (Array(S)) is a subtype of (Array(T)) if (S) is a subtype of (T).
+                </p>
+          </li>
+          <li>
+            <p>
+                    (Map(S)) is a subtype of (Map(T)) if (S) is a subtype of (T).
+                </p>
+          </li>
+        </ul>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="subtype-sub-exception"></a>Subtype-Substitution Rule Exception</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                Ordinarily, if an operation expects input items of type
+                (T), or produces items of type (T), then it can also
+                operate on or produce items of type (S) if (S) is a subtype
+                of (T). However, there is an exception to this rule.
+            </p>
+        <p>
+				Items whose type is a proper subtype of Array(JSON) or Map(JSON)
+                cannot be used as:
+            </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                        record/map field values if the field type is JSON,
+                        Array(JSON) or Map(JSON); or
+                    </p>
+            </li>
+            <li>
+              <p>
+                        elements of arrays whose element type is JSON,
+                        Array(JSON) or Map(JSON). 
+                    </p>
+            </li>
+          </ul>
+        </div>
+        <p>
+                This is in order to disallow strongly type data to be
+                inserted into JSON data. 
+            </p>
+        <p>
+                For example, consider a JSON document which is a map value
+                whose associated type is Map(JSON). The document may
+                contain an array whose values contain only integers.
+                However, the type associated with the array cannot be
+                Array(integer), it must be Array(JSON). If the array had
+                type Array(integer), the user would not be able to add any
+                non-integer values to it. 
+            </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="timestamp.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="introduction_sql.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="whatisasequence.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Timestamp </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> SQL for Oracle NoSQL Database Sequences</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

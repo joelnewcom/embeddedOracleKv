@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>General Index Views Considerations</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with Oracle NoSQL Database Key/Value API" />
+    <link rel="up" href="indexviews.html" title="Chapter 13. Index Views" />
+    <link rel="prev" href="keyonlyindexviews.html" title="Using Key-Only Records" />
+    <link rel="next" href="secondaryexample.html" title="Example" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">General Index Views Considerations</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="keyonlyindexviews.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 13. Index Views</th>
+          <td width="20%" align="right"> <a accesskey="n" href="secondaryexample.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="viewconsiderations"></a>General Index Views Considerations</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="viewconsiderations.html#additionalwrite">Additional Write Activity</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="viewconsiderations.html#nonatomic">Non-Atomic Updates</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="viewconsiderations.html#secondary-consistency">Decoupled Consistency</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+            While creating index views can vastly improve
+            your stores read performance (depending on the size of your
+            data set, and the kinds of questions you want to ask of it),
+            there are some limitations of which you need to be aware.
+        </p>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="additionalwrite"></a>Additional Write Activity</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                Maintaining an index view necessarily requires
+                additional read and write activity over and above what is
+                required just to maintain a primary record. Whether this
+                additional activity will measurably affect your write
+                throughput depends on the size of the dataset you are
+                indexing, and the size of your views. 
+            </p>
+        <p>
+                For small datasets and small views, this additional
+                activity will not be noticeable. But as the size of the
+                data to be indexed grows, and so your views themselves
+                grow larger, you might notice a reduction in throughput,
+                particularly in write throughput. Given this, when planning
+                your store size, be sure to consider overhead to maintain
+                index views.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="nonatomic"></a>Non-Atomic Updates</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                Because index views are managed by the application, Oracle NoSQL Database
+                cannot insure that operations performed on the primary
+                record are atomic with operations performed on the
+                corresponding view records.  This means that it is possible
+                to change your primary records, but have the corresponding
+                operation(s) on your index view(s) fail thereby causing
+                them to be out of sync with the primary data. The reverse
+                can also happen, where the index view update operation is
+                successful, but the update to the primary record fails.
+            </p>
+        <p>
+                Note that for some workloads, non-atomic updates to primary
+                records and their index views can be desirable. This is
+                sometimes the case for workloads that require the maximum
+                read and write throughput possible. For these types of
+                applications, consistency between the index view and the
+                primary data is not nearly as important as overall
+                performance. 
+            </p>
+        <p>
+                That said, you should still make an attempt to determine
+                whether your indexes are out of sync relative to your
+                primary data, so that you can perform compensating
+                transactions if your code detects a problem.
+                You may also need to flag your index views as being in an
+                unsafe state if some aspect of the update operations fail.
+                The safest way (not necessarily the fastest way) to update
+                a primary record for which you are maintaining an index
+                view is:
+            </p>
+        <div class="orderedlist">
+          <ol type="1">
+            <li>
+              <p>
+                        Check whether your view is in a READY state. If
+                        it is, proceed with the update operation. If it
+                        is not, either pause and wait for the state to
+                        change, or abort the update entirely.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        Update your primary record as necessary, but
+                        <span class="emphasis"><em>do not write the results back to the
+                        store yet.</em></span>
+                    </p>
+            </li>
+            <li>
+              <p>
+                        Update your index view to be reflective of the
+                        changes you have made to the primary record.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        Write the primary record to the store.
+                        If the write fails, perform a compensating
+                        transaction to fix the problem. Either retry the
+                        write operation with the updated record, or check
+                        to ensure that the record which is currently in the store 
+                        is not corrupted or altered in any way.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        If the update to the primary record succeeds, then 
+                        write the changes to the index view to the store.
+                        If this succeeds, then you are done with your
+                        update.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        If the update to the index view record fails, then
+                        immediately mark your index view as being in a
+                        non-READY state. How you do this depends on how you
+                        are storing index view state flags, but assuming
+                        you are using metadata records, that needs to be
+                        updated before you take steps to fix your index
+                        view.
+                    </p>
+            </li>
+          </ol>
+        </div>
+        <p>
+                A similar algorithm is required for the creation and
+                deletion of primary records.
+            </p>
+        <p>
+                Of course, this means that before you perform a read with
+                your index view, you need to check the view's state before
+                you proceed. If the view's state is not READY, then you
+                need to either pause until the state is READY, or you need
+                to abandon the read entirely. In addition to this check,
+                you also need to ensure that your index views are in a
+                state that is consistent with the primary records. This is
+                described next.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="secondary-consistency"></a>Decoupled Consistency</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                As described above, index views can be out of sync with
+                your primary data due to some generic failure in the update
+                operation. Your code needs to be robust enough to recognize
+                when this has happened, and take corrective action
+                (including rebuilding the index view, if necessary).
+                A related, but temporary, problem is that for
+                any given node, changes to your views may not have caught up
+                to changes to your primary records due to replication
+                delays. Note that it is also possible for views on the
+                local node to have been updated when the corresponding
+                primary data modifications have not yet arrived.
+            </p>
+        <p>
+                Again, for some workloads, it might not be critically
+                important that your views are in sync with your primary
+                data. However, if your workload is such that you need
+                assurance your views accurately reflect your primary
+                data, you need to make use of Oracle NoSQL Database's built-in consistency
+                guarantees.
+            </p>
+        <p>
+                One way to do this is to use an absolute consistency
+                guarantee for any reads that you perform using your views.
+                But this can ultimately harm your read and write
+                performance because absolute consistency requires the read
+                operation to be performed on a master node. 
+                (See 
+                <a class="xref" href="consistency-pre.html" title="Using Simple Consistency">Using Simple Consistency</a>
+                 for details.) For this reason, you should use absolute
+                 consistency only when it is truly critical that your views
+                 are completely up-to-date relative to your primary data.
+            </p>
+        <p>
+                A better way to resolve the problem is to use a version-based
+                consistency guarantee when using your index views.
+                You will need to check the version information on
+                both the primary data and the views when
+                performing your reads in order to ensure that they are in
+                sync. You may also need to create a way to transfer version
+                information between different processes in your
+                application, if one process is responsible for performing
+                store writes and other processes are performing store
+                reads. For details on using version-based consistency, see
+                <a class="xref" href="consistency-version.html" title="Using Version-Based Consistency">Using Version-Based Consistency</a>.
+            </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="keyonlyindexviews.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="indexviews.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="secondaryexample.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Using Key-Only Records </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Example</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

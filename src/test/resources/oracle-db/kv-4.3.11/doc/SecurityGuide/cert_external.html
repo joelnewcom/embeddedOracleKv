@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Guidelines for Configuring External Certificates for a new Installation</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Security Guide" />
+    <link rel="up" href="security_guidelines.html" title="Chapter 12. Keeping Oracle NoSQL Database Secure" />
+    <link rel="prev" href="update_cert.html" title="Guidelines for Updating the SSL key/certificate" />
+    <link rel="next" href="external_running.html" title="Guidelines for Configuring External Certificates for an Existing Default Secure Installation" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Guidelines for Configuring External Certificates for a new Installation</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="update_cert.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 12. Keeping Oracle NoSQL Database Secure</th>
+          <td width="20%" align="right"> <a accesskey="n" href="external_running.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="cert_external"></a>Guidelines for Configuring External Certificates for a new Installation</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            Follow these steps to configure a new store to use external certificates:
+        </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+            This procedure assumes you already have a Java keystore and truststore setup. For more information see
+            <a class="xref" href="keystore_prep.html" title="Appendix C. Java KeyStore Preparation">Java KeyStore Preparation</a>.
+          </p>
+      </div>
+      <div class="orderedlist">
+        <ol type="1">
+          <li>
+            <p>
+                    Collect the distinguished name from the verbose information of the external certificate. In this example, it is the value of the owner field.
+                </p>
+            <pre class="programlisting">keytool -list -v -keystore store.keys alias shared
+Certificate chain length: 3
+Certificate[1]:
+Owner: CN=myhost, OU=TeamA, O=MyCompany, L=Unknown, ST=California, 
+C=US
+Issuer: CN=intermediate CA, OU=CA, O=MyCompany, ST=California, 
+C=US </pre>
+          </li>
+          <li>
+            <p>
+                    Run makebootconfig to setup the new secure store, also specify the keystore password and DN of certificates in the security parameters.
+                </p>
+            <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+              <h3 class="title">Note</h3>
+              <p>
+                    The text for the dnmatch expression needs to match the owner distinguished name exactly (from the previous step), including the order of the fields, capitalization, and spaces. Also, the KeyStore password "sslPwd" must use the same password as the Java Keystore of external certificates.
+                  </p>
+            </div>
+            <pre class="programlisting">java -Xmx256m -Xms256m -jar KVHOME/lib/kvstore.jar makebootconfig \
+-root KVROOT -host node01 -port 5000 -harange 5010,5020 -admin 5001 \
+-store-security configure \
+-pwdmgr wallet -kspwd sslPwd \
+-security-param client:serverIdentityAllowed="dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-security-param internal:serverIdentityAllowed="dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-security-param internal:clientIdentityAllowed="dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-security-param ha:serverIdentityAllowed="dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)" \
+-security-param ha:clientIdentityAllowed="dnmatch
+(CN=myhost, OU=TeamA, O=MyCompany, L=Unknown,
+ST=California, C=US)"</pre>
+          </li>
+          <li>
+            <p>
+                    The makebootconfig command automatically generates keystore, server, and client truststore files using self-signed certificates. To use external certificates instead, you need to replace the keystore and truststore files with your own on each server that will host a Storage Node. For example:
+                </p>
+            <pre class="programlisting">copy store.keys store.trust client.trust KVROOT/security/ </pre>
+          </li>
+          <li>
+            <p>
+                    Use the securityconfig tool to verify installation. For example:
+                </p>
+            <pre class="programlisting">security-&gt; config verify -secdir KVROOT/security
+Security configuration verification passed.</pre>
+            <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+              <h3 class="title">Note</h3>
+              <p>
+                    For previous releases (prior 4.1), you need to verify the configuration manually. The distinguished name of the certificate must match the content inside of dnmatch
+                    in security.xml. Also, the user-generated keystore password must be the same as the one stored
+                    in the wallet (store.wallet) or the password file (store.pwd). Finally, the truststore (store.trust) must contain the CA
+                    certificates and the one used for Oracle NoSQL Database.
+                </p>
+            </div>
+          </li>
+          <li>
+            <p>
+                  Finally, deliver the client.trust or import the CA certificates into the client truststore.
+                </p>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="update_cert.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="security_guidelines.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="external_running.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Guidelines for Updating the SSL key/certificate </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Guidelines for Configuring External Certificates for an Existing Default Secure Installation</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

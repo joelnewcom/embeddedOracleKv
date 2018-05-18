@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Basic Queries</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="json.html" title="Chapter 10. Working with JSON" />
+    <link rel="prev" href="json.html" title="Chapter 10. Working with JSON" />
+    <link rel="next" href="existsexample.html" title="Using Exists with JSON" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Basic Queries</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="json.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 10. Working with JSON</th>
+          <td width="20%" align="right"> <a accesskey="n" href="existsexample.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="jsonbasic"></a>Basic Queries</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            Because JSON is parsed and stored in native data formats
+            internally with Oracle NoSQL Database, querying JSON data is not any different
+            from querying data in other column types. See 
+            <a class="xref" href="simple_expressions.html" title="Chapter 7. Simple Select-From-Where Queries">Simple Select-From-Where Queries</a>
+            and 
+            <a class="xref" href="complextypes.html" title="Chapter 8. Working with complex data">Working with complex data</a>
+            for introductory examples of how to form these queries.
+        </p>
+      <p>
+            In our JSONPersons example, all of the data for each person is
+            contained in a column of type JSON called
+            <code class="literal">person</code>. This data is presented as a JSON
+            object, which is mapped internally into a Map(JSON) type. You 
+            can therefore query information in this column in the same
+            way as you would if you were operating on a Map of any
+            other type. For example:
+        </p>
+      <pre class="programlisting">
+sql-&gt; SELECT id, j.person.lastname, j.person.age FROM JSONPersons j;
+ +----+---------------------+------------+
+ | id |      lastname       |    age     |
+ +----+---------------------+------------+
+ |  3 | Morgan              | 38         |
+ +----+---------------------+------------+
+ |  2 | Anderson            | 35         |
+ +----+---------------------+------------+
+ |  5 | Scully              | 47         |
+ +----+---------------------+------------+
+ |  1 | Morrison            | 25         |
+ +----+---------------------+------------+
+ |  4 | Smith               | 38         |
+ +----+---------------------+------------+
+ |  6 | NULL                | NULL       |
+ +----+---------------------+------------+
+
+6 rows returned </pre>
+      <p>
+            Notice that the last row in the result set contains all NULLs.
+            This is because that row was populated using a JSON object that
+            looks nothing like the objects used to populate the rest of our
+            table. This is both a strength and a weakness of using JSON.
+            You can modify your schema easily, but if you are not careful
+            you can end up with tables containing dissimilar data in both
+            big and small ways.
+        </p>
+      <p>
+            Because the JSON object is stored as a map, you can use normal
+            map step functions on the column. For example:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, j.person.expenses.keys($value &gt; 1000) as Expenses 
+from JSONPersons j;
++----+---------------------+
+ | id |      Expenses       |
+ +----+---------------------+
+ |  3 | food                |
+ +----+---------------------+
+ |  2 | food                |
+ |    | travel              |
+ +----+---------------------+
+ |  4 | clothes             |
+ |    | food                |
+ |    | shoes               |
+ +----+---------------------+
+ |  6 | NULL                |
+ +----+---------------------+
+ |  5 | clothes             |
+ +----+---------------------+
+ |  1 | NULL                |
+ +----+---------------------+
+
+6 rows returned </pre>
+      <p>
+                Here, id 1 is NULL because that user had no expenses
+                greater than $1000, while id 6 is NULL because it has no
+                <code class="literal">j.person.expenses</code> field.
+            </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="json.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="json.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="existsexample.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Chapter 10. Working with JSON </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Using Exists with JSON</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

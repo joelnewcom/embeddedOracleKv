@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Appendix B. CLI Command Reference</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="prev" href="configure_non-secure.html" title="Appendix A.  Installing and Configuring a Non-secure Store" />
+    <link rel="next" href="await-consistent.html" title="await-consistent" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Appendix B. CLI Command Reference</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="configure_non-secure.html">Prev</a> </td>
+          <th width="60%" align="center"> </th>
+          <td width="20%" align="right"> <a accesskey="n" href="await-consistent.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="appendix" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title"><a id="cli_command_reference"></a>Appendix B. CLI Command Reference</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            This appendix describes the following commands:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                        <a class="xref" href="cli_command_reference.html#aggregate" title="aggregate">aggregate </a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="await-consistent.html" title="await-consistent">await-consistent</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="change-policy.html" title="change-policy">change-policy</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="configure_store.html" title="configure">configure</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="connect.html" title="connect">connect</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="delete.html" title="delete">delete</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="ddl.html" title="ddl">ddl</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="execute.html" title="execute">execute</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="exit.html" title="exit">exit</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="get.html" title="get">get </a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="help.html" title="help">help</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="hidden.html" title="hidden">hidden</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="history.html" title="history">history</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="load.html" title="load">load</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="logtail.html" title="logtail">logtail</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="page.html" title="page">page</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="ping.html" title="ping">ping</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="plan.html" title="plan">plan</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="pool.html" title="pool">pool</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="put_command.html" title="put">put</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="repair-admin-quorum.html" title="repair-admin-quorum">repair-admin-quorum</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="show.html" title="show">show</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="snapshot.html" title="snapshot">snapshot</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="table.html" title="table">table</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="table_size.html" title="table-size">table-size</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="timer.html" title="timer">timer</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html" title="topology">topology</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="verbose.html" title="verbose">verbose</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="verify.html" title="verify">verify</a>
+                    </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+            The Command Line Interface (CLI) is run interactively
+            or used to run single commands. The general usage to start
+            the CLI is:
+        </p>
+      <pre class="programlisting">java -Xmx256m -Xms256m \
+-jar KVHOME/lib/kvstore.jar runadmin \
+-host &lt;hostname&gt; -port &lt;port&gt; [single command and arguments] 
+-security KVROOT/security/client.security</pre>
+      <p>
+            If you want to run a script file, you can use the
+            "load" command on the command line:
+        </p>
+      <pre class="programlisting">java -Xmx256m -Xms256m \
+-jar KVHOME/lib/kvstore.jar runadmin -host &lt;hostname&gt; -port &lt;port&gt; \
+-security \
+KVROOT/securtiy/client.security \
+load -file &lt;path-to-script&gt;</pre>
+      <p>
+            If none of the optional arguments are passed, it starts
+            interactively. If additional arguments are passed they are
+            interpreted as a single command to run, then return. The
+            interactive prompt for the CLI is:
+        </p>
+      <pre class="programlisting">"kv-&gt; "</pre>
+      <p>
+            Upon successful completion of the command, the CLI's
+            process exit code is zero. If there is an error, the exit
+            code will be non-zero.
+        </p>
+      <p>
+            The CLI comprises a number of commands, some of which
+            have subcommands. Complex commands are grouped by general
+            function, such as "show" for displaying information or
+            "ddl" for manipulating schema. All commands accept the
+            following flags:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    -help
+                </p>
+            <p>
+                    Displays online help for the command or
+                    subcommand.
+                </p>
+          </li>
+          <li>
+            <p>
+                    ?
+                </p>
+            <p>
+                    Synonymous with -help. Displays online help for
+                    the command or subcommand.
+                </p>
+          </li>
+          <li>
+            <p>
+                    -verbose
+                </p>
+            <p>
+                    Enables verbose output for the command.
+                </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+            CLI commands have the following general format:
+        </p>
+      <div class="orderedlist">
+        <ol type="1">
+          <li>
+            <p>
+                    All commands are structured like this:
+                </p>
+            <pre class="programlisting">"kv-&gt; command [sub-command] [arguments] </pre>
+          </li>
+          <li>
+            <p>
+                    All arguments are specified using flags which
+                    start with "-"
+                </p>
+          </li>
+          <li>
+            <p>
+                    Commands and subcommands are case-insensitive
+                    and match on partial strings(prefixes) if
+                    possible. The arguments, however, are
+                    case-sensitive.
+                </p>
+          </li>
+        </ol>
+      </div>
+      <p>
+           Inside a CLI script file, you can use <code class="literal">#</code> to designate
+           a comment. Also, you can terminate a line with a backslash <code class="literal">\</code> to
+           continue a command onto the next line.
+        </p>
+      <div class="sect1" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="aggregate"></a>aggregate </h2>
+            </div>
+          </div>
+        </div>
+        <div class="toc">
+          <dl>
+            <dt>
+              <span class="sect2">
+                <a href="cli_command_reference.html#aggregate_kv">aggregate kv</a>
+              </span>
+            </dt>
+            <dt>
+              <span class="sect2">
+                <a href="cli_command_reference.html#aggregate-table">aggregate table</a>
+              </span>
+            </dt>
+          </dl>
+        </div>
+        <p>
+                Performs simple data aggregation operations on
+                numeric fields like count, sum, average, keys, start
+                and end. The aggregate command iterates matching keys
+                or rows in the store so, depending on the size of the
+                specified key or row, it may take a very long time to
+                complete.
+            </p>
+        <p>
+                The aggregate subcommands are:
+            </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                        <a class="xref" href="cli_command_reference.html#aggregate_kv" title="aggregate kv">aggregate kv</a>
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <a class="xref" href="cli_command_reference.html#aggregate-table" title="aggregate table">aggregate table</a>
+                    </p>
+            </li>
+          </ul>
+        </div>
+        <div class="sect2" lang="en" xml:lang="en">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a id="aggregate_kv"></a>aggregate kv</h3>
+              </div>
+            </div>
+          </div>
+          <pre class="programlisting">aggregate kv [-count] [-sum &lt;field[,field,..]&gt;] [-avg &lt;field[,field,..]&gt;]
+              [-key &lt;key&gt;] [-schema &lt;name&gt;]
+              [-start &lt;prefixString&gt;] [-end &lt;prefixString&gt;] </pre>
+          <p>
+                Performs simple data aggregation operations using the
+                specified key.
+              </p>
+          <p>
+                where:
+              </p>
+          <div class="itemizedlist">
+            <ul type="disc">
+              <li>
+                <p>
+                    <code class="literal">-count</code>
+                  </p>
+                <p>
+                      Returns the count of matching records.
+                    </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-sum</code>
+                  </p>
+                <p>
+                        Returns the sum of the values of matching fields. All
+                        records with a specified schema with the named field
+                        are matched. Unmatched records are ignored.
+                   </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-avg</code>
+                  </p>
+                <p>
+                        Returns the average of the values of
+                        matching fields. All records with a specified schema
+                        with the named field are matched. Unmatched
+                        records are ignored.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-key</code>
+                  </p>
+                <p>
+                    Specifies the key (prefix) to use.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-schema</code>
+                  </p>
+                <p>
+                    Specifies the Avro schema to use.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-start</code> and
+                    <code class="literal">-end</code> flags
+                  </p>
+                <p>
+                        Restricts the range used for iteration.
+                        This is particularly helpful when getting a
+                        range of records based on a key component,
+                        such as a well-formatted string.
+                        <code class="literal">-start</code> and
+                        <code class="literal">-end</code> arguments are
+                        inclusive.
+                  </p>
+              </li>
+            </ul>
+          </div>
+          <p>
+                    For example, a simple <code class="literal">count</code> of
+                    all records in the store:
+              </p>
+          <pre class="programlisting">kv-&gt; aggregate kv -count
+count: 33508 </pre>
+          <p>
+                <code class="literal">Sum</code> and <code class="literal">average</code>
+                operate on specific field names in matching records
+                which means that only Avro records containing the
+                named fields are used. Sum and average only operate on
+                numeric fields of Avro types INT, LONG, FLOAT, and
+                DOUBLE.
+              </p>
+          <p>
+                For example, with the following schema:
+              </p>
+          <pre class="programlisting">{
+   "type" : "record",
+   "name" : "Cookie",
+   "fields" : [ {
+   "name" : "id",
+   "type" : "string",
+   "default" : ""
+   }, {
+     "name" : "frequency",
+     "type" : "int",
+     "default" : 0
+   }, {
+     "name" : "lastVisit",
+     "type" : "string",
+     "default" : ""
+   }, {
+     "name" : "segments",
+     "type" : {
+        "type" : "array",
+     "items" : "string"
+     },
+     "default" : [ ]
+   } ]
+} </pre>
+          <p>
+                An example of <code class="literal">sum</code> on a field
+                named <code class="literal">frequency</code>:
+              </p>
+          <pre class="programlisting">kv-&gt; aggregate kv -sum frequency -key /visits/charitable_donors/date
+sum(frequency): 2068 </pre>
+          <p>
+                An example of <code class="literal">average</code> on a field
+                named <code class="literal">frequency</code>:
+              </p>
+          <pre class="programlisting">kv -&gt; aggregate kv -avg frequency -key /visits/charitable_donors/date
+avg(frequency): 2.494571773220748 </pre>
+        </div>
+        <div class="sect2" lang="en" xml:lang="en">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a id="aggregate-table"></a>aggregate table</h3>
+              </div>
+            </div>
+          </div>
+          <pre class="programlisting">aggregate table -name &lt;name&gt;
+    [-count] [-sum &lt;field[,field,..]&gt;]
+    [-avg &lt;field[,field,..]&gt;]
+    [-index &lt;name&gt;]
+    [-field &lt;name&gt; -value &lt;value&gt;]*
+    [-field &lt;name&gt; [-start &lt;value&gt;] [-end &lt;value&gt;]]
+    [-json &lt;string&gt;] </pre>
+          <p>
+                Performs simple data aggregation operations on numeric
+                fields of the table.
+              </p>
+          <p>
+                where:
+              </p>
+          <div class="itemizedlist">
+            <ul type="disc">
+              <li>
+                <p>
+                    <code class="literal">-name</code>
+                  </p>
+                <p>
+                      Specifies the table for the operation.
+                    </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-count</code>
+                  </p>
+                <p>
+                      Returns the count of matching records.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-sum</code>
+                  </p>
+                <p>
+                    Returns the sum of the values of matching
+                    fields.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-avg</code>
+                  </p>
+                <p>
+                    Returns the average of the values of
+                    matching fields.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-index</code>
+                  </p>
+                <p>
+                    Specifies the name of the index to use.  When an
+                    index is used, the fields named must belong to the
+                    specified index and the aggregation is performed
+                    over rows with matching index entries.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-field</code> and
+                    <code class="literal">-value</code> pairs are
+                    used to specify the field values of the
+                    primary key to use to match for the aggregation,
+                    or you can use an empty key to match the entire table.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    The <code class="literal">-field</code> flat, along
+                    with its
+                    <code class="literal">-start</code> and
+                    <code class="literal">-end</code> flags, can be used
+                    for restricting the range used to match rows.
+                  </p>
+              </li>
+              <li>
+                <p>
+                    <code class="literal">-json</code>
+                  </p>
+                <p>
+                    Specifies the fields and values to use for the
+                    aggregation as a JSON input string.
+                  </p>
+              </li>
+            </ul>
+          </div>
+          <p>
+                See the example below:
+              </p>
+          <pre class="programlisting"># Create a table 'user_test' with an index on user_test(age):
+kv-&gt; execute 'CREATE TABLE user_test (id INTEGER,
+firstName STRING, lastName STRING, age INTEGER, PRIMARY KEY (id))'
+Statement completed successfully
+
+kv-&gt; execute 'CREATE INDEX idx1 on user_test (age)'
+Statement completed successfully
+
+# Insert 3 rows:
+kv-&gt; put table -name user_test -json
+'{"id":1,"firstName":"joe","lastName":"wang","age":21}'
+Operation successful, row inserted.
+kv-&gt; put table -name user_test -json
+'{"id":2,"firstName":"jack","lastName":"zhao","age":32}'
+Operation successful, row inserted.
+kv-&gt; put table -name user_test -json
+'{"id":3,"firstName":"john","lastName":"gu","age":43}'
+Operation successful, row inserted.
+
+# Get count(*), sum(age) and avg(age) of rows in table:
+kv-&gt; aggregate table -name user_test -count -sum age -avg age
+Row count: 3
+Sum:
+        age(3 values): 96
+Average:
+        age(3 values): 32.00
+
+# Get count(*), sum(age) and avg(age) of rows where
+age &gt;= 30, idx1 is utilized to filter the rows:
+kv-&gt; aggregate table -name user_test -count -sum age
+-avg age -index idx1 -field age -start 30
+Row count: 2
+Sum:
+        age(2 values): 75
+Average:
+        age(2 values): 37.50
+</pre>
+        </div>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="configure_non-secure.html">Prev</a> </td>
+          <td width="20%" align="center"> </td>
+          <td width="40%" align="right"> <a accesskey="n" href="await-consistent.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Appendix A. 
+   Installing and Configuring a Non-secure Store </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> await-consistent</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

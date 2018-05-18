@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Using binding variables</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with Oracle NoSQL Database Tables" />
+    <link rel="up" href="sql_tables.html" title="Chapter 4. Introduction to SQL for Oracle NoSQL Database" />
+    <link rel="prev" href="sql_tables.html" title="Chapter 4. Introduction to SQL for Oracle NoSQL Database" />
+    <link rel="next" href="access_metadata.html" title="Accessing metadata" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Using binding variables</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="sql_tables.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 4. Introduction to SQL for Oracle NoSQL Database</th>
+          <td width="20%" align="right"> <a accesskey="n" href="access_metadata.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="using_binding"></a>Using binding variables</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+        To declare a binding variable, you need to create an instance of <code class="classname">PreparedStatement</code>.
+        An instance of PreparedStatement can be created through the
+        <code class="methodname">KVStore.prepare()</code> method.
+    </p>
+      <p>
+        You can specify zero or more variable declarations. The syntax for a variable is:
+    </p>
+      <pre class="programlisting">DECLARE $varname vartype; </pre>
+      <p>
+       If the DML statement contains external variables, the PreparedStatement
+       can be executed multiple times by creating an instance of <code class="classname">BoundStatement</code>.
+       The external variables must be bound to specific values before the statement can be
+       executed. To allow for the potentially concurrent execution of the same
+       PreparedStatement multiple times with different bind values each time,
+       binding of external variables must be done through one or more instances of
+       <code class="classname">BoundStatement</code>. Such instances are created using the
+       <code class="methodname">createBoundStatement()</code> method.
+    </p>
+      <p>
+        This instance can then be executed
+        multiple times using the <code class="methodname">KVStore.execute()</code> or
+        <code class="methodname">KVStore.executeSync()</code> methods.
+    </p>
+      <p>
+       For example:
+    </p>
+      <pre class="programlisting">// kvstore handle creation omitted.
+
+// Compile the statement.
+PreparedStatement pStmt = store.prepare(
+   "DECLARE $minAge integer; $maxAge integer;  " +
+   "SELECT id, firstName FROM Users WHERE
+    age &gt;= $minAge and age &lt; $maxAge ");
+
+// Iterate decades
+for( int age = 0; age &lt;= 100; age = age + 10 ) {
+
+    int maxAge = age + ( age &lt; 100 ? 10 : 1000 );
+    System.out.println("Persons with ages between " + age +
+    " and " + maxAge + ".");
+    // Bind variables, reuse the same pStmt
+    BoundStatement bStmt = pStmt.createBoundStatement();
+    bStmt.setVariable("$minAge", age);
+    bStmt.setVariable("$maxAge", maxAge);
+
+    // Execute the statement
+    StatementResult result = store.executeSync(bStmt);
+
+    // Get the results in the current decade
+    for( RecordValue record : result ) {
+
+    System.out.println("id: " +
+    record.get("id").asInteger().get() );
+    System.out.println("firstName: " +
+    record.get("firstName").asString().get());
+    }
+}</pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="sql_tables.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="sql_tables.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="access_metadata.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Chapter 4. Introduction to SQL for Oracle NoSQL Database </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Accessing metadata</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

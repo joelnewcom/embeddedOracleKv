@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>SQL for Oracle NoSQL Database Sequences</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="introduction_sql.html" title="Chapter 1. The SQL for Oracle NoSQL Database Data Model" />
+    <link rel="prev" href="typehierarchy.html" title="Type Hierarchy" />
+    <link rel="next" href="sfw_expression.html" title="Chapter 2. SQL for Oracle NoSQL Database Queries" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">SQL for Oracle NoSQL Database Sequences</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="typehierarchy.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 1. The SQL for Oracle NoSQL Database Data Model</th>
+          <td width="20%" align="right"> <a accesskey="n" href="sfw_expression.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="whatisasequence"></a>SQL for Oracle NoSQL Database Sequences</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            A <span class="emphasis"><em>sequence</em></span> is an important concept in SQL
+            for Oracle NoSQL Database. It is used wherever expressions and operators are
+            discussed.
+        </p>
+      <p>
+            A sequence is the result of any expression that returns zero or
+            more items. Sequences are not containers; they cannot be nested.
+        </p>
+      <p>
+            Note that an array is not a sequence; rather it is a single
+            item that contains other items in it.
+        </p>
+      <p>
+            Sequences have a type. A sequence type specifies the
+            type of items that may appear in a sequence. For example,
+            a sequence could contain atomic elements that are of type integer.
+            In this case, the sequence type would be integer.
+        </p>
+      <p>
+            Sequence types have a cardinality.  The cardinality indicates
+            constraints on how many items can or must appear in the
+            sequence:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    <code class="literal">*</code>
+                </p>
+            <p>
+                    indicates a sequence of zero or more items.
+                </p>
+          </li>
+          <li>
+            <p>
+                    <code class="literal">+</code>
+                </p>
+            <p>
+                    indicates a sequence of one or more items.
+                </p>
+          </li>
+          <li>
+            <p>
+                    <code class="literal">?</code>
+                </p>
+            <p>
+                    indicates a sequence of zero or one items.
+                </p>
+          </li>
+          <li>
+            <p>
+                    The absence of a quantifier indicates a sequence of
+                    exactly one item.
+                </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+            When we say that the result of an expression must have a
+            sequence of a certain type, what we mean is the sequence must
+            have that type or any subtype of that type.
+        </p>
+      <p>
+            Sequence subtypes are defined as follows:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    The empty sequence is a subtype of all sequence types
+                    whose quantifier is <code class="literal">*</code> or
+                    <code class="literal">?</code>.
+                </p>
+          </li>
+          <li>
+            <p>
+                    A sequence type (s1) is a subtype of another sequence
+                    type (s2) if:
+                </p>
+            <div class="itemizedlist">
+              <ul type="circle">
+                <li>
+                  <p>
+                            s1's item type is a subtype of s2's item type; and
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            s1's sequence quantifier is a sub-quantifier for
+                            s2's quantifier.
+                        </p>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <p>
+            The following table shows the subtype relationship for the various 
+            quantifiers:
+        </p>
+      <div class="mediaobject">
+        <img src="type-subtype.jpg" width="270" />
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="typehierarchy.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="introduction_sql.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="sfw_expression.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Type Hierarchy </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Chapter 2. SQL for Oracle NoSQL Database Queries</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

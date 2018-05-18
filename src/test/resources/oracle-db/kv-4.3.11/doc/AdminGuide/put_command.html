@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>put</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="pool.html" title="pool" />
+    <link rel="next" href="repair-admin-quorum.html" title="repair-admin-quorum" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">put</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="pool.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="repair-admin-quorum.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="put_command"></a>put</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="put_command.html#put_kv">put kv</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="put_command.html#put_table">put table</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+                Encapsulates commands that put key/value pairs to
+                the store or put rows to a table. The subcommands are
+                as follows:
+            </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                        <a class="xref" href="put_command.html#put_kv" title="put kv">put kv</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+
+                        <a class="xref" href="put_command.html#put_table" title="put table">put table</a>
+                    </p>
+          </li>
+        </ul>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="put_kv"></a>put kv</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">put kv -key &lt;keyString&gt; -value &lt;valueString&gt; [-file]
+    [-hex | -json &lt;schemaName&gt;] [-if-absent] [-if-present] </pre>
+        <p>
+                    Put the specified key/value pair into the
+                    store. The following arguments apply to the put
+                    command:
+                </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                            <code class="literal">-key&lt;keyString&gt;</code>
+                        </p>
+              <p>
+                            Specifies the name of the key to be put
+                            into the store. Key can be composed of
+                            both major and minor key paths, or a major
+                            key path only. The &lt;keyString&gt;
+                            format is:
+                            "major-key-path/-/minor-key-path".
+                        </p>
+              <p>
+                            For example, a key containing major and
+                            minor key paths:
+                        </p>
+              <pre class="programlisting">kv-&gt; put -key /Smith/Bob/-/email -value
+"{\"id\": 1,\"email\":\"bob.smith@gmail.com\"}" 
+-json schema.EmailInfo </pre>
+              <p>
+                            For example, a key containing only a
+                            major key path:
+                        </p>
+              <pre class="programlisting">kv-&gt; put -key /Smith/Bob -value"{\"name\":
+ \"bob.smith\", \"age\": 20, \"phone\":\"408 555 5555\", \"email\":
+ \"bob.smith@gmail.com\"}" -json schema.UserInfo </pre>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-value
+                                &lt;valueString&gt;</code>
+                        </p>
+              <p>
+                            If neither -json or -file is specified,
+                            the &lt;valueString&gt; is treated as a
+                            raw bytes array.
+                        </p>
+              <p>
+                            For example:
+                        </p>
+              <pre class="programlisting">kv-&gt; put -key /Smith/Bob/-/phonenumber -value "408 555 5555"</pre>
+              <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+                <h3 class="title">Note</h3>
+                <p>
+                                The mapping of the raw arrays to
+                                data structures (serialization and
+                                deserialization) is left entirely to
+                                the application.
+                            </p>
+              </div>
+              <p>
+                            If used with <code class="literal">-json</code>
+                            to specify a Json string, the
+                            <code class="literal">valueString</code> should
+                            be encapsulated in quotation marks, and
+                            its internal field name and value with
+                            string type should also be encapsulated by
+                            string quote characters.
+                        </p>
+              <p>
+                            For example:
+                        </p>
+              <pre class="programlisting">kv-&gt; put -key /Smith/John/-/email -value
+"{\"id\": 1,\"email\":\"john.smith@gmail.com\"}" 
+-json schema.EmailInfo </pre>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-file</code>
+                        </p>
+              <p>
+                            Indicates that the value is obtained
+                            from a file. The file to use is identified
+                            by the value parameter.
+                        </p>
+              <p>
+                            For example:
+                        </p>
+              <pre class="programlisting">kv-&gt; put -key /Smith/Bob -value ./smith-bob-info.txt
+ -file -json schema.UserInfo </pre>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-hex</code>
+                        </p>
+              <p>
+                            Indicates that the value is a BinHex
+                            encoded byte value with base64 encoding.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-json&lt;schemaName&gt;</code>
+                        </p>
+              <p>
+                            Indicates that the value is a JSON
+                            string. Can be specified along with
+                            <code class="literal">-file</code>.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-if-absent</code>
+                        </p>
+              <p>
+                            Indicates that a key/value pair is
+                            <code class="literal">put</code> only if no
+                            value for the given key is present.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-if-present</code>
+                        </p>
+              <p>
+                            Indicates that a key/value pair is
+                            <code class="literal">put</code> only if a value
+                            for the given key is present.
+                        </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="put_table"></a>put table</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">put table -name &lt;name&gt; [if-absent | -if-present ]
+    [-json &lt;string&gt;] [-file &lt;file&gt;] [-exact] [-update] </pre>
+        <p>
+                    Put a row into the named table. The table name
+                    is a dot-separated name with the format
+                    table[.childTableName]*.
+                </p>
+        <p>
+                    where:
+                </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                            <code class="literal">-if-absent</code>
+                        </p>
+              <p>
+                            Indicates to put a row only if the row
+                            does not exist.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-if-present</code>
+                        </p>
+              <p>
+                            Indicates to put a row only if the row
+                            already exists.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-json</code>
+                        </p>
+              <p>
+                            Indicates that the value is a JSON
+                            string.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-file</code>
+                        </p>
+              <p>
+                            Can be used to load JSON strings from a
+                            file.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-exact</code>
+                        </p>
+              <p>
+                            Indicates that the input JSON string
+                            or file must contain values for all
+                            columns in the table and cannot contain
+                            extraneous fields.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-update</code>
+                        </p>
+              <p>
+                            Can be used to partially update the
+                            existing record.
+                        </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="pool.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="repair-admin-quorum.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">pool </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> repair-admin-quorum</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

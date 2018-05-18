@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Chapter 4. Operators</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="prev" href="map_constructors.html" title="Map Constructors" />
+    <link rel="next" href="logical_operators.html" title="Logical Operators" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Chapter 4. Operators</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="map_constructors.html">Prev</a> </td>
+          <th width="60%" align="center"> </th>
+          <td width="20%" align="right"> <a accesskey="n" href="logical_operators.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="chapter" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title"><a id="operators"></a>Chapter 4. Operators</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <p>
+          <b>Table of Contents</b>
+        </p>
+        <dl>
+          <dt>
+            <span class="sect1">
+              <a href="operators.html#value_operators">Value Comparison Operators</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="logical_operators.html">Logical Operators</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="sequence_operator.html">Sequence Comparison Operators</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="exists_operator.html">Exists Operator</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="isoftype_operator.html">Is-Of-Type Operator</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+        This chapter describes the various operators you can use with your
+        SQL expressions.
+    </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+            The examples shown in this chapter rely on the sample data
+            shown in <a class="xref" href="introduction_sql.html#exampledata" title="Example Data">Example Data</a>.
+        </p>
+      </div>
+      <div class="sect1" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="value_operators"></a>Value Comparison Operators</h2>
+            </div>
+          </div>
+        </div>
+        <p>
+            Value comparison operators are primarily used to compare 2
+            values, one produced by the left operand and another from the
+            right operand. The available value comparison operators are:
+        </p>
+        <table class="simplelist" border="0" summary="Simple list">
+          <tr>
+            <td>=</td>
+          </tr>
+          <tr>
+            <td>!=</td>
+          </tr>
+          <tr>
+            <td>&gt;</td>
+          </tr>
+          <tr>
+            <td>&gt;=</td>
+          </tr>
+          <tr>
+            <td>&lt;</td>
+          </tr>
+          <tr>
+            <td>&lt;=</td>
+          </tr>
+        </table>
+        <p>
+            If any operand returns more than one item, an error is raised.
+            If both operands return the empty sequence, the operands are
+            considered equal (so true will be returned if the operator is
+            =, &lt;=, or &gt;=). If only one of the operands returns empty, the
+            result of the comparison is false unless the operator is !=.
+        </p>
+        <p>
+            Among atomic items, if the types of the items are not
+            comparable, false is returned. The following rules defined what
+            atomic types are comparable and how the comparison is done in
+            each case.
+        </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                    A numeric item is comparable with any other numeric
+                    item. If an integer/long value is compared to a
+                    float/double value, the integer/long will first be cast
+                    to float/double.
+                </p>
+            </li>
+            <li>
+              <p>
+                    A string item is comparable to another string item. 
+                </p>
+              <p>
+                    A string
+                    item is also comparable to an enum item. In this case,
+                    before the comparison the string is cast to an enum
+                    item in the type of the other enum item. Such a cast is
+                    possible only if the enum type contains a token whose
+                    string value is equal to the source string. If the cast
+                    is successful, the two enum items are then compared as
+                    explained in the next bullet; otherwise, the two items are
+                    incomparable and false is returned.
+                </p>
+            </li>
+            <li>
+              <p>
+                    Two enum items are comparable only if they belong to
+                    the same type. If so, the comparison is done on the
+                    ordinal numbers of the two enums (not their string
+                    values). 
+                </p>
+            </li>
+            <li>
+              <p>
+                    Binary and fixed binary items are comparable with each
+                    other for equality only. The 2 values are equal if
+                    their byte sequences have the same length and are equal
+                    byte-per-byte.
+                </p>
+            </li>
+            <li>
+              <p>
+                    A boolean item is comparable with another boolean item.
+                </p>
+            </li>
+            <li>
+              <p>
+                    A timestamp item is comparable to another timestamp
+                    item, even if their precisions are different.
+                </p>
+            </li>
+            <li>
+              <p>
+                    JNULL (JSON null) is comparable with JNULL. If the
+                    comparison operator is !=, JNULL is also comparable
+                    with every other kind of item, and the result of such a
+                    comparison is always true, except when the other item
+                    is also JNULL.
+                </p>
+            </li>
+          </ul>
+        </div>
+        <p>
+            The semantics of comparisons among complex items is:
+        </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                    A record is comparable with another record for equality
+                    only, and only if they contain comparable values.  To
+                    be equal, the 2 records must have equal sizes (number
+                    of fields) and for each field in the first record,
+                    there must exist a field in the other record such that
+                    the two fields are at the same position within their
+                    containing records, have equal field names, and equal
+                    values.
+                </p>
+            </li>
+            <li>
+              <p>
+                    A map is comparable with another map for equality only,
+                    and only if they contain comparable values. To be
+                    equal, the 2 maps must have equal sizes (number of
+                    fields) and for each field in the first map, there must
+                    exist a field in the other map such that the two fields
+                    have equal names and equal values.
+                </p>
+            </li>
+            <li>
+              <p>
+                    An array is comparable to another array, if the
+                    elements of the 2 arrays are comparable pair-wise.
+                    Comparison between 2 arrays is done lexicographically.
+                    That is, the arrays are compared like strings, with the
+                    array elements playing the role of the "characters" to
+                    compare.
+                </p>
+            </li>
+          </ul>
+        </div>
+        <p>
+            As with atomic items, if two complex items are not comparable
+            according to the above rules, false is returned.  Comparisons
+            between atomic and complex items return false always.
+        </p>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <h3 class="title">Note</h3>
+          <p>
+                The reason for returning false for incomparable items, instead
+                of raising an error, is to handle schemaless
+                applications where different table rows may contain very
+                different data, or differently shaped data. As a result, even
+                the writer of the query may not know what kind of items an
+                operand may return and an operand may indeed return different
+                kinds of items from different rows. Nevertheless, when the
+                query writer compares “something” with, say, an integer, they
+                expect that the “something” will be an integer and they would
+                like to see results from the table rows that fulfill that
+                expectation, instead of the whole query being rejected because
+                some rows do not fulfill the expectation.
+            </p>
+        </div>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="map_constructors.html">Prev</a> </td>
+          <td width="20%" align="center"> </td>
+          <td width="40%" align="right"> <a accesskey="n" href="logical_operators.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Map Constructors </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Logical Operators</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

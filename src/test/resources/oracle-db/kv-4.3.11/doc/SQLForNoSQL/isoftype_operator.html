@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Is-Of-Type Operator</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="operators.html" title="Chapter 4. Operators" />
+    <link rel="prev" href="exists_operator.html" title="Exists Operator" />
+    <link rel="next" href="expressions.html" title="Chapter 5. Expressions" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Is-Of-Type Operator</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="exists_operator.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 4. Operators</th>
+          <td width="20%" align="right"> <a accesskey="n" href="expressions.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="isoftype_operator"></a>Is-Of-Type Operator</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            Returns true if the input sequence matches the identified type.
+        </p>
+      <pre class="programlisting">&lt;sequence&gt; IS OF TYPE (&lt;type&gt;*|+|?,&lt;type&gt;*|+|?,...])</pre>
+      <p>
+                or
+            </p>
+      <pre class="programlisting">&lt;sequence&gt; IS NOT OF TYPE (&lt;type&gt;*|+|?,&lt;type&gt;*|+|?,...)</pre>
+      <p>
+            The is-of-type operator checks the input sequence type against
+            one or more target sequence types.  It returns true if both of
+            the following conditions are true:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    The cardinality of the input sequence matches the
+                    quantifier of the target type: 
+                </p>
+            <div class="itemizedlist">
+              <ul type="circle">
+                <li>
+                  <p>
+                            If the quantifier is <code class="literal">*</code>, the
+                            input sequence may have any number of items.
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            If the quantifier is <code class="literal">+</code>, the 
+                            input sequence must have at least one item.
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            If the quantifier is <code class="literal">?</code>, the
+                            input sequence must have at most one item.
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            If there is no quantifier, the input sequence must 
+                            have exactly one item.
+                        </p>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <p>
+                    All of the items in the input sequence are instance of
+                    the specified type(s). For the purpose of this check, a
+                    NULL is not considered to be and instance of any type.
+                </p>
+            <p>
+                    SQL for Oracle NoSQL Database's subtype-supertype relationship model is
+                    relevant to the usage of this operator. See
+                    <a class="xref" href="typehierarchy.html" title="Type Hierarchy">Type Hierarchy</a>
+                    for more information.
+                </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+            If the cardinality requirement is met and the input sequence contains a NULL, 
+            this operator returns NULL. In all other cases, the result is false.
+        </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+                If the number of the target types is greater than one, the
+                expression is equivalent to OR-ing that number of
+                is-of-type expressions, each having one target type. 
+            </p>
+      </div>
+      <p>
+            For an example of using is-of-type, see 
+            <a class="xref" href="examiningdatatypes.html" title="Examining Data Types JSON Columns">Examining Data Types JSON Columns</a>.
+        </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="exists_operator.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="operators.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="expressions.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Exists Operator </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Chapter 5. Expressions</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

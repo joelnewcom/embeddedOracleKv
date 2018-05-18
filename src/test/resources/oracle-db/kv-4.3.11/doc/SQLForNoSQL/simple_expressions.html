@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Chapter 7. Simple Select-From-Where Queries</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="prev" href="functions.html" title="Chapter 6. Built-in Functions" />
+    <link rel="next" href="runsqlshell.html" title="Running the SQL Shell" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Chapter 7. Simple Select-From-Where Queries</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="functions.html">Prev</a> </td>
+          <th width="60%" align="center"> </th>
+          <td width="20%" align="right"> <a accesskey="n" href="runsqlshell.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="chapter" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title"><a id="simple_expressions"></a>Chapter 7. Simple Select-From-Where Queries</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <p>
+          <b>Table of Contents</b>
+        </p>
+        <dl>
+          <dt>
+            <span class="sect1">
+              <a href="simple_expressions.html#sqlbasicexamples">SQLBasicExamples Script</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="runsqlshell.html">Running the SQL Shell</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="selecting_columns.html">Selecting columns</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="renaming_columns.html">Renaming columns</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="computing_columns.html">Computing new columns</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="identifying_tables.html">Identifying tables and their columns</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="filtering_results.html">Filtering results</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="ordering_results.html">Ordering Results</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="limit_offset.html">Limiting and Offsetting Results</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="using_variables.html">Using External Variables</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+        In this section we walk you through examples of queries over
+        simple, relational data.  If you want to follow along the examples,
+        get the <code class="literal">Examples</code> download from 
+        <a class="ulink" href="http://www.oracle.com/technetwork/database/database-technologies/nosqldb/downloads/index.html" target="_top">http://www.oracle.com/technetwork/database/database-technologies/nosqldb/downloads/index.html</a> 
+        and run the <code class="literal">SQLBasicExamples</code> script found in the
+        Examples folder. This creates the table and imports the data used.
+    </p>
+      <div class="sect1" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="sqlbasicexamples"></a>SQLBasicExamples Script</h2>
+            </div>
+          </div>
+        </div>
+        <p>
+            The script <code class="literal">SQLBasicExamples</code> creates the
+            following table:
+        </p>
+        <pre class="programlisting">create table Users (
+  id integer,
+  firstname string,
+  lastname string,
+  age integer,
+  income integer,
+  primary key (id)
+); </pre>
+        <p>
+            The script also populates the Users table with the following rows
+            (shown here in JSON format):
+        </p>
+        <pre class="programlisting">{
+  "id":1,
+  "firstname":"David",
+  "lastname":"Morrison",
+  "age":25,
+  "income":100000,
+}
+
+{
+  "id":2,
+  "firstname":"John",
+  "lastname":"Anderson",
+  "age":35,
+  "income":100000,
+}
+
+{
+  "id":3,
+  "firstname":"John",
+  "lastname":"Morgan",
+  "age":38,
+  "income":200000,
+}
+
+{
+  "id":4,
+  "firstname":"Peter",
+  "lastname":"Smith",
+  "age":38,
+  "income":80000,
+}
+
+{
+  "id":5,
+  "firstname":"Dana",
+  "lastname":"Scully",
+  "age":47,
+  "income":400000,
+} </pre>
+        <p>
+            You run the SQLBasicExamples script using the 
+            <a class="xref" href="shell_command_reference.html#load" title="load">load</a>
+            command:
+        </p>
+        <pre class="programlisting">java -jar &lt;KVHOME&gt;/lib/sql.jar -helper-hosts &lt;host&gt;:&lt;port&gt; \
+-store &lt;storename&gt; load \
+-file &lt;KVHOME&gt;/examples/sql/SQLBasicExamples.cli</pre>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="functions.html">Prev</a> </td>
+          <td width="20%" align="center"> </td>
+          <td width="40%" align="right"> <a accesskey="n" href="runsqlshell.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Chapter 6. Built-in Functions </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Running the SQL Shell</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

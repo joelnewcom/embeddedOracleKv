@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Monitoring for Administration (Admin) Nodes</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Run Book" />
+    <link rel="up" href="softwaremonitor.html" title="Chapter 2. Software Monitoring" />
+    <link rel="prev" href="monitoringmetricsforarbiternodes.html" title="Monitoring for Arbiter Nodes" />
+    <link rel="next" href="hardwaremonitoring.html" title="Chapter 3. Hardware Monitoring" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Monitoring for Administration (Admin) Nodes</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="monitoringmetricsforarbiternodes.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 2. Software Monitoring </th>
+          <td width="20%" align="right"> <a accesskey="n" href="hardwaremonitoring.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="monitoringmetricsforadminnodes"></a>Monitoring for Administration (Admin) Nodes</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="monitoringmetricsforadminnodes.html#metrics_an">Metrics</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+     The Administrative (Admin) Node is a process running in the Storage Node, that is 
+     used to configure, deploy, monitor, and change store components. The Administrative 
+     Node handles the execution of commands from the Administrative 
+     Command Line Interface (CLI). For more information, see 
+     <a href="../ConceptsManual/admin-cli.html" class="olink">
+     Administration</a> section in the <em class="citetitle">Oracle NoSQL Database Concepts Manual</em>.
+    </p>
+      <p>See the following section:</p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+         <a class="xref" href="monitoringmetricsforadminnodes.html#metrics_an" title="Metrics">Metrics</a>
+         </p>
+          </li>
+        </ul>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="metrics_an"></a>Metrics</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+            The following metrics are accessible through JMX and
+            are intended to be used for the monitoring of the
+            administrative nodes in the Oracle NoSQL Database cluster.
+        </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                    adminId – The unique ID for the Admin Node.
+                </p>
+            </li>
+            <li>
+              <p>
+                   adminServiceStatus – The status of the administrative
+                   service. It can be one of the follows:
+                </p>
+              <div class="itemizedlist">
+                <ul type="circle">
+                  <li>
+                    <p>
+                            unreachable(0) – The Admin Node unreachable. 
+                            This can be due to a network error or the
+                            Admin Node maybe down.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            starting (1) – The Admin Node agent is booting
+                            up. 
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            waitingForDeploy (2) – Indicates a bootstrap admin
+                            that has not been configured, that is, it has not been
+                            given a store name. Configuring the admin triggers the
+                            creation of the Admin database, and changes its status
+                            from "WAITING_FOR_DEPLOY" to "RUNNING".
+                            
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            running(3) – The Admin Node is running.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            stopping(4) – The Admin Node in the process of
+                            shutting down. 
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            stopped(5) – An intentional clean shutdown of
+                            the Admin Node.
+                         </p>
+                  </li>
+                  <li>
+                    <p>
+                            errorRestarting(6) – The Storage Node tried to start
+                            the admin several times without success and gave up.
+                        </p>
+                  </li>
+                  <li><p>
+                            errorNoRestart(7) – Service
+                            is in an error state and will not
+                            be automatically restarted. Administrative
+                            intervention is required. The user can start 
+                            looking for SEVERE entries in both the service's 
+                            log file and the log file of the SNA controlling 
+                            the failed service. The service's log in Monitoring 
+                            for Admin section is Admin log:
+                          </p><pre class="programlisting">&lt;kvroot&gt;/&lt;storename&gt;/log/admin*_*.log</pre><p>
+                            where, &lt;kvroot&gt; and &lt;storename&gt; are user 
+                            inputs and * represents the number of the log. 
+                       </p><p>
+                            Note that the kvroot and storename will 
+                            be different for every installation. Similarly, to find 
+                            the log file for SNA, use:
+                       </p><pre class="programlisting">&lt;kvroot&gt;/&lt;storename&gt;/log/sn*_*.log</pre>
+                            Examples of SN logs can be: sn1_0.log, sn1_1.log.
+                       <p>
+                            You can search SEVERE keyword in these log files, and 
+                            then read the searched messages to fix the errors, or 
+                            you may require help from Oracle NoSQL Database support. The action 
+                            to take depends on the nature of the failure and can 
+                            vary from stopping and restarting the service explicitly 
+                            (easy) to the need to replace the service instance 
+                            entirely (not easy and slow). The issues can be any 
+                            of the following:
+                        </p><div class="itemizedlist"><ul type="square"><li><p>
+                           Resource issue – Some type of necessary resource for 
+                           example, disk space, memory, or network is not available. 
+                           </p></li><li><p>
+                           Configuration problem – Some configuration-related issues 
+                           which needs a fix. 
+                           </p></li><li><p>
+                           Software bug – Bugs in the code which needs Oracle NoSQL Database support. 
+                           </p></li><li><p>
+                           On disk corruption – Something in persistent storage has been 
+                           corrupted. 
+                           </p></li></ul></div><p>
+                   Note that the corruption situations are difficult to handle, but 
+                   this is rare and require help from Oracle NoSQL Database support.
+                   </p></li>
+                  <li>
+                    <p>
+                           expectedRestarting(9) – The Admin Node is executing 
+                           an expected restart as some plan CLI commands causes a component
+                           to restart. This is an expected restart, that is different from 
+                           errorRestarting(6) (which is a restart after encountering an error).
+                       </p>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <p>
+                    adminLogFileCount – A logging config parameter that
+                    represents the maximum number of log files that are
+                    retained by the Admin Node. Users can change the value of this 
+                    parameter, and also the <code class="literal">adminLogFileLimit</code> parameter, 
+                    if they want to reduce the amount of disk space used by debug log 
+                    files. Note that reducing the amount of debug log data saved may 
+                    make it harder to debug problems if debug information is deleted 
+                    before the problem is noticed. For more information on 
+                    <code class="literal">adminLogFileCount</code>, see sections
+                    <a href="../AdminGuide/setstoreparams.html#adminparameters" class="olink">
+                   Admin Parameters</a> and 
+                   <a href="../AdminGuide/setstoreparams.html#admin_restart" class="olink">
+                   Admin Restart</a> in the 
+                   <em class="citetitle">Oracle NoSQL Database Administrator's Guide</em>.
+                </p>
+            </li>
+            <li>
+              <p>
+                    adminLogFileLimit – A logging config parameter that
+                    represents the maximum size of a single log file in
+                    bytes. For more information on 
+                    <code class="literal">adminLogFileLimit</code>, see sections
+                    <a href="../AdminGuide/setstoreparams.html#adminparameters" class="olink">
+                   Admin Parameters</a> and 
+                   <a href="../AdminGuide/setstoreparams.html#admin_restart" class="olink">
+                   Admin Restart</a> in the 
+                   <em class="citetitle">Oracle NoSQL Database Administrator's Guide</em>.
+                </p>
+            </li>
+            <li>
+              <p>
+                    adminPollPeriod – The frequency by which the Admin
+                    polls agents (Replication Node and Storage Node Agent) for statistics.
+                    This polling receives service status changes, performance
+                    metrics, and log messages. This period is reported in
+                    units of milliseconds.
+                </p>
+            </li>
+            <li>
+              <p>
+                    adminEventExpiryAge – Tells how long critical events
+                    are saved in the admin database. This value is
+                    reported in units of hours.
+                </p>
+            </li>
+            <li>
+              <p>
+                    adminIsMaster – A Boolean value which indicates whether
+                    or not this Admin Node is the master node for the admin
+                    group.
+                </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="monitoringmetricsforarbiternodes.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="softwaremonitor.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="hardwaremonitoring.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Monitoring for Arbiter Nodes </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Chapter 3. Hardware Monitoring</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

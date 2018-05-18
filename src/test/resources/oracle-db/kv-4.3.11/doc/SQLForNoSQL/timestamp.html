@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Timestamp</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="introduction_sql.html" title="Chapter 1. The SQL for Oracle NoSQL Database Data Model" />
+    <link rel="prev" href="jsondata.html" title="JSON Data" />
+    <link rel="next" href="typehierarchy.html" title="Type Hierarchy" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Timestamp</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="jsondata.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 1. The SQL for Oracle NoSQL Database Data Model</th>
+          <td width="20%" align="right"> <a accesskey="n" href="typehierarchy.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="timestamp"></a>Timestamp</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            Represents a point in time as a date and, optionally, a time
+            value. 
+        </p>
+      <p>
+            Timestamp values have a precision in fractional seconds that
+            range from 0 to 9.  For example, a precision of 0 means that no
+            fractional seconds are stored, 3 means that the timestamp
+            stores milliseconds, and 9 means a precision of nanoseconds. 0
+            is the minimum precision, and 9 is the maximum. 
+        </p>
+      <p>
+            There is no timezone information stored in timestamp; they are
+            all assumed to be in the UTC timezone. 
+        </p>
+      <p>
+            The number of bytes used to store a timestamp depends on its
+            precision (the on-disk storage varies between 5 and 9 bytes).
+        </p>
+      <p>
+            This datatype is specified as a string in the following
+            format:
+        </p>
+      <pre class="programlisting">"&lt;yyyy&gt;-&lt;mm&gt;-&lt;dd&gt;[T&lt;HH&gt;:&lt;mm&gt;:&lt;ss&gt;[.&lt;SS&gt;]]"</pre>
+      <p>
+            where:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    &lt;yyyy&gt; is the four-digit year value (for example, "2016").
+                </p>
+          </li>
+          <li>
+            <p>
+                    &lt;mm&gt; is the two-digit month value (for example, "08").
+                </p>
+          </li>
+          <li>
+            <p>
+                    &lt;dd&gt; is the two-digit day value (for example, "01").
+                </p>
+          </li>
+          <li>
+            <p>
+                    &lt;HH&gt; is the two-digit hour value (for example, "18").
+                </p>
+          </li>
+          <li>
+            <p>
+                    &lt;mm&gt; is the two-digit minute value.
+                </p>
+            <p>
+                    &lt;ss&gt; is the two-digit seconds value.
+                </p>
+          </li>
+          <li>
+            <p>
+                    &lt;SS&gt; is the fractional seconds value. If the value
+                    specified here exceeds the precision declared when the
+                    table column was defined, then the value specified is
+                    rounded off.
+                </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="jsondata.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="introduction_sql.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="typehierarchy.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">JSON Data </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Type Hierarchy</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

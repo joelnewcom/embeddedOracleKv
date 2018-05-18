@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>import</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="utility_command_reference.html" title="Appendix C. Utility Command Reference" />
+    <link rel="prev" href="helpjar.html" title="help" />
+    <link rel="next" href="loaddata.html" title="load admin metadata" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">import</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="helpjar.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix C. Utility Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="loaddata.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="importutility"></a>import</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="importutility.html#importclparms">Import Utility Command Line Parameters</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="importutility.html#importconfig">Import Utility Configuration File</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="importutility.html#importutilcodes">Import Exit Codes</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <pre class="programlisting">java -Xmx256m -Xms256m \
+-jar KVHOME/lib/kvtool.jar import -import-all | -table &lt;table_names&gt;
+-store &lt;storeName&gt; -helper-hosts &lt;helper_hosts&gt;
+[-status &lt;status-file-name&gt;] [-username &lt;user&gt;]
+[-security &lt;security-file-path&gt;] </pre>
+      <p>
+            This utility imports data to the identified Oracle NoSQL Database store.
+            The data to be imported must have been created by the
+            <a class="xref" href="utility_command_reference.html#exportutility" title="export">export</a> utility.
+        </p>
+      <p>
+            This utility runs synchronously. Also, this utility will
+            not create an Oracle NoSQL Database store instance; the store must be
+            installed and configured before this utility is run.
+        </p>
+      <p>
+            This utility can be used to:
+        </p>
+      <div class="orderedlist">
+        <ol type="1">
+          <li>
+            <p>
+                    Import all schema definitions and user data. Schema
+                    definitions include table definitions, avro
+                    schemas, and the index definitions. All schema is
+                    imported first, and then user data is imported to
+                    the store. Because schema is written first, it is
+                    possible to use this utility to populate a new,
+                    empty store.
+                </p>
+            <p>
+                    Schema is imported only if the table or avro definition
+                    does not currently exist in the store.  Index
+                    definitions are created after tables are created, but
+                    only if the tables are created by this utility. If the
+                    table is created using some other mechanism (DDL
+                    supplied using the Command Line Interface, for
+                    example), then the <code class="literal">import</code> utility
+                    will not create the indexes, even if they currently do
+                    not exist. Finally, if the targeted table somehow does
+                    not contain the field to be indexed, then that index
+                    creation is skipped.
+                </p>
+            <p>
+                    After all schema has been imported, user data is
+                    imported. If the primary key definition of the data
+                    does not match the primary key definition in the
+                    table or avro schema definition, the
+                    corresponding table data is not imported.
+                </p>
+            <p>
+                    If the non-key fields in the data do not match the
+                    non-key definition fields in the schema, then the
+                    table is still imported with the following
+                    behavior:
+                </p>
+            <div class="itemizedlist">
+              <ul type="disc">
+                <li>
+                  <p>
+                            If the schema calls for a non-key field,
+                            but the data does not provide this field,
+                            then the field's default value is used if
+                            one is available. If a default value has
+                            not been defined in the schema for that
+                            field, then NULL is used.
+                        </p>
+                </li>
+                <li>
+                  <p>
+                            If the data provides a non-key field value
+                            that is not known to the table's schema,
+                            then that value is ignored.
+                        </p>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <p>
+                    Import a specific table from the exported dataset.
+                    In this case, the corresponding table schemas,
+                    index definitions, and table data are imported.
+                </p>
+          </li>
+          <li>
+            <p>
+                    The Time-To-Live (TTL) value of the table data is
+                    imported. If the TTL has already expired, then the
+                    data is not written to the store.
+                </p>
+          </li>
+        </ol>
+      </div>
+      <p>
+            Write activity may be on-going against the store at the time of
+            the import. In this regard, the <code class="literal">import</code>
+            utility is simply another client writing to the store. In the
+            case of a conflict when writing a table row or record, your
+            store data will be in a state defined by which client last
+            wrote the data.
+        </p>
+      <p>
+            Because <code class="literal">import</code> can take a long time, it is
+            possible for you to track the progress of the import process.
+            Use the <code class="literal">Import.log</code> file for this purpose. It
+            is written to the same directory as is identified by the
+            <code class="literal">export-package-path</code> configuration file
+            parameter.
+        </p>
+      <p>
+            See
+            <a class="xref" href="usingimportexport.html" title="Using the Export and Import Utilities">Using the Export and Import Utilities</a>
+            for usage information.
+        </p>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="importclparms"></a>Import Utility Command Line Parameters</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                The <code class="literal">import</code> utility's command line parameters are:
+            </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                        <code class="literal">-import-all</code> causes the entire
+                        store to be imported. If this option is specified,
+                        then <code class="literal">-table</code> cannot be specified.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">-table</code> is the name of the
+                        table or tables you want to import. If you want
+                        to import multiple tables, then specify a
+                        comma-delimited list of table names.
+                    </p>
+              <p>
+                        If this parameter is specified, then
+                        <code class="literal">-import-all</code> cannot be specified.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">-store</code> is the name of the Oracle NoSQL Database
+                        store you want to import data to. This parameter
+                        is required.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">-helper-hosts</code> is a list of
+                        hostname and registry port pairs in
+                        <span class="emphasis"><em>hostname</em></span>:<span class="emphasis"><em>port</em></span> format.
+                        Comma-delimit each item in this list. At least one
+                        helper host must be specified.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">-config</code> is the name of the
+                        configuration file to use. This parameter is
+                        required. See
+                        <a class="xref" href="importutility.html#importconfig" title="Import Utility Configuration File">Import Utility Configuration File</a>
+                        for information on the configuration file for this utility.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">-status</code> is
+                        optional parameter that causes the status of the
+                        import operation to be saved in the named file. If
+                        the import fails part way, it can start where it
+                        left off by using the status file. The granularity
+                        of the status file is per file segment stored in
+                        the export package.
+                    </p>
+              <p>
+                        If this parameter is not specified and there is
+                        a failure, then the import must start over from
+                        the beginning. In this case, the target store
+                        does not need to be re-created. Upon subsequent
+                        imports, existing records are skipped.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">-username</code> is the name of the
+                        user you want to import data as. This parameter is
+                        required if your store is configured to require
+                        authentication.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">-security</code> is the client security
+                        configuration file. This parameter is required if
+                        your store is configured to require authentication.
+                        For information on the parameters contained in
+                        this file, see
+                        <a href="../GettingStartedGuideTables/authentication.html#configuressl" class="olink">Configuring SSL</a>
+                        in the
+                        <em class="citetitle">Oracle NoSQL Database Getting Started with the Table API for Java</em>
+                        guide. For example:
+                    </p>
+              <pre class="programlisting">oracle.kv.auth.username=clientUID1
+oracle.kv.auth.pwdfile.file=/home/nosql/login.pwd
+oracle.kv.transport=ssl
+oracle.kv.ssl.trustStore=/home/nosql/client.trust</pre>
+              <p>
+                        If you are using Kerberos, then this file would
+                        look something like this:
+                    </p>
+              <pre class="programlisting">oracle.kv.auth.kerberos.keytab = kerberos/mykeytab
+oracle.kv.auth.username = krbuser@EXAMPLE.COM
+oracle.kv.auth.external.mechanism=kerberos
+oracle.kv.auth.kerberos.services=
+node01:oraclenosql/node01.example.com@EXAMPLE.COM
+oracle.kv.auth.kerberos.mutualAuth=false</pre>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="importconfig"></a>Import Utility Configuration File</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                The <code class="literal">import</code> utility uses a plain-text configuration file
+                which describes the import type and the location of
+                the exported data. It is identified to the utility
+                using the required <code class="literal">-config</code> command
+                line parameter.
+            </p>
+        <p>
+                The contents of the configuration file differ depending
+                on the value specified for the utility's
+                <code class="literal">export-type</code> parameter.
+            </p>
+        <p>
+                If <code class="literal">LOCAL</code> is specified, then the
+                configuration file contains the following
+                information:
+            </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                        <code class="literal">export-type = LOCAL</code>
+                    </p>
+              <p>
+                        Indicates that this export is stored on a local file
+                        system.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">export-package-path = &lt;path_for_export&gt;</code>
+                    </p>
+              <p>
+                        Identifies the path to the directory where the
+                        export package can be located.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">ttl</code> is used for import only
+                        (see <a class="xref" href="importutility.html" title="import">import</a>
+                        for details). This parameter is illegal if you
+                        are using it with the export utility.
+                        It must specify either
+                        <code class="literal">absolute</code> or
+                        <code class="literal">relative</code>.
+
+                    </p>
+              <p>
+                        If <code class="literal">absolute</code>, then the
+                        expiration timestamp on the data is observed
+                        without adjustment. This is the default.
+                    </p>
+              <p>
+                        If <code class="literal">relative</code>, then the
+                        expiration timestamp is adjusted relative to a
+                        date and time value provided using the
+                        <code class="literal">ttl-relative-date</code>
+                        parameter.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        <code class="literal">ttl-relative-date</code> is used
+                        only when the <code class="literal">ttl</code> parameter
+                        is set to <code class="literal">relative</code>. It
+                        requires you to set a date and time value which is
+                        used to calculate the timeout value for the
+                        data. It is provided in
+                        <code class="literal">YYYY-MM-DD HH:MM:SS</code> format.
+                    </p>
+            </li>
+          </ul>
+        </div>
+        <p>
+                For example, a configuration file used when importing
+                from the local file system might contain:
+            </p>
+        <pre class="programlisting">export-type = LOCAL
+export-package-path = /mnt/dsk1/nosql_export_dir
+ttl = absolute</pre>
+        <p>
+                Use <code class="literal">OBJECT_STORE</code> if the
+                <code class="literal">import</code> utility is being used with Oracle
+                Storage Cloud Services. In this case, the configuration
+                file must contain the following information:
+            </p>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <h3 class="title">Note</h3>
+          <p>
+                    To use the <code class="literal">import</code> utility with
+                    Oracle Storage Cloud Services, you must download and
+                    install Java jar files which provide necessary support.
+                    See <a class="xref" href="usingimportexport.html#installcloudjars" title="Installing the Cloud Storage JARs">Installing the Cloud Storage JARs</a> for details.
+                </p>
+        </div>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                            <code class="literal">export-type = OBJECT_STORE</code>
+                        </p>
+              <p>
+                            Indicates that the export is located in Oracle Storage
+                            Cloud Services.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">container-name = &lt;container_name&gt;</code>
+                        </p>
+              <p>
+                            The name of the container in Oracle Storage
+                            Cloud Service where the exported data is
+                            stored.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">service-name = &lt;service_name&gt;</code>
+                        </p>
+              <p>
+                            The service name associated with the Oracle
+                            Storage Cloud Service subscription.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">user-name = &lt;user_name&gt;</code>
+                        </p>
+              <p>
+                            The user name associated with the Oracle
+                            Storage Cloud Service subscription.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">password</code> is the password you
+                            use with the Oracle Storage Cloud Service
+                            subscription.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">service-url = &lt;service_url&gt;</code>
+                        </p>
+              <p>
+                            The service URL associated with the Oracle
+                            Storage Cloud Service subscription.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">ttl</code> is used for import only
+                            (see <a class="xref" href="importutility.html" title="import">import</a>
+                            for details). This parameter is illegal if you
+                            are using it with the export utility.
+                            It must specify either
+                            <code class="literal">absolute</code> or
+                            <code class="literal">relative</code>.
+
+                        </p>
+              <p>
+                            If <code class="literal">absolute</code>, then the
+                            expiration timestamp on the data is observed
+                            without adjustment. This is the default.
+                        </p>
+              <p>
+                            If <code class="literal">relative</code>, then the
+                            expiration timestamp is adjusted relative to a
+                            date and time value provided using the
+                            <code class="literal">ttl-relative-date</code>
+                            parameter.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">ttl-relative-date</code> is used
+                            only when the <code class="literal">ttl</code> parameter
+                            is set to <code class="literal">relative</code>. It
+                            requires you to set a date and time value which is
+                            used to calculate the timeout value for the
+                            data. It is provided in
+                            <code class="literal">YYYY-MM-DD HH:MM:SS</code> format.
+                        </p>
+            </li>
+          </ul>
+        </div>
+        <p>
+                    For example, a configuration file used when importing
+                    from Oracle Cloud Service Storage might contain:
+                </p>
+        <pre class="programlisting">export-type = OBJECT_STORE
+container-name = TestContainer
+service-name = Storage-nosqldb
+user-name = nosqldb.Storageadmin
+password = objs4KV!
+service-url = https://storage-den2.oraclecorp.com
+ttl = absolute</pre>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="importutilcodes"></a>Import Exit Codes</h3>
+            </div>
+          </div>
+        </div>
+        <div class="informaltable">
+          <table border="1" width="80%">
+            <colgroup>
+              <col />
+              <col />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>EXIT_OK</td>
+                <td>0</td>
+                <td>No errors found.</td>
+              </tr>
+              <tr>
+                <td>EXIT_USAGE</td>
+                <td>100</td>
+                <td>Illegal import command usage.</td>
+              </tr>
+              <tr>
+                <td>EXIT_NOPERM</td>
+                <td>101</td>
+                <td>Unauthorized access to the Oracle Cloud Storage Service.</td>
+              </tr>
+              <tr>
+                <td>EXIT_EXPSTR_NOCONNECT</td>
+                <td>102</td>
+                <td>
+                                The Oracle Cloud Storage Service could not
+                                be accessed using the service connection
+                                parameters.
+                            </td>
+              </tr>
+              <tr>
+                <td>EXIT_NOCONNECT</td>
+                <td>103</td>
+                <td>
+                              The source store could not be connected
+                              using the given store name and helper host.
+                          </td>
+              </tr>
+              <tr>
+                <td>EXIT_UNEXPECTED</td>
+                <td>104</td>
+                <td>
+                              The utility experienced an unexpected error.
+                          </td>
+              </tr>
+              <tr>
+                <td>EXIT_NOREAD</td>
+                <td>106</td>
+                <td>
+                              The import utility does not have permission
+                              to read the export package.
+                          </td>
+              </tr>
+              <tr>
+                <td>EXIT_INVALID_EXPORT_STORE</td>
+                <td>109</td>
+                <td>
+                              Invalid export store type. Valid export types
+                              are <code class="literal">LOCAL</code> or
+                              <code class="literal">OBJECT_STORE</code>.
+                          </td>
+              </tr>
+              <tr>
+                <td>EXIT_SECURITY_ERROR</td>
+                <td>110</td>
+                <td>
+                              Error loading security file.
+                          </td>
+              </tr>
+              <tr>
+                <td>EXIT_NOEXPPACKAGE</td>
+                <td>112</td>
+                <td>
+                              The export package required for import can
+                              not be found at the identified location. For
+                              Oracle Cloud Storage Service, the means the
+                              required container cannot be found.
+                          </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="helpjar.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="utility_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="loaddata.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">help </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> load admin metadata</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

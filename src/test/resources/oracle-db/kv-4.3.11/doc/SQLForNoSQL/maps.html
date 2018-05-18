@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Working With Maps</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="complextypes.html" title="Chapter 8. Working with complex data" />
+    <link rel="prev" href="arrays.html" title="Working With Arrays" />
+    <link rel="next" href="indexes.html" title="Chapter 9. Working With Indexes" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Working With Maps</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="arrays.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 8. Working with complex data</th>
+          <td width="20%" align="right"> <a accesskey="n" href="indexes.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="maps"></a>Working With Maps</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            The path steps applicable to maps are field and filter steps.
+            Slice steps do not make sense for maps, because maps are unordered,
+            and as a result, their entries do not have any fixed positions.
+        </p>
+      <p>
+            You can use a field step to select the value of a field from
+            a map. For example, to return the lastname and the food
+            expenses of all persons:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname, p.expenses.food
+FROM Persons p;
+ +----------+------+
+ | lastname | food |
+ +----------+------+
+ | Morgan   | 2000 |
+ | Morrison | 1000 |
+ | Scully   |  900 |
+ | Smith    | 6000 |
+ | Anderson | 1700 |
+ +----------+------+
+
+5 rows returned </pre>
+      <p>
+            In the above query, the path expression
+            <code class="literal">p.expenses.food</code> consists of 2 field
+            steps: <code class="literal">.expenses</code> selects the expenses
+            field of the current row and <code class="literal">.food</code> selects
+            the value of the food field/entry from the current expenses map.
+        </p>
+      <p>
+            To return the lastname and amount spent on travel for each person
+            who spent less than $3000 on food:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname, p.expenses.travel
+FROM Persons p WHERE p.expenses.food &lt; 3000;
+ +----------+--------+
+ | lastname | travel |
+ +----------+--------+
+ | Scully   |   NULL |
+ | Morgan   |    700 |
+ | Anderson |   2100 |
+ | Morrison |   NULL |
+ +----------+--------+
+
+4 rows returned </pre>
+      <p>
+          Notice that NULL is returned for persons who did not have any
+          travel expenses.
+        </p>
+      <p>
+            Filter steps are performed using either the
+            <code class="literal">.values()</code> or <code class="literal">.keys()</code>
+            path steps. To select a map field value, use
+            <code class="literal">.values()</code>. To select a map field key,
+            use <code class="literal">.keys()</code>. Empty expressions for
+            either of these steps returns all values or all keys. If
+            the steps contain a condition expression, the condition is
+            evaluated for each entry, and the entry is selected/skipped
+            if the result is true/false.
+        </p>
+      <p>
+            The implicitly-declared variables $key and $value can be used
+            inside a map filter condition. $key references the key of the
+            current entry and $value references the associated value.
+            Notice that, contrary to arrays, the $pos variable can not be
+            be used inside map filters (because map entries do not have
+            fixed positions).
+        </p>
+      <p>
+            To show all the id and expense categories where the user spent
+            more than $1000:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, p.expenses.keys($value &gt; 1000) as Expenses 
+from Persons p;
+ +----+---------------------+
+ | id |      Expenses       |
+ +----+---------------------+
+ |  4 | clothes             |
+ |    | food                |
+ |    | shoes               |
+ +----+---------------------+
+ |  3 | food                |
+ +----+---------------------+
+ |  2 | food                |
+ |    | travel              |
+ +----+---------------------+
+ |  5 | clothes             |
+ +----+---------------------+
+ |  1 | NULL                |
+ +----+---------------------+ </pre>
+      <p>
+            To return the id and the expense categories in
+            which the user spent more than they spent on clothes, use
+            the following filter step expression. In this
+            query, the context-item variable ($) appearing in the
+            filter step expression [$value &gt; $.clothes] refers to the
+            expenses map as a whole.
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, p.expenses.keys($value &gt; $.clothes) FROM Persons p;
+ +----+---------------------+
+ | id |      Column_2       |
+ +----+---------------------+
+ |  3 | NULL                |
+ +----+---------------------+
+ |  2 | NULL                |
+ +----+---------------------+
+ |  5 | NULL                |
+ +----+---------------------+
+ |  1 | NULL                |
+ +----+---------------------+
+ |  4 | food                |
+ +----+---------------------+ </pre>
+      <p>
+            To return the id and expenses data of any person who
+            spent more on any category than what they spent on food:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, p.expenses
+FROM Persons p
+WHERE p.expenses.values() &gt;any p.expenses.food;
+ +----+---------------------+
+ | id |      expenses       |
+ +----+---------------------+
+ |  5 | clothes  | 1500     |
+ |    | food     | 900      |
+ |    | shoes    | 1000     |
+ +----+---------------------+
+ |  2 | books    | 100      |
+ |    | food     | 1700     |
+ |    | travel   | 2100     |
+ +----+---------------------+
+
+2 rows returned </pre>
+      <p>
+           To return the id of all persons who consumed more than $2000 in
+           any category other than food:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id FROM Persons p
+WHERE p.expenses.values($key != "food") &gt;any 2000;
+ +----+
+ | id |
+ +----+
+ |  2 |
+ +----+
+
+1 row returned </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="arrays.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="complextypes.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="indexes.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Working With Arrays </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Chapter 9. Working With Indexes</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

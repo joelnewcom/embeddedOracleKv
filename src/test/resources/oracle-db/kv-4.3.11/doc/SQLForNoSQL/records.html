@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Working With Records</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="complextypes.html" title="Chapter 8. Working with complex data" />
+    <link rel="prev" href="timestamp-ex.html" title="Working with Timestamps" />
+    <link rel="next" href="orderingbyindex.html" title="Using ORDER BY to Sort Results" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Working With Records</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="timestamp-ex.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 8. Working with complex data</th>
+          <td width="20%" align="right"> <a accesskey="n" href="orderingbyindex.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="records"></a>Working With Records</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            You can use a field step to select the value of a field from
+            a record. For example, to return the id, last name, and city of
+            persons who reside in Florida:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, lastname, p.address.city
+FROM Persons p WHERE p.address.state = "FL";
+ +----+----------+------------+
+ | id | lastname |    city    |
+ +----+----------+------------+
+ |  3 | Morgan   | Middleburg |
+ +----+----------+------------+
+
+1 row returned </pre>
+      <p>
+            In the above query, the path expression (see 
+            <a class="xref" href="path-expressions.html" title="Path Expressions">Path Expressions</a>)
+            <code class="literal">p.address.state</code> consists of 2 field
+            steps: <code class="literal">.address</code> selects the address field of
+            the current row (rows can be viewed as records, whose fields
+            are the row columns), and <code class="literal">.state</code> selects the
+            state field of the current address.
+        </p>
+      <p>
+            The following example demonstrates sequence comparisons (see
+            <a class="xref" href="sequence_operator.html" title="Sequence Comparison Operators">Sequence Comparison Operators</a>).
+            To return the last name of persons who have a phone number with
+            area code 423:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname FROM Persons
+p WHERE p.address.phones.areacode =any 423;
+ +----------+
+ | lastname |
+ +----------+
+ | Morrison |
+ +----------+
+
+1 row returned </pre>
+      <p>
+            In the above query, the path expression
+                <code class="literal">p.address.phones.areacode</code> returns all the
+            area codes of a person. Then, the =any operator returns true if
+            this sequence of area codes contains the number 423. Notice also
+            that the field step <code class="literal">.areacode</code> is applied to
+            an array field (phones). This is allowed if the array contains
+            records or maps. In this case, the field step is applied to each
+            element of the array in turn.
+        </p>
+      <p>
+            The following example returns all the persons who had three
+            connections. Notice the use of [] after connections: it is an
+            array filter step, which returns all the elements of the
+            connections array as a sequence (it is unnesting the array).
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, firstName, lastName, connections from Persons where 
+connections[] =any 3 ORDER BY id;
+ +----+-----------+----------+-------------+
+ | id | firstName | lastName | connections |
+ +----+-----------+----------+-------------+
+ |  1 | David     | Morrison | 2           |
+ |    |           |          | 3           |
+ +----+-----------+----------+-------------+
+ |  2 | John      | Anderson | 1           |
+ |    |           |          | 3           |
+ +----+-----------+----------+-------------+
+ |  4 | Peter     | Smith    | 3           |
+ |    |           |          | 5           |
+ |    |           |          | 1           |
+ |    |           |          | 2           |
+ +----+-----------+----------+-------------+
+ |  5 | Dana      | Scully   | 2           |
+ |    |           |          | 4           |
+ |    |           |          | 1           |
+ |    |           |          | 3           |
+ +----+-----------+----------+-------------+
+
+4 rows returned </pre>
+      <p>
+            This query can use ORDER BY to sort the results because
+            the sort is being performed on the table's primary key.
+            The next section shows sorting on non-primary key fields
+            through the use of indexes.
+        </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="timestamp-ex.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="complextypes.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="orderingbyindex.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Working with Timestamps </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Using ORDER BY to Sort Results</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

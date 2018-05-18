@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Filtering results</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="simple_expressions.html" title="Chapter 7. Simple Select-From-Where Queries" />
+    <link rel="prev" href="identifying_tables.html" title="Identifying tables and their columns" />
+    <link rel="next" href="ordering_results.html" title="Ordering Results" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Filtering results</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="identifying_tables.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 7. Simple Select-From-Where Queries</th>
+          <td width="20%" align="right"> <a accesskey="n" href="ordering_results.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="filtering_results"></a>Filtering results</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            You can filter the result by specifying a filter condition in
+            the WHERE clause. Typically, a filter condition is an expression
+            that consists of one or more comparison expressions connected
+            through the logical operators AND and/or OR. The usual comparison
+    operators: =, !=, &gt;, &gt;=, &lt;, and &lt;= are supported. For example:
+        </p>
+      <p>
+            To return users whose firstname is John:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, firstname, lastname FROM Users WHERE firstname = "John";
+ +----+-----------+----------+
+ | id | firstname | lastname |
+ +----+-----------+----------+
+ |  3 | John      | Morgan   |
+ |  2 | John      | Anderson |
+ +----+-----------+----------+
+
+2 rows returned </pre>
+      <p>
+            To return the users whose calculated
+                <code class="literal">monthlysalary</code> is greater than 6000:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, lastname, income, income/12 AS monthlysalary
+FROM Users WHERE income/12 &gt; 6000;
+ +----+----------+--------+---------------+
+ | id | lastname | income | monthlysalary |
+ +----+----------+--------+---------------+
+ |  5 | Scully   | 400000 |         33333 |
+ |  3 | Morgan   | 200000 |         16666 |
+ |  4 | Smith    |  80000 |          6666 |
+ |  2 | Anderson | 100000 |          8333 |
+ |  1 | Morrison | 100000 |          8333 |
+ +----+----------+--------+---------------+
+
+5 rows returned </pre>
+      <p>
+            To return the users whose age is between 30 and 40 or their
+            income is greater than 100,000:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname, age, income FROM Users
+WHERE 30 &lt;= age and age &lt;=40 or income &gt; 100000;
+ +----------+-----+--------+
+ | lastname | age | income |
+ +----------+-----+--------+
+ | Smith    |  38 |  80000 |
+ | Morgan   |  38 | 200000 |
+ | Anderson |  35 | 100000 |
+ | Scully   |  47 | 400000 |
+ +----------+-----+--------+
+
+4 rows returned </pre>
+      <p>
+            You can use parenthesized expressions to alter the default
+            precedence among operators. For example:
+        </p>
+      <p>
+            To return the users whose age is greater than 40 and either
+            their age is less than 30 or their income is greater or equal
+            than 100,000:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, lastName FROM Users WHERE
+(income &gt;= 100000 or age &lt; 30) and age &gt; 40;
+ +----+----------+
+ | id | lastName |
+ +----+----------+
+ |  5 | Scully   |
+ +----+----------+
+
+1 row returned </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="identifying_tables.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="simple_expressions.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="ordering_results.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Identifying tables and their columns </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Ordering Results</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

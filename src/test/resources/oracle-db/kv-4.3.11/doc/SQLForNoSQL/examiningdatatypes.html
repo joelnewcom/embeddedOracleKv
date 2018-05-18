@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Examining Data Types JSON Columns</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="json.html" title="Chapter 10. Working with JSON" />
+    <link rel="prev" href="arrayconsistency.html" title="Seeking NULLS in Arrays" />
+    <link rel="next" href="mapstepsjason.html" title="Using Map Steps with JSON Data" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Examining Data Types JSON Columns</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="arrayconsistency.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 10. Working with JSON</th>
+          <td width="20%" align="right"> <a accesskey="n" href="mapstepsjason.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="examiningdatatypes"></a>Examining Data Types JSON Columns</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            The example data contains a couple of rows with unusual data:
+        </p>
+      <pre class="programlisting">
+{
+  "id":6,
+  "person" : {
+      "mynumber":5,
+      "myarray":[1,2,3,4]
+  }
+}
+
+{
+  "id":7,
+  "person" : {
+      "mynumber":"5",
+      "myarray":["1","2","3","4"]
+  }
+} </pre>
+      <p>
+            You can locate them using the query:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT * FROM JSONPersons j WHERE EXISTS j.person.mynumber;
+ +----+-------------------+
+ | id |      person       |
+ +----+-------------------+
+ |  6 | myarray           |
+ |    |            1      |
+ |    |            2      |
+ |    |            3      |
+ |    |            4      |
+ |    | mynumber | 5      |
+ +----+-------------------+
+ |  7 | myarray           |
+ |    |            1      |
+ |    |            2      |
+ |    |            3      |
+ |    |            4      |
+ |    | mynumber | 5      |
+ +----+-------------------+
+
+2 rows returned </pre>
+      <p>
+            However, notice that these two rows actually contain numbers
+            stored as different types. ID 6 stores integers while ID 7 stores
+            strings. You can select a row based on its type:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT * FROM JSONPersons j 
+WHERE j.person.mynumber IS OF TYPE (integer);
+ +----+-------------------+
+ | id |      person       |
+ +----+-------------------+
+ |  6 | myarray           |
+ |    |            1      |
+ |    |            2      |
+ |    |            3      |
+ |    |            4      |
+ |    | mynumber | 5      |
+ +----+-------------------+ </pre>
+      <p>
+            Notice that if you use <code class="literal">IS NOT OF TYPE</code>
+            then every row in the table is returned except id 6.
+            This is because for all the other rows, 
+            <code class="literal">j.person.mynumber</code> evaluates to jnull,
+			which is not an integer.
+        </p>
+      <pre class="programlisting">
+sql-&gt; SELECT id FROM JSONPersons j 
+WHERE j.person.mynumber IS NOT OF TYPE (integer);
+ +----+
+ | id |
+ +----+
+ |  3 |
+ |  2 |
+ |  5 |
+ |  4 |
+ |  1 |
+ |  7 |
+ +----+
+
+6 rows returned </pre>
+      <p>
+            To solve this problem, also check for the existence of
+            <code class="literal">j.person.mynumber</code>:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id from JSONPersons j WHERE EXISTS j.person.mynumber 
+and j.person.mynumber IS NOT OF TYPE (integer); 
+ +----+
+ | id |
+ +----+
+ |  7 |
+ +----+
+
+1 row returned </pre>
+      <p>
+            You can also perform type checking based on the type of 
+            data contained in the array. Recall that our rows contain
+            arrays with integers and arrays with strings. You can 
+            return the row with just the array of strings using:
+        </p>
+      <pre class="programlisting">
+sql-&gt; SELECT id, j.person.myarray FROM JSONPersons j 
+WHERE j.person.myarray[] IS OF TYPE (string+);
+ +----+-------------------+
+ | id |      myarray      |
+ +----+-------------------+
+ |  7 | 1                 |
+ |    | 2                 |
+ |    | 3                 |
+ |    | 4                 |
+ +----+-------------------+
+
+1 row returned
+
+</pre>
+      <p>
+            Here, we use the array filter step ([]) in the WHERE
+            clause to unpack the array into a sequence. This allows
+            is-of-type to iterate over the sequence, checking the type
+            of each element. If every element in the sequence matches
+            the identified type (<code class="literal">string</code>, in this case),
+            then the is-of-type returns true.
+        </p>
+      <p>
+            Also notice that the query uses the <code class="literal">+</code>
+            cardinality modifier. This means that is-of-type will return
+            true only if the input sequence (myarray[], in this case)
+            contains ONE OR MORE elements that match the identified type
+            (string). If we used <code class="literal">*</code>, then 0 or more 
+            elements would have to match the identified type in order
+            for true to return. Because our table contains a mix of
+            rows with different schema, the result is that every
+            row except id 6 is returned:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, j.person.myarray FROM JSONPersons j 
+WHERE j.person.myarray[] IS OF TYPE (string*);
+ +----+-------------------+
+ | id |      myarray      |
+ +----+-------------------+
+ |  3 | NULL              |
+ +----+-------------------+
+ |  5 | NULL              |
+ +----+-------------------+
+ |  1 | NULL              |
+ +----+-------------------+
+ |  7 | 1                 |
+ |    | 2                 |
+ |    | 3                 |
+ |    | 4                 |
+ +----+-------------------+
+ |  4 | NULL              |
+ +----+-------------------+
+ |  2 | NULL              |
+ +----+-------------------+
+
+6 rows returned </pre>
+      <p>
+            Finally, if we do not provide a cardinality modifier at all,
+            then is-of-type returns true if ONE AND ONLY one member of the
+            input sequence matches the identified type. In this example,
+            the result is that no rows are returned.
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, j.person.myarray FROM JSONPersons j 
+WHERE j.person.myarray[] IS OF TYPE (string);
+
+0 row returned </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="arrayconsistency.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="json.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="mapstepsjason.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Seeking NULLS in Arrays </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Using Map Steps with JSON Data</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

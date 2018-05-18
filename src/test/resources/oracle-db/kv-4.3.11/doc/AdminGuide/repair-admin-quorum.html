@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>repair-admin-quorum</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="put_command.html" title="put" />
+    <link rel="next" href="show.html" title="show" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">repair-admin-quorum</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="put_command.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="show.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="repair-admin-quorum"></a>repair-admin-quorum</h2>
+          </div>
+        </div>
+      </div>
+      <pre class="programlisting">repair-admin-quorum {-zn &lt;id&gt; | -znname &lt;name&gt; | -admin&lt;id&gt;}... </pre>
+      <p>
+                Repairs admin quorum by reducing membership of the admin
+                group to the admins in the specified zones or the specific
+                admins listed. This command should be used when attempting
+                to recover from a failure that has resulted in a loss of
+                admin quorum.  This command can result in data loss.
+            </p>
+      <p>
+               After obtaining a working admin by calling this command, you
+               should use the plan failover command to failover to the
+               zones that remain available after a failure and to update
+               the topology to match the changes made to the admins.
+            </p>
+      <p>
+               The arguments specify which admins to use as the new set of
+               primary admins, either by specifying all of the admins in
+               one or more zones or by identifying specific admins. The
+               specified set of admins must not be empty, must contain only
+               currently available admins, and must include all currently
+               available primary admins. It may also include secondary
+               admins, if desired, to increase the admin replication factor
+               or because no primary admins are available.
+            </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+                This command can be repeated if a temporary network or
+                component failure causes the command invocation to fail.
+            </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="put_command.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="show.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">put </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> show</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Table LOB Example</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with Oracle NoSQL Database Key/Value API" />
+    <link rel="up" href="lobapi.html" title="Appendix A. Using the Large Object API" />
+    <link rel="prev" href="kvlob_example.html" title="Key/Value LOB Example" />
+    <link rel="next" href="thirdpartylicenses.html" title="Appendix B. Third Party Licenses" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Table LOB Example</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="kvlob_example.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix A. Using the Large Object API</th>
+          <td width="20%" align="right"> <a accesskey="n" href="thirdpartylicenses.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="tablelob_example"></a>Table LOB Example</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            The following example writes and then reads a LOB value using
+            the Table API. Notice that the object is never actually
+            materialized within the application; instead, the value is
+            streamed directly from the file system to the store. On reading
+            from the store, this simple example merely counts the number of
+            bytes retrieved.
+        </p>
+      <p>
+            When you use LOBs with the Table API, you must still use a
+            <code class="classname">Key</code> to identify the LOB object. In other words,
+            you cannot directly store the LOB in a table row. Typically you
+            will construct the <code class="classname">Key</code> using information
+            stored in your table. For example, you can simply store the
+            LOB's key as a text string in one of your table cells. Or you
+            could store the key's values as an array in a table cell (or
+            two arrays, if you are using minor key components). Finally, you
+            can construct the key based on values retrieved from one or
+            more cells in the row.
+        </p>
+      <p>
+            Also, this example only provides bare-bones exception handling.
+            In production code, you will probably want to do more than
+            simply report the exceptions caught by this example.
+        </p>
+      <p>
+            Before beginning, we must define and create the table in the
+            store. The following table definition describes a very minimal
+            table of user information. It then uses a child table to
+            identify one or more image files associated with the user.
+        </p>
+      <pre class="programlisting">table create -name userTable
+add-field -type STRING -name userid
+add-field -type STRING -name familiarname
+add-field -type STRING -name surname
+primary-key -field userid -field familiarname -field surname
+shard-key -field userid
+exit
+plan add-table -name userTable -wait
+
+table create -name userTable.images
+add-field -type STRING -name imageFileName
+add-field -type STRING -name imageVersion
+add-field -type STRING -name imageDescription
+primary-key -field imageFileName
+exit
+plan add-table -name userTable.images -wait</pre>
+      <p>
+            Add the table definition to the store:
+        </p>
+      <pre class="programlisting">&gt; java -Xmx256m -Xms256m \
+-jar KVHOME/lib/kvstore.jar runadmin -host &lt;hostName&gt; \
+-port &lt;port&gt; -store &lt;storeName&gt;
+kv-&gt; load -file createLOBTable.txt
+Table userTable built.
+Executed plan 5, waiting for completion...
+Plan 5 ended successfully
+Table userTable.images built.
+Executed plan 6, waiting for completion...
+Plan 6 ended successfully</pre>
+      <p>
+            Now we can write and read table data. In the following example,
+            we create two users that between them have three associated
+            images. First the table rows are created (written), and then
+            the BLOB data is saved to the store. The example then iterates
+            over the tables, showing relevant information, and along the
+            way showing the images associated with each user.  In this
+            case, we limit the BLOB display to merely reporting on the
+            BLOB's byte count.
+        </p>
+      <pre class="programlisting">package kvstore.lobExample;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
+import oracle.kv.Consistency;
+import oracle.kv.Durability;
+import oracle.kv.KVStore;
+import oracle.kv.KVStoreConfig;
+import oracle.kv.KVStoreFactory;
+import oracle.kv.Key;
+import oracle.kv.RequestTimeoutException;
+import oracle.kv.Version;
+import oracle.kv.lob.InputStreamVersion;
+import oracle.kv.lob.PartialLOBException;
+
+import oracle.kv.table.PrimaryKey;
+import oracle.kv.table.Row;
+import oracle.kv.table.Table;
+import oracle.kv.table.TableAPI;
+import oracle.kv.table.TableIterator;
+import oracle.kv.table.MultiRowOptions;
+
+public class LOBTable {
+
+    private String[] hhosts = {"localhost:5000"};
+
+    // Store handles
+    private KVStoreConfig kconfig;
+    private KVStore kvstore;
+
+    // Table handles
+    private TableAPI tableH;
+    private Table userTable;
+    private Table userImageTable;
+    private Row row;
+
+    private static String blobPfx = "blobpfx";
+    private static String imgSfx = "userimage.lob";
+
+    public static void main(String args[]) {
+        LOBTable lobtable = new LOBTable();
+        lobtable.run(args);
+        System.out.println("All done.");
+    }
+
+    private void run(String args[]) {
+
+        // Open a store handle
+        kconfig = new KVStoreConfig("kvstore", hhosts);
+        kvstore = KVStoreFactory.getStore(kconfig);
+        tableH = kvstore.getTableAPI();
+
+
+        // Obtain table handles
+        userTable = tableH.getTable("userTable");
+        userImageTable = tableH.getTable("userTable.images");
+
+        // populate the tables, and load LOBs into the store
+        addData();
+
+        // retrieve tables, and retrieve LOBs from the store
+        // and show some details about the tables and LOBs.
+        retrieveData();
+    }
+
+    // Creates some table rows and loads images into the store
+    private void addData() {
+
+        // Load up a couple of rows in the user (parent) table.
+        row = userTable.createRow();
+        row.put("userid","m.beckstrom.3267");
+        row.put("familiarname","Mary");
+        row.put("surname","Beckstrom");
+        tableH.put(row, null, null);
+
+        row = userTable.createRow();
+        row.put("userid","h.zwaska.9140");
+        row.put("familiarname","Harry");
+        row.put("surname","Zwaska");
+        tableH.put(row, null, null);
+
+        // Now populate each row's image (child) table
+        // and stream in a BLOB as each row is created.
+        row = userImageTable.createRow();
+        row.put("userid","m.beckstrom.3267");
+        row.put("imageFileName","IMG_2581.jpg");
+        row.put("imageDescription","Highrise sunset");
+        tableH.put(row, null, null);
+        loadBlob("m.beckstrom.3267", "IMG_2581.jpg");
+
+        row = userImageTable.createRow();
+        row.put("userid","m.beckstrom.3267");
+        row.put("imageFileName","IMG_2607.jpg");
+        row.put("imageDescription","Swing set at dawn");
+        tableH.put(row, null, null);
+        loadBlob("m.beckstrom.3267", "IMG_2607.jpg");
+
+        row = userImageTable.createRow();
+        row.put("userid","h.zwaska.9140");
+        row.put("imageFileName","mom1.jpg");
+        row.put("imageDescription","Mom's 89th birthday");
+        tableH.put(row, null, null);
+        loadBlob("h.zwaska.9140", "mom1.jpg");
+    }
+
+    // Loads a blob of data into the store
+    private void loadBlob(String userid, String filename) {
+
+        // Construct the key.
+        // userid and filename are information saved in the
+        // table, so later we can recreate the key by table
+        // examination. blobPfx is a constant that we use for 
+        // all BLOB data. imgSfx ends the key path with the
+        // required suffix. We use a fixed constant partially
+        // to meet the BLOB suffix requirement, but in a 
+        // larger system this could also be used to 
+        // differentiate the type of data contained in the 
+        // BLOB (image data versus an audio file, for example).
+
+        final Key key = Key.createKey(
+                Arrays.asList(blobPfx, userid, filename, imgSfx));
+
+        File lobFile = new File(filename);
+        try {
+            FileInputStream fis  = new FileInputStream(lobFile);
+            // The image file is streamed from the filesystem into 
+            // the store without materializing it within the
+            // application. A medium level of durability is
+            // used for this put operation. A timeout value
+            // of 5 seconds is set in which each chunk of the LOB
+            // must be written, or the operation fails with a
+            // RequestTimeoutException.
+            kvstore.putLOB(key, fis,
+                    Durability.COMMIT_WRITE_NO_SYNC,
+                    5, TimeUnit.SECONDS);
+        } catch (FileNotFoundException fnf) {
+            System.err.println("Input file not found.");
+
+            System.err.println("FileNotFoundException: " +
+                    fnf.toString());
+            fnf.printStackTrace();
+            System.exit(-1);
+        } catch (RequestTimeoutException rte) {
+            System.err.println("A LOB chunk was either not read or");
+            System.err.println("not written in the alloted time.");
+
+            System.err.println("RequestTimeoutException: " + 
+                rte.toString());
+            rte.printStackTrace();
+            System.exit(-1);
+        } catch (IOException e) {
+            System.err.println("IO Exception: " + e.toString());
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    // Retrieves the user (parent) table, as well as the images
+    // (child) table, and then iterates over the user table, 
+    // displaying each row as it is retrieved.
+    private void retrieveData() {
+
+        PrimaryKey key = userTable.createPrimaryKey();
+        // Iterate over every row in the user table including
+        // images (child) table in the result set.
+        MultiRowOptions mro = new MultiRowOptions(null, null,
+                Arrays.asList(userImageTable));
+        TableIterator&lt;Row&gt; iter = 
+                   tableH.tableIterator(key, mro, null);
+        try {
+            while (iter.hasNext()) {
+                Row row = iter.next();
+                displayRow(row);
+            }
+        } finally {
+            iter.close();
+        }
+    }
+
+    // Display a single table row. Tests to see if the
+    // table row belongs to a user table or a user images
+    // table, and then displays the row appropriately.
+    private void displayRow(Row row) {
+        if (row.getTable().equals(userTable)) {
+            System.out.println("\nName: " +
+                    row.get("familiarname").asString().get() +
+                    " " +
+                    row.get("surname").asString().get());
+            System.out.println("UID: " +
+                    row.get("userid").asString().get());
+        } else if (row.getTable().equals(userImageTable)) {
+            showBlob(row);
+        }
+    }
+
+   // Retrieves and displays a BLOB of data. For this limited
+    // example, the BLOB display is limited to simply reporting
+    // on its size.
+    private void showBlob(Row row) {
+        // Build the blob key based on information stored in the
+        // row, plus external constants.
+        String userid = row.get("userid").asString().get();
+        String filename  = row.get("imageFileName").asString().get();
+        final Key key = Key.createKey(
+                Arrays.asList(blobPfx, userid, filename, imgSfx));
+
+        // Show supporting information about the file which we have
+        // stored in the table row:
+        System.out.println("\n\tFile: " + filename);
+        System.out.println("\tDescription: " +
+                row.get("imageDescription").asString().get());
+
+        try {
+            // Now read the LOB. It is streamed from the store, 
+            // without materialization within the application code. 
+            // Here, we only count the number of bytes retrieved.
+            //
+            // We use the least stringent consistency policy 
+            // available for the read. Each LOB chunk must be read 
+            // within a 5 second window or a RequestTimeoutException
+            // is thrown.
+            InputStreamVersion istreamVersion =
+                 kvstore.getLOB(key,
+                              Consistency.NONE_REQUIRED,
+                              5, TimeUnit.SECONDS);
+
+             InputStream stream = istreamVersion.getInputStream();
+             int byteCount = 0;
+             while (stream.read() != -1) {
+                 byteCount++;
+             }
+             System.out.println("\tBLOB size: " + byteCount);
+
+        } catch (RequestTimeoutException rte) {
+            System.err.println("A LOB chunk was either not read or");
+            System.err.println("not written in the alloted time.");
+
+            System.err.println("RequestTimeoutException: " + 
+                rte.toString());
+            rte.printStackTrace();
+            System.exit(-1);
+        } catch (PartialLOBException ple) {
+            System.err.println("Retrieval (getLOB()) only retrieved");
+            System.err.println("a portion of the requested object.");
+
+            System.err.println("PartialLOBException: " + ple.toString());
+            ple.printStackTrace();
+            System.exit(-1);
+        } catch (IOException e) {
+            System.err.println("IO Exception: " + e.toString());
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    protected LOBTable() {}
+} </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="kvlob_example.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="lobapi.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="thirdpartylicenses.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Key/Value LOB Example </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Appendix B. Third Party Licenses</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>configure</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="change-policy.html" title="change-policy" />
+    <link rel="next" href="connect.html" title="connect" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">configure</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="change-policy.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="connect.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="configure_store"></a>configure</h2>
+          </div>
+        </div>
+      </div>
+      <pre class="programlisting">configure -name &lt;storename&gt; </pre>
+      <p>
+                Configures a new store. This call must be made
+                before any other administration can be performed.
+            </p>
+      <p>
+                Use the <code class="literal">-name</code> option to specify
+                the name of the KVStore that you want to configure.
+                The name is used to form a path to records kept in the
+                store. For this reason, you should avoid using
+                characters in the store name that might interfere with
+                its use within a file path. The command line interface
+                does not allow an invalid store name. Valid characters
+                are alphanumeric, '-', '_', and '.'.
+            </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="change-policy.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="connect.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">change-policy </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> connect</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

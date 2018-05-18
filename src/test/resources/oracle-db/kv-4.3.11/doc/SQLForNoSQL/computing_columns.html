@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Computing new columns</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="simple_expressions.html" title="Chapter 7. Simple Select-From-Where Queries" />
+    <link rel="prev" href="renaming_columns.html" title="Renaming columns" />
+    <link rel="next" href="identifying_tables.html" title="Identifying tables and their columns" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Computing new columns</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="renaming_columns.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 7. Simple Select-From-Where Queries</th>
+          <td width="20%" align="right"> <a accesskey="n" href="identifying_tables.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="computing_columns"></a>Computing new columns</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            The SELECT clause can also contain expressions that
+            compute/create new values from existing data. In fact, any kind
+            of expression that returns at most one item can be used in the
+            SELECT list. Here we show two examples demonstrating arithmetic
+            expressions. The usual arithmetic operators: +, -,
+            *, and / are supported.
+        </p>
+      <p>
+            To select the income column and perform a division operation
+            which calculates <code class="literal">monthlysalary</code>:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, lastname, income, income/12
+AS monthlysalary FROM users;
+ +----+----------+--------+---------------+
+ | id | lastname | income | monthlysalary |
+ +----+----------+--------+---------------+
+ |  2 | Anderson | 100000 |          8333 |
+ |  1 | Morrison | 100000 |          8333 |
+ |  5 | Scully   | 400000 |         33333 |
+ |  4 | Smith    |  80000 |          6666 |
+ |  3 | Morgan   | 200000 |         16666 |
+ +----+----------+--------+---------------+
+
+5 rows returned </pre>
+      <p>
+            To select the income column and perform an addition operation
+            which calculates <code class="literal">salarywithbonus</code>:
+        </p>
+      <pre class="programlisting">sql-&gt; SELECT id, lastname, income, income+5000
+AS salarywithbonus FROM users;
+ +----+----------+--------+-----------------+
+ | id | lastname | income | salarywithbonus |
+ +----+----------+--------+-----------------+
+ |  4 | Smith    |  80000 |           85000 |
+ |  1 | Morrison | 100000 |          105000 |
+ |  5 | Scully   | 400000 |          405000 |
+ |  3 | Morgan   | 200000 |          205000 |
+ |  2 | Anderson | 100000 |          105000 |
+ +----+----------+--------+-----------------+
+
+5 rows returned </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="renaming_columns.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="simple_expressions.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="identifying_tables.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Renaming columns </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Identifying tables and their columns</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

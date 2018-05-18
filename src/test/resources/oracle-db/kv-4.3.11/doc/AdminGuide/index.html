@@ -1,0 +1,1771 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Oracle NoSQL Database Administrator's Guide</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="next" href="preface.html" title="Preface" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Oracle NoSQL Database Administrator's Guide</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"> </td>
+          <th width="60%" align="center"> </th>
+          <td width="20%" align="right"> <a accesskey="n" href="preface.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="book" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h1 class="title"><a id="idp1041488"></a>Oracle NoSQL Database Administrator's Guide</h1>
+          </div>
+          <div>
+            <div class="legalnotice">
+              <a id="idp1638800"></a>
+              <p class="legalnotice-title">
+                <b>Legal Notice</b>
+              </p>
+              <span>
+        <p>
+            Copyright © 2011 - 2017 Oracle and/or its affiliates. All rights
+            reserved.
+        </p>
+        <p>
+            This software and related documentation are provided under a
+            license agreement containing restrictions on use and disclosure
+            and are protected by intellectual property laws. Except as
+            expressly permitted in your license agreement or allowed by
+            law, you may not use, copy, reproduce, translate, broadcast,
+            modify, license, transmit, distribute, exhibit, perform,
+            publish, or display any part, in any form, or by any means.
+            Reverse engineering, disassembly, or decompilation of this
+            software, unless required by law for interoperability, is
+            prohibited.
+        </p>
+        <p>
+            The information contained herein is subject to change without
+            notice and is not warranted to be error-free. If you find any
+            errors, please report them to us in writing.
+        </p>
+        
+        <p>
+            If this is software or related documentation that is delivered
+            to the U.S. Government or anyone licensing it on behalf of the
+            U.S. Government, the following notice is applicable:
+        </p>
+        <p>
+            U.S. GOVERNMENT END USERS: Oracle programs, including any
+            operating system, integrated software, any programs installed
+            on the hardware, and/or documentation, delivered to U.S.
+            Government end users are "commercial computer software"
+            pursuant to the applicable Federal Acquisition Regulation and
+            agency-specific supplemental regulations. As such, use,
+            duplication, disclosure, modification, and adaptation of the
+            programs, including any operating system, integrated software,
+            any programs installed on the hardware, and/or documentation,
+            shall be subject to license terms and license restrictions
+            applicable to the programs. No other rights are granted to the
+            U.S. Government.
+        </p>
+        <p>
+            This software or hardware is developed for general use in a
+            variety of information management applications. It is not
+            developed or intended for use in any inherently dangerous
+            applications, including applications that may create a risk of
+            personal injury. If you use this software or hardware in
+            dangerous applications, then you shall be responsible to take
+            all appropriate fail-safe, backup, redundancy, and other
+            measures to ensure its safe use. Oracle Corporation and its
+            affiliates disclaim any liability for any damages caused by use
+            of this software or hardware in dangerous applications.
+        </p>
+        <p>
+            Oracle and Java are registered trademarks of Oracle and/or its
+            affiliates. Other names may be trademarks of their respective
+            owners.
+        </p>
+        <p>
+            Intel and Intel Xeon are trademarks or registered trademarks of
+            Intel Corporation. All SPARC trademarks are used under license
+            and are trademarks or registered trademarks of SPARC
+            International, Inc. AMD, Opteron, the AMD logo, and the AMD
+            Opteron logo are trademarks or registered trademarks of
+            Advanced Micro Devices. UNIX is a registered trademark of The
+            Open Group.
+        </p>
+        <p>
+            This software or hardware and documentation may provide access
+            to or information on content, products, and services from third
+            parties. Oracle Corporation and its affiliates are not
+            responsible for and expressly disclaim all warranties of any
+            kind with respect to third-party content, products, and
+            services. Oracle Corporation and its affiliates will not be
+            responsible for any loss, costs, or damages incurred due to
+            your access to or use of third-party content, products, or
+            services.
+        </p>
+    </span>
+            </div>
+          </div>
+          <div>
+            <p class="pubdate">17-Feb-2017</p>
+          </div>
+        </div>
+        <hr />
+      </div>
+      <div class="toc">
+        <p>
+          <b>Table of Contents</b>
+        </p>
+        <dl>
+          <dt>
+            <span class="preface">
+              <a href="preface.html">Preface</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="preface.html#conventions">Conventions Used in This Book</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="installation.html">1. Installing Oracle NoSQL Database</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="installation.html#install-prereqs">Installation Prerequisites</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="install.html">Installation</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="install-config.html">Installation Configuration</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="install-config.html#kvstore_instal">Steps to Configure KVSTORE Installation</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="config-firewall.html">Configuring the Firewall</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="plans.html">2. Plans</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="plans.html#usingplans">Using Plans</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plans.html#planexecutefeedback">Feedback While a Plan is Running</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="planstates.html">Plan States</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="reviewplans.html">Reviewing Plans</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="plan_ownership.html">Plan Ownership</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="configure.html">3. Configuring the KVStore</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="configure.html#config-overview">Configuration Overview</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="cli-start.html">Start the Administration CLI</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="cli-start.html#cli-plan-command">The plan Commands</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="cli-configurenodes.html">Configure and Start a Set of 
+        Storage Nodes</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="cli-configure-command.html">Name your KVStore</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="cli-datacenter.html">Create a Zone</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="cli-adminproc.html">Create an Administration Process on a
+        Specific Host</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="cli-createpool.html">Create a Storage Node Pool</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="create-all-sns.html">Create the Remainder of your Storage Nodes</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="create-rep-nodes.html">Create and Deploy Replication Nodes</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="config_remote-access-security.html">Configuring Security 
+        with Remote Access</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="multiple-datacenters.html">Configuring with Multiple Zones</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="deploy-script.html">Using a Script to Configure the Store</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="smoketest.html">Smoke Testing the System</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="troubleshooting.html">Troubleshooting</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="troubleshooting.html#findingerrorinfo">Where to Find Error Information</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="troubleshooting.html#servicestates">Service States</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="troubleshooting.html#usefulcommands">Useful Commands</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="managing-topology.html">4. Determining Your Store's Configuration</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="managing-topology.html#planningprocess">Steps for Changing the Store's Topology</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="managing-topology.html#topologycandidate">Make the Topology Candidate</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="managing-topology.html#transformtopology">Transform the Topology Candidate</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="managing-topology.html#viewtopology">View the Topology Candidate</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="managing-topology.html#validatetopology">Validate the Topology Candidate</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="managing-topology.html#previewtopology">Preview the Topology Candidate</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="managing-topology.html#deploytopology">Deploy the Topology Candidate</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="managing-topology.html#verifytopology">Verify the Store's Current Topology</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="arbiter_topology.html">Deploying an Arbiter Node Enabled Topology</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="deploymentupdate.html">5. Upgrading an Existing Oracle NoSQL Database Deployment</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="deploymentupdate.html#upgradeprepare">Preparing to Upgrade</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="upgradeprocedure.html">General Upgrade Notes</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="upgrade_release_3_to_current.html">Upgrade to This Release from 
+          Release 3.0 or Later</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="upgrade_release_3_to_current.html#scriptto21">Using a Script to Upgrade to Release 4</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="procedures.html">6. Administrative Procedures</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="procedures.html#backup">Backing Up the Store</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="procedures.html#takesnapshot">Taking a Snapshot</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="procedures.html#snapshotmanage">Snapshot Management</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="recovery.html">Recovering the Store</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="recovery.html#usingload">Using the Load Program</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="recovery.html#restoredirect">Restoring Directly from a Snapshot</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="datacorrupt.html">Recovering from Data Corruption</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="datacorrupt.html#corruptiondetection">Detecting Data Corruption</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="datacorrupt.html#datacorruptionrecovery">Data Corruption Recovery Procedure</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="usingimportexport.html">Using the Export and Import Utilities</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="usingimportexport.html#exportingdata">Exporting Data</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="usingimportexport.html#importdata">Importing Data</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="usingimportexport.html#installcloudjars">Installing the Cloud Storage JARs</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="provideschema.html">
+            
+            <span>Managing Avro Schema</span>
+        </a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="provideschema.html#schema-add-to-store">Adding Schema</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="provideschema.html#change-schema-in-store">Changing Schema</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="provideschema.html#disable-schema-in-store">Disabling and Enabling Schema</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="provideschema.html#show-schema-in-store">Showing Schema</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="increasecapacity.html">Increasing the capacity of a Storage Node</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="manage-storagedirsize.html">Managing Storage Directory Sizes</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="replacefailedsn.html">Replacing a Failed Storage Node</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="replacedisk.html">Replacing a Failed Disk</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="replacedc.html">Repairing a Failed Zone by Replacing Hardware</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="disableservices.html">Disabling Storage Node Agent Hosted Services</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="verifyingthestore.html">Verifying the Store</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="monitoring.html">Monitoring the Store</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="monitoring.html#monitorevents">Events</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="setstoreparams.html">Setting Store Parameters</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#changeparamcli">Changing Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#settingpolicycli">Setting Store Wide Policy Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#adminparameters">Admin Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#storagenodeparameters">Storage Node Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#replicationnodeparameters">Replication Node Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#globalparameters">Global Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#securityparameters">Security Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#admin_restart">Admin Restart</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="setstoreparams.html#rn_restart">Replication Node Restart</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="removestore.html">Removing an Oracle NoSQL Database Deployment</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="fixhaportrange.html">Fixing Incorrect Storage Node HA Port Ranges</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="failover-switchover.html">7.  Failover and Switchover Operations </a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="failover-switchover.html#repairzone">Repairing a Failed Zone</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="perform_failover.html">Performing a failover</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="perform_switchover.html">Performing a Switchover</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="standardized-monitoring.html">8. 
+      Standardized Monitoring Interfaces
+   </a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="standardized-monitoring.html#SNMP-JMX-Objects">
+            Java Management Extensions (JMX)
+       </a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="standardized-monitoring.html#Enabling_Monitoring">Enabling Monitoring</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="standardized-monitoring.html#Displaying_MBeans">Displaying the NoSQL DB MBeans</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+            </dl>
+          </dd>
+          <dt>
+            <span class="chapter">
+              <a href="oem-integration.html">9. 
+      Integrating Oracle Enterprise Manager (OEM) with
+      Oracle NoSQL Database 
+   </a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="oem-integration.html#import-deploy-plugin">
+            Importing and Deploying the EM Plug-in
+       </a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="adding-nosql-database-targets.html">
+            Adding NoSQL Database Targets
+       </a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="components-of-nosql-store.html">
+            Components of a NoSQL Store
+       </a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="store-targets.html">
+            Store Targets
+       </a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="store-targets.html#store-page">Store Page</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="store-targets.html#store-node-page">Storage Node Page</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="store-targets.html#shard-page">Shard Page</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="store-targets.html#replication-node-page">Replication Node Page</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+            </dl>
+          </dd>
+          <dt>
+            <span class="appendix">
+              <a href="configure_non-secure.html">A. 
+   Installing and Configuring a Non-secure Store</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="configure_non-secure.html#instal_non-secure">Installation Configuration</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="appendix">
+              <a href="cli_command_reference.html">B. CLI Command Reference</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="cli_command_reference.html#aggregate">aggregate </a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="cli_command_reference.html#aggregate_kv">aggregate kv</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="cli_command_reference.html#aggregate-table">aggregate table</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="await-consistent.html">await-consistent</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="change-policy.html">change-policy</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="configure_store.html">configure</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="connect.html">connect</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="connect.html#connect-admin">connect admin</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="connect.html#connect store">connect store</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="delete.html">delete</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="delete.html#delete_kv">delete kv</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="delete.html#delete-table">delete table</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="ddl.html">ddl</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="ddl.html#add_ddl_schema">ddl add-schema</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="ddl.html#enable_ddl_schema">ddl enable-schema</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="ddl.html#disable_ddl_schema">ddl disable-schema</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="execute.html">execute</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="exit.html">exit</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="get.html">get </a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="get.html#get_kv"> get kv </a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="get.html#get-table">get table</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="help.html">help</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="hidden.html">hidden</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="history.html">history</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="load.html">load</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="logtail.html">logtail</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="page.html">page</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="ping.html">ping</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="plan.html">plan</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_add_index">plan add-index</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_add_table">plan add-table</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_register_es">plan register-es </a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_deregister_es">plan deregister-es </a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_cancel">plan cancel</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_change-parameters">plan change-parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_change_storagedir">plan change-storagedir</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_change_user">plan change-user</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_create_user">plan create-user</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_deploy-admin">plan deploy-admin</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_deploy_datacenter">plan deploy-datacenter </a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_deploy-sn">plan deploy-sn</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_deploy-topology">plan deploy-topology</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_deploy_zone">plan deploy-zone</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_drop_user">plan drop-user</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_evolve-table">plan evolve-table</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_execute">plan execute</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_failover">plan failover</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_grant">plan grant</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_interrupt">plan interrupt</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_migrate-sn">plan migrate-sn</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_remove-admin">plan remove-admin</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_remove_index">plan remove-index</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_remove_datacenter">plan remove-datacenter</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_remove-sn">plan remove-sn</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_remove-table">plan remove-table</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_remove-zone">plan remove-zone</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_repair_topology">plan repair-topology</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_revoke">plan revoke</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_start-service">plan start-service</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_stop-service">plan stop-service</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="plan.html#plan_wait">plan wait</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="pool.html">pool</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pool.html#pool_clone">pool clone</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pool.html#pool_create">pool create</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pool.html#pool_join">pool join</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pool.html#pool_leave">pool leave</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pool.html#pool_remove">pool remove</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="put_command.html">put</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="put_command.html#put_kv">put kv</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="put_command.html#put_table">put table</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="repair-admin-quorum.html">repair-admin-quorum</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="show.html">show</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_admins">show admins</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_datacenters">show datacenters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_events">show events</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_faults">show faults</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_indexes">show indexes</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_parameters">show parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_perf">show perf</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_plans">show plans</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_pools">show pools</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_schemas">show schemas</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_snapshots">show snapshots</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_tables">show tables</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_topology">show topology</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_upgrade">show upgrade-order</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_users">show users</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_versions">show versions</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="show.html#show_zones">show zones</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="snapshot.html">snapshot</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="snapshot.html#snapshot_create">snapshot create</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="snapshot.html#snapshot_remove">snapshot remove</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="table.html">table</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="table_size.html">table-size</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="timer.html">timer</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="topology.html">topology</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_change-repfactor">topology change-repfactor</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_change-zone-arbiters">topology change-zone-arbiters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_change-zone-type">topology change-zone-type</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_clone">topology clone</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_contract">topology contract</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_create">topology create</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_delete">topology delete</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_list">topology list</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_preview">topology preview</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_rebalance">topology rebalance</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_redistribute">topology redistribute</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_validate">topology validate</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="topology.html#topology_view">topology view</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="verbose.html">verbose</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="verify.html">verify</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="verify.html#verify_silent">verify configuration</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="verify.html#verify_prerequisite">verify prerequisite</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="verify.html#verify_upgrade">verify upgrade</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+            </dl>
+          </dd>
+          <dt>
+            <span class="appendix">
+              <a href="utility_command_reference.html">C. Utility Command Reference</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="utility_command_reference.html#exportutility">export</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="utility_command_reference.html#exportclparms">Export Utility Command Line Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="utility_command_reference.html#exportconfig">Export Utility Configuration File</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="utility_command_reference.html#schemamanagement">Schema Management</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="utility_command_reference.html#exportutilcodes">Export Exit Codes</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="generateconfig.html">generateconfig</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="helpjar.html">help</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="importutility.html">import</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="importutility.html#importclparms">Import Utility Command Line Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="importutility.html#importconfig">Import Utility Configuration File</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="importutility.html#importutilcodes">Import Exit Codes</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="loaddata.html">load admin metadata</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="loadstoredata.html">load store data</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="makebootconfig.html">makebootconfig</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="pingstore.html">ping</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pingstore.html#pingparamters">Ping Command Line Parameters</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pingstore.html#pingexitcodes">Ping Exit Codes</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pingstore.html#pingtext">Ping Report Text Output</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="pingstore.html#pingjson">Ping Report JSON Output</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="restartagent.html">restart</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="runadmin.html">runadmin</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="startagent.html">start</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="status.html">status</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="stopagent.html">stop</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="version.html">version</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="appendix">
+              <a href="initialcapacityplanning.html">D. Initial Capacity Planning</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="initialcapacityplanning.html#shard-capacity">Shard Capacity</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="initialcapacityplanning.html#application-characteristics">Application
+        Characteristics</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="initialcapacityplanning.html#hardware-characteristics">Hardware
+        Characteristics</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="initialcapacityplanning.html#shard-capacities">Shard Storage and Throughput Capacities</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="initialcapacityplanning.html#mem-network-config">Memory and Network Configuration</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="estimate-total-shards-and-machines.html">Estimate total Shards and Machines</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="estimate-total-shards-and-machines.html#num-partitions">Number of Partitions</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+            </dl>
+          </dd>
+          <dt>
+            <span class="appendix">
+              <a href="machine-tuning.html">E. Tuning</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="machine-tuning.html#turnoffswap">Turn off the swap</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="linuxcachepagetuning.html">Linux Page Cache Tuning</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="osuser.html">OS User Limits</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="osuser.html#fdlimits">File Descriptor Limits</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="osuser.html#processthread">Process and Thread Limits</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="networkconfig.html">Linux Network Configuration Settings</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="networkconfig.html#serversocket">Server Socket Backlog</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="networkconfig.html#isolateha">Isolating HA Network Traffic</a>
+                    </span>
+                  </dt>
+                  <dt>
+                    <span class="sect2">
+                      <a href="networkconfig.html#receivepacket">Receive Packet Steering</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+              <dt>
+                <span class="sect1">
+                  <a href="offheap.html">Managing the Off-heap Cache</a>
+                </span>
+              </dt>
+              <dd>
+                <dl>
+                  <dt>
+                    <span class="sect2">
+                      <a href="offheap.html#setoffheapsize">Configuring the Off-heap Cache</a>
+                    </span>
+                  </dt>
+                </dl>
+              </dd>
+            </dl>
+          </dd>
+          <dt>
+            <span class="appendix">
+              <a href="ssd.html">F. Solid State Drives (SSDs)</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="ssd.html#trim_req">Trim requirements</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="enable_trim.html">Enabling Trim</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="appendix">
+              <a href="diag_util.html">G. Diagnostics Utility</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect1">
+                  <a href="diag_util.html#diag_setup">Setting up the tool</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="diag_collect.html">Packaging information and files</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="diag_verify.html">Verifying Storage Node configuration</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect1">
+                  <a href="diag_stats.html">Key Distribution Statistics Utility</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="appendix">
+              <a href="thirdpartylicenses.html">H. Third Party Licenses</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"> </td>
+          <td width="20%" align="center"> </td>
+          <td width="40%" align="right"> <a accesskey="n" href="preface.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top"> </td>
+          <td width="20%" align="center"> </td>
+          <td width="40%" align="right" valign="top"> Preface</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

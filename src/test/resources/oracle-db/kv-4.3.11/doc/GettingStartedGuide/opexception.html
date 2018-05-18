@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>LOB Operation Exceptions</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with Oracle NoSQL Database Key/Value API" />
+    <link rel="up" href="lobapi.html" title="Appendix A. Using the Large Object API" />
+    <link rel="prev" href="lobapis.html" title="LOB APIs" />
+    <link rel="next" href="kvlob_example.html" title="Key/Value LOB Example" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">LOB Operation Exceptions</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="lobapis.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix A. Using the Large Object API</th>
+          <td width="20%" align="right"> <a accesskey="n" href="kvlob_example.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="opexception"></a>LOB Operation Exceptions</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            The methods used to read and insert LOBs are not atomic.  This
+            relaxing of the atomicity requirement permits distribution of
+            LOB chunks across the entire store. It is therefore the
+            application's responsibility to coordinate concurrent
+            operations on a LOB. The LOB implementation will make a good
+            faith effort to detect concurrent modification of a LOB and
+            throw <code class="classname">ConcurrentModificationException</code>
+            when it detects conflicts, but there is no guarantee that the
+            API will detect all such conflicts. The safe course of action
+            upon encountering this exception is to delete the LOB and
+            replace it with a new value after fixing the application level
+            coordination issue that provoked the exception.
+        </p>
+      <p>
+            Failures during a LOB modification operation result in the creation
+            of a partial LOB. The LOB value of a partial LOB is in some
+            intermediate state, where it cannot be read by the application;
+            attempts to <code class="methodname">getLOB()</code> on a partial LOB will
+            result in a <code class="classname">PartialLOBException</code>. A partial
+            LOB resulting from an incomplete <code class="methodname">putLOB()</code>
+            operation can be repaired by retrying the operation.  Or it can be
+            deleted and a new key/value pair can be created in its place. A
+            partial LOB resulting from an incomplete delete operation must have
+            the delete retried. The documentation associated with individual
+            LOB methods describes their behavior when invoked on partial LOBs
+            in greater detail.
+        </p>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="lobapis.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="lobapi.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="kvlob_example.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">LOB APIs </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Key/Value LOB Example</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

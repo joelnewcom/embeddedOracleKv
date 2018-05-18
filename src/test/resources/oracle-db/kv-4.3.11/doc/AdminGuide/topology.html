@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>topology</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="timer.html" title="timer" />
+    <link rel="next" href="verbose.html" title="verbose" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">topology</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="timer.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="verbose.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="topology"></a>topology</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_change-repfactor">topology change-repfactor</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_change-zone-arbiters">topology change-zone-arbiters</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_change-zone-type">topology change-zone-type</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_clone">topology clone</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_contract">topology contract</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_create">topology create</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_delete">topology delete</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_list">topology list</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_preview">topology preview</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_rebalance">topology rebalance</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_redistribute">topology redistribute</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_validate">topology validate</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="topology.html#topology_view">topology view</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+                Encapsulates commands that manipulate store
+                topologies. Examples are redistribution/rebalancing of
+                nodes or changing replication factor. Topologies are
+                created and modified using this command. They are then
+                deployed by using the <code class="literal">plan
+                deploy-topology</code> command. For more
+                information, see <a class="xref" href="plan.html#plan_deploy-topology" title="plan deploy-topology">plan deploy-topology</a>. The
+                subcommands are as follows:
+            </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_change-repfactor" title="topology change-repfactor">topology change-repfactor</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_change-zone-arbiters" title="topology change-zone-arbiters">topology change-zone-arbiters</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_change-zone-type" title="topology change-zone-type">topology change-zone-type</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_clone" title="topology clone">topology clone</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_contract" title="topology contract">topology contract</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_create" title="topology create">topology create</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+
+                        <a class="xref" href="topology.html#topology_delete" title="topology delete">topology delete</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_list" title="topology list">topology list</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_preview" title="topology preview">topology preview</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_rebalance" title="topology rebalance">topology rebalance</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_redistribute" title="topology redistribute">topology redistribute</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_validate" title="topology validate">topology validate</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="topology.html#topology_view" title="topology view">topology view</a>
+                    </p>
+          </li>
+        </ul>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_change-repfactor"></a>topology change-repfactor</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology change-repfactor -name &lt;name&gt;  -pool &lt;pool name&gt;
+    -zn &lt;id&gt; | -znname &lt;name&gt; -rf &lt;replication factor&gt; </pre>
+        <p>
+                    Modifies the topology to change the replication
+                    factor of the specified zone to a new value. The
+                    replication factor may not be decreased at this
+                    time.
+                </p>
+        <p>
+                   The command will create Replication Nodes and Arbiter Nodes
+                   and may remove Arbiter Nodes only in the zone specified 
+                   in the command. If the change in replication factor increases 
+                   the total primary replication factor equal to two and the
+                   zone is configured to allow Arbiters, then Arbiters are 
+                   created in that zone. If the change in replication factor 
+                   increases the total primary Replication Factor from two
+                   to a number greater than two and if the zone contained
+                   Arbiters, then they are removed from the zone. If some 
+                   other zone contained Arbiters,  a topology rebalance must 
+                   be performed by the user to remove the Arbiters from the
+                   topology.
+            	</p>
+        <p>
+                    For more information on modifying the
+                    replication factor, see <a class="xref" href="managing-topology.html#datareplication" title="Increase Replication Factor">Increase Replication Factor</a>.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_change-zone-arbiters"></a>topology change-zone-arbiters</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology change-zone-arbiters -name &lt;name&gt;
+    {-zn &lt;id&gt; | -znname &lt;name&gt;}  {-arbiter | -no-arbiter}</pre>
+        <p>
+                    Modifies the topology to change the Arbiter Node attribute of the
+                    specified zone.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_change-zone-type"></a>topology change-zone-type</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology change-zone-type -name &lt;name&gt;
+    {-zn &lt;id&gt; | -znname &lt;name&gt;} -type {primary | secondary} </pre>
+        <p>
+                    Modifies the topology to change the type of the specified
+                    zone to a new type.
+                </p>
+        <p>
+                   If one or more zones have their type changed and the resulting
+                   topology is deployed using the plan deploy-topology command, the
+                   following rules apply:
+                </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                           The plan waits for up to five minutes for secondary nodes that
+                           are being converted to primary nodes to catch up with their
+                           masters.
+                        </p>
+            </li>
+            <li>
+              <p>
+                           The plan will fail, and print details about lagging zones
+                           and nodes, if a quorum of secondary nodes in each shard fails
+                           to catch up within the required amount of time. This behavior
+                           helps to reduce the time that a newly added primary node
+                           cannot become a master, and so is not able
+                           to contribute to availability.
+                        </p>
+            </li>
+            <li>
+              <p>
+                           Because this command can only be performed successfully
+                           if quorum can be maintained, it does not result in data loss.
+                        </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_clone"></a>topology clone</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology clone -from &lt;from topology&gt; -name &lt;to topology&gt;</pre>
+        <p>
+                    or
+                </p>
+        <pre class="programlisting">topology clone -current -name &lt;to topology&gt; </pre>
+        <p>
+                    Clones an existing topology so as to create a
+                    new candidate topology to be used for topology
+                    change operations.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_contract"></a>topology contract</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology contract -name &lt;name&gt; -pool &lt;pool name&gt;</pre>
+        <p>
+                    Modifies the named topology to contract storage nodes.
+                    For more information, see
+                        <a class="xref" href="managing-topology.html#topologycontract" title="Contracting a Topology">Contracting a Topology</a>.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_create"></a>topology create</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology create -name &lt;candidate name&gt; -pool &lt;pool name&gt;
+    -partitions &lt;num&gt;</pre>
+        <p>
+                    Creates a new topology with the specified
+                    number of partitions using the specified storage
+                    pool.
+                </p>
+        <p>
+                   You should avoid using the dollar sign ('$') character in topology
+                   candidate names. The CLI displays a warning when trying to create or clone
+                   topologies whose names contain the reserved character.
+                </p>
+        <p>
+                   If the primary replication factor is equal to two, the
+                   <code class="literal">topology create</code> command will allocate
+                   Arbiter Nodes on the Storage Nodes in a zone that supports hosting
+                   Arbiter Nodes. During topology deployment, an error is issued if there
+                   are not enough Storage Nodes for Arbiter Node distribution.
+                   A valid Arbiter Node distribution is one in which the Arbiter Node is hosted
+                   on a Storage Node that does not contain other members of its
+                   Replication Group.
+                </p>
+        <p>
+                    For more information on creating the first
+                    topology candidate, see <a class="xref" href="managing-topology.html#topologycandidate" title="Make the Topology Candidate">Make the Topology Candidate</a>.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_delete"></a>topology delete</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology delete -name &lt;name&gt; </pre>
+        <p>
+                    Deletes a topology.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_list"></a>topology list</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology list </pre>
+        <p>
+                    Lists existing topologies.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_preview"></a>topology preview</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology preview -name &lt;name&gt; [-start &lt;from topology&gt;]</pre>
+        <p>
+                    Describes the actions that would be taken to
+                    transition from the starting topology to the
+                    named, target topology. If -start is not
+                    specified, the current topology is used. This
+                    command should be used before deploying a new
+                    topology.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_rebalance"></a>topology rebalance</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology rebalance -name &lt;name&gt; -pool &lt;pool name&gt;
+    [-zn &lt;id&gt; | -znname &lt;name&gt;]</pre>
+        <p>
+                    Modifies the named topology to create a
+                    balanced topology. If the optional
+                    <code class="literal">-zn</code> flag is used, only
+                    Storage Nodes from the specified zone are used for
+                    the operation.
+                </p>
+        <p>
+                    This command may also add, move or remove Arbiter Nodes. Arbiter Nodes
+                    are added if the new topology supports Arbiter Nodes and the old
+                    topology does not. Arbiter Nodes are removed if the old topology
+                    supported Arbiter Nodes and the new one does not. Arbiter Nodes may
+                    be moved to a zero Replication Factor datacenter if the
+                    Arbiter Nodes are hosted in a non zero Replication Factor datacenter.
+                </p>
+        <p>
+                    For more information on balancing a
+                    non-compliant topology, see <a class="xref" href="managing-topology.html#databalancing" title="Balance a Non-Compliant Topology">Balance a Non-Compliant Topology</a>.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_redistribute"></a>topology redistribute</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology redistribute -name &lt;name&gt; -pool &lt;pool name&gt; </pre>
+        <p>
+                    Modifies the named topology to redistribute
+                    resources to more efficiently use those available.
+                </p>
+        <p>
+                    For more information on redistributing
+                    resources to enhance write throughput, see <a class="xref" href="managing-topology.html#datadistribution" title="Increase Data Distribution">Increase Data Distribution</a>.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_validate"></a>topology validate</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology validate [-name &lt;name&gt;] </pre>
+        <p>
+                    Validates the specified topology. If no
+                    topology is specified, the current topology is
+                    validated. Validation generates violations and
+                    notes.
+                </p>
+        <p>
+                    Violations are issues that can cause problems
+                    and should be investigated.
+                </p>
+        <p>
+                    Notes are informational and highlight
+                    configuration oddities that can be potential
+                    issues or may be expected.
+                </p>
+        <p>
+                    For more information, see <a class="xref" href="managing-topology.html#validatetopology" title="Validate the Topology Candidate">Validate the Topology Candidate</a>.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="topology_view"></a>topology view</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">topology view -name &lt;name&gt; </pre>
+        <p>
+                    Displays details of the specified topology.  Also
+                    displays any available Arbiter Node information.
+                </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="timer.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="verbose.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">timer </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> verbose</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>get</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="exit.html" title="exit" />
+    <link rel="next" href="help.html" title="help" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">get </th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="exit.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="help.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="get"></a>get </h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="get.html#get_kv"> get kv </a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="get.html#get-table">get table</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+                Encapsulates commands that get key/value pairs from
+                store or get rows from table. The subcommands are as
+                follows:
+            </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                        <a class="xref" href="get.html#get_kv" title="get kv"> get kv </a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="get.html#get-table" title="get table">get table</a>
+                    </p>
+          </li>
+        </ul>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="get_kv"></a> get kv </h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">get kv [-key &lt;keyString&gt;] [-json] [-file &lt;output&gt;] [-all] [-keyonly]
+[-valueonly] [-start &lt;prefixString&gt;] [-end &lt;prefixString&gt;] </pre>
+        <p>
+                    Perform a simple get operation using the
+                    specified key. The obtained value is printed out
+                    if it contains displayable characters, otherwise
+                    the bytes array is encoded using Base64 for
+                    display purposes. "[Base64]" is appended to
+                    indicate this transformation. The arguments for
+                    the get command are:
+                </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                            <code class="literal">-key &lt;keyString&gt;</code>
+                        </p>
+              <p>
+                            Indicates the full or the prefix key path to
+                            use. If <code class="literal">&lt;keyString&gt;</code> is
+                            a full key path, it returns a single value
+                            information. The format of this
+                            <code class="literal">get</code> command is: <code class="literal">get
+                                -key &lt;keyString&gt;.</code> If
+                            <code class="literal">&lt;keyString&gt;</code> is a
+                            prefix key path, it returns multiple key/value
+                            pairs. The format of this
+                            <code class="literal">get</code> command is: <code class="literal">get
+                                -key &lt;keyString&gt; -all.</code> Key
+                            can be composed of both major and minor key
+                            paths, or a major key path only. The
+                            &lt;keyString&gt; format is:
+                            "major-key-path/-/minor-key-path".
+                            Additionally, in the case of the prefix key
+                            path, a key can be composed of the prefix part
+                            of a major key path.
+                        </p>
+              <p>
+                            For example, with some sample keys in
+                            the KVStore:
+                        </p>
+              <pre class="programlisting">/group/TC/-/user/bob
+/group/TC/-/user/john
+/group/TC/-/dep/IT
+/group/SZ/-/user/steve
+/group/SZ/-/user/diana</pre>
+              <p>
+                            A get command with a key containing
+                            only the prefix part of the major key path
+                            results in:
+                        </p>
+              <pre class="programlisting">kv -&gt; get kv -key /group -all -keyonly
+/group/TC/-/user/bob
+/group/TC/-/user/john
+/group/TC/-/dep/IT
+/group/SZ/-/user/steve
+/group/SZ/-/user/diana</pre>
+              <p>
+                            A get command with a key containing a
+                            major key path results in:
+                        </p>
+              <pre class="programlisting">kv -&gt; get kv -key /group/TC -all -keyonly
+/group/TC/-/user/bob
+/group/TC/-/user/john
+/group/TC/-/dep/IT</pre>
+              <p>
+                            Get commands with a key containing
+                            major and minor key paths results in:
+                        </p>
+              <pre class="programlisting">kv -&gt; get kv -key /group/TC/-/user -all -keyonly
+/group/TC/-/user/bob
+/group/TC/-/user/john
+kv -&gt; get kv -key /group/TC/-/user/bob
+{
+    "name"  : "bob.smith",
+    "age"   : 20,
+    "email" : "bob.smith@gmail.com",
+    "phone" : "408 555 5555"
+}</pre>
+            </li>
+            <li>
+              <p>
+
+                            <code class="literal">-json</code>
+
+                        </p>
+              <p>
+                            Should be specified if the record is
+                            JSON.
+                        </p>
+            </li>
+            <li>
+              <p>
+
+                            <code class="literal">-file &lt;output&gt;</code>
+
+                        </p>
+              <p>
+                            Specifies an output file, which is
+                            truncated, replacing all existing content
+                            with new content.
+                        </p>
+              <p>
+                            In the following example, records from
+                            the key <code class="literal">/Smith/Bob</code> are
+                            written to the file
+                            <code class="literal">"data.out".</code>
+                        </p>
+              <pre class="programlisting">kv -&gt; get kv -key /Smith/Bob -all -file ./data.out </pre>
+              <p>
+                            In the following example, contents of
+                            the file <code class="literal">"data.out"</code> are
+                            replaced with records from the key
+                            <code class="literal">/Wong/Bill.</code>
+                        </p>
+              <pre class="programlisting">kv -&gt; get kv -key /Wong/Bill -all -file ./data.out </pre>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-all</code>
+                        </p>
+              <p>
+                            Specified for iteration starting at the
+                            specified key. If the key argument is not
+                            specified, the entire store will be
+                            iterated.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-keyonly</code>
+                        </p>
+              <p>
+                            Specified with <code class="literal">-all</code>
+                            to return only keys.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-valueonly</code>
+                        </p>
+              <p>
+                            Specified with <code class="literal">-all</code>
+                            to return only values.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-start
+                                &lt;prefixString&gt;</code> and
+                            <code class="literal">-end
+                                &lt;prefixString&gt;</code>
+                        </p>
+              <p>
+                            Restricts the range used for iteration.
+                            This is particularly helpful when getting
+                            a range of records based on a key
+                            component, such as a well-formatted
+                            string. Both the <code class="literal">-start</code>
+                            and <code class="literal">-end</code> arguments are
+                            inclusive.
+                        </p>
+              <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+                <h3 class="title">Note</h3>
+                <p>
+                                <code class="literal">-start</code> and
+                                <code class="literal">-end</code> only work
+                                on the key component specified by
+                                <code class="literal">-key
+                                    &lt;keyString&gt;</code>. The
+                                value of
+                                <code class="literal">&lt;keyString&gt;</code>
+                                should be composed of simple strings
+                                and cannot have multiple key
+                                components specified.
+                            </p>
+              </div>
+              <p>
+                            For example, a log where its key
+                            structure is:
+                        </p>
+              <pre class="programlisting">/log/&lt;year&gt;/&lt;month&gt;/-/&lt;day&gt;/&lt;time&gt; </pre>
+              <p>
+                            puts all log entries for the same day
+                            in the same partition, but splits the days
+                            across shards. The <code class="literal">time</code>
+                            format is: "hour.minute".
+                        </p>
+              <p>
+                            In this way, you can do a
+                            <code class="literal">get</code> of all log
+                            entries in February and March, 2013 by
+                            specifying:
+                        </p>
+              <pre class="programlisting">kv-&gt; get kv -all -keyonly -key /log/2013 -start 02 -end 03
+/log/2013/02/-/01/1.45
+/log/2013/02/-/05/3.15
+/log/2013/02/-/15/10.15
+/log/2013/02/-/20/6.30
+/log/2013/02/-/28/8.10
+/log/2013/03/-/01/11.13
+/log/2013/03/-/15/2.28
+/log/2013/03/-/22/4.52
+/log/2013/03/-/31/11.55 </pre>
+              <p>
+                            You can be more specific to the
+                            <code class="literal">get</code> command by
+                            specifying a more complete key path. For
+                            example, to display all log entries from
+                            April 1st to April 4th:
+                        </p>
+              <pre class="programlisting">kv-&gt; get kv -all -keyonly -key /log/2013/04 -start 01 -end 04
+/log/2013/04/-/01/1.03
+/log/2013/04/-/01/4.05
+/log/2013/04/-/02/7.22
+/log/2013/04/-/02/9.40
+/log/2013/04/-/03/4.15
+/log/2013/04/-/03/6.30
+/log/2013/04/-/03/10.25
+/log/2013/04/-/04/4.10
+/log/2013/04/-/04/8.35 </pre>
+            </li>
+          </ul>
+        </div>
+        <p>
+                    See the subcommand <a class="xref" href="get.html#get-table" title="get table">get table</a>
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="get-table"></a>get table</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">get table -name &lt;name&gt; [-index &lt;name&gt;]
+    [-field &lt;name&gt; -value &lt;value&gt;]+
+    [-field &lt;name&gt; [-start &lt;value&gt;] [-end &lt;value&gt;]]
+    [-ancestor &lt;name&gt;]+ [-child &lt;name&gt;]+
+    [-json &lt;string&gt;] [-file &lt;output&gt;] [-keyonly]
+    [-pretty] [-report-size] </pre>
+        <p>
+                    Performs a get operation to retrieve row(s)
+                    from a named table. The table name is a
+                    dot-separated name with the format
+                    <code class="literal">tableName[.childTableName]*
+                    </code>.
+                </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                            <code class="literal">-field</code> and
+                            <code class="literal">-value</code> pairs are
+                            used to specify the field values of the
+                            primary key or index key if using index
+                            specified by <code class="literal">-index</code>, or
+                            with an empty key to iterate the entire
+                            table.
+                        </p>
+            </li>
+            <li>
+              <p>
+                          <code class="literal">-field</code> flag, along
+                          with its
+                          <code class="literal">-start</code> and
+                          <code class="literal">-end</code> flags, can be used to define
+                          a value range for the last field specified.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-ancestor</code> and
+                            <code class="literal">-child</code> flags are
+                            used to return results from specific
+                            ancestor and/or descendant tables as well
+                            as the target table.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-json</code> indicates that the
+                            key field values are in JSON format.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-file</code> is used to
+                            specify an output file, which is
+                            truncated.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-keyonly</code> is used to restrict
+                             information to keys only.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-pretty</code> is used for a
+                            nicely formatted JSON string with
+                            indentation and carriage returns.
+                        </p>
+            </li>
+            <li>
+              <p>
+                            <code class="literal">-report-size</code> is used to
+                            show key and data size information for primary
+                            keys, data values, and index keys for matching
+                            records. When  <code class="literal">-report-size</code> is
+                            specified no data is displayed.
+                        </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="exit.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="help.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">exit </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> help</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

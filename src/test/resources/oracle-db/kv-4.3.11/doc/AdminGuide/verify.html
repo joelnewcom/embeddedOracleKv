@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>verify</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="cli_command_reference.html" title="Appendix B. CLI Command Reference" />
+    <link rel="prev" href="verbose.html" title="verbose" />
+    <link rel="next" href="utility_command_reference.html" title="Appendix C. Utility Command Reference" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">verify</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="verbose.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix B. CLI Command Reference</th>
+          <td width="20%" align="right"> <a accesskey="n" href="utility_command_reference.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="verify"></a>verify</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="verify.html#verify_silent">verify configuration</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="verify.html#verify_prerequisite">verify prerequisite</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="verify.html#verify_upgrade">verify upgrade</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+                Encapsulates commands that check various parameters
+                of the store. The subcommands are as follows:
+            </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                        <a class="xref" href="verify.html#verify_silent" title="verify configuration">verify configuration</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="verify.html#verify_prerequisite" title="verify prerequisite">verify prerequisite</a>
+                    </p>
+          </li>
+          <li>
+            <p>
+                        <a class="xref" href="verify.html#verify_upgrade" title="verify upgrade">verify upgrade</a>
+                    </p>
+          </li>
+        </ul>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="verify_silent"></a>verify configuration</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">verify configuration [-silent] [-json] </pre>
+        <p>
+                    Verifies the store configuration by iterating
+                    the components and checking their state against
+                    that expected in the Admin database. This call may
+                    take a while on a large store.
+                </p>
+        <p>
+                    The <code class="literal">-json</code> option specifies that
+                    output should be displayed in JSON format.
+                </p>
+        <p>
+                    The <code class="literal">-silent</code> option
+                    suppresses verbose verification messages that are
+                    displayed as the verification is proceeding.
+                    Instead, only the initial startup messages and the
+                    final verification message is displayed. This option
+                    has no effect when the <code class="literal">-json</code>
+                    option is specified.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="verify_prerequisite"></a>verify prerequisite</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">verify prerequisite [-silent] [-sn snX]*</pre>
+        <p>
+                    Verifies that the storage nodes are at or above
+                    the prerequisite software version needed to
+                    upgrade to the current version. This call may take
+                    a while on a large store.
+                </p>
+        <p>
+                    As part of the verification process, this
+                    command displays the components which do not meet
+                    the prerequisites or cannot be contacted. It also
+                    checks for illegal downgrade situations where the
+                    installed software is of a newer minor release
+                    than the current version.
+                </p>
+        <p>
+                    When using this command, the current version is
+                    the version of the software running the command
+                    line interface.
+                </p>
+        <p>
+                    Use the <code class="literal">-sn</code> option to
+                    specify those storage nodes that you want to
+                    verify. If no storage nodes are specified, all the
+                    nodes in the store are checked.
+                </p>
+        <p>
+                    The <code class="literal">-silent</code> option
+                    suppresses verbose verification messages that are
+                    displayed as the verification is proceeding.
+                    Instead, only the initial startup messages and the
+                    final verification message is displayed.
+                </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="verify_upgrade"></a>verify upgrade</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">verify upgrade [-silent] [-sn snX]*</pre>
+        <p>
+                    Verifies the storage nodes (and their managed
+                    components) are at or above the current version.
+                    This call may take a while on a large store.
+                </p>
+        <p>
+                    As part of the verification process, this
+                    command displays the components which have not yet
+                    been upgraded or cannot be contacted.
+                </p>
+        <p>
+                    When using this command, the current version is
+                    the version of the software running the command
+                    line interface.
+                </p>
+        <p>
+                    Use the <code class="literal">-sn</code> option to
+                    specify those storage nodes that you want to
+                    verify. If no storage nodes are specified, all the
+                    nodes in the store are checked.
+                </p>
+        <p>
+                    The <code class="literal">-silent</code> option
+                    suppresses verbose verification messages that are
+                    displayed as the verification is proceeding.
+                    Instead, only the initial startup messages and the
+                    final verification message is displayed.
+                </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="verbose.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="cli_command_reference.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="utility_command_reference.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">verbose </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Appendix C. Utility Command Reference</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

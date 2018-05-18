@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Key/Value LOB Example</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with Oracle NoSQL Database Key/Value API" />
+    <link rel="up" href="lobapi.html" title="Appendix A. Using the Large Object API" />
+    <link rel="prev" href="opexception.html" title="LOB Operation Exceptions" />
+    <link rel="next" href="tablelob_example.html" title="Table LOB Example" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Key/Value LOB Example</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="opexception.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix A. Using the Large Object API</th>
+          <td width="20%" align="right"> <a accesskey="n" href="tablelob_example.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="kvlob_example"></a>Key/Value LOB Example</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            The following example writes and then reads a LOB value using
+            the Key/Value API. Notice that the object is never actually
+            materialized within the application; instead, the value is
+            streamed directly from the file system to the store. On reading
+            from the store, this simple example merely counts the number of
+            bytes retrieved.
+        </p>
+      <p>
+            Also, this example only provides bare-bones exception handling.
+            In production code, you will probably want to do more than
+            simply report the exceptions caught by this example.
+        </p>
+      <pre class="programlisting">package kvstore.lobExample;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
+import oracle.kv.Consistency;
+import oracle.kv.Durability;
+import oracle.kv.KVStore;
+import oracle.kv.KVStoreConfig;
+import oracle.kv.KVStoreFactory;
+import oracle.kv.Key;
+import oracle.kv.RequestTimeoutException;
+import oracle.kv.Version;
+import oracle.kv.lob.InputStreamVersion;
+import oracle.kv.lob.PartialLOBException;
+
+public class LOBKV {
+
+    private String[] hhosts = {"localhost:5000"};
+
+    public static void main(String args[]) {
+        LOBKV lobkv = new LOBKV();
+        lobkv.run(args);
+        System.out.println("All done.");
+    }
+    private void run(String args[]) {
+
+        KVStoreConfig kconfig = new KVStoreConfig("kvstore", hhosts);
+        KVStore kvstore = KVStoreFactory.getStore(kconfig);
+
+        // Use key "/test/lob/1.lob" to store the jpeg object.
+        // Note that we are not using a minor key in this
+        // example. As required, the final key component 
+        // uses a ".lob" suffix.
+        final Key key = 
+            Key.createKey(Arrays.asList("test", "lob", "1.lob"));
+
+        File lobFile = new File("test.jpg");
+        try {
+            FileInputStream fis  = new FileInputStream(lobFile);
+
+            // The image file is streamed from the filesystem into 
+            // the store without materializing it within the
+            // application. A medium level of durability is
+            // used for this put operation. A timeout value
+            // of 5 seconds is set in which each chunk of the LOB
+            // must be written, or the operation fails with a
+            // RequestTimeoutException.
+            kvstore.putLOB(key, fis,
+                    Durability.COMMIT_WRITE_NO_SYNC,
+                    5, TimeUnit.SECONDS);
+
+
+            // Now read the LOB. It is streamed from the store, 
+            // without materialization within the application code. 
+            // Here, we only count the number of bytes retrieved.
+            //
+            // We use the least stringent consistency policy 
+            // available for the read. Each LOB chunk must be read 
+            // within a 5 second window or a RequestTimeoutException
+            // is thrown.
+            InputStreamVersion istreamVersion =
+                 kvstore.getLOB(key,
+                              Consistency.NONE_REQUIRED,
+                              5, TimeUnit.SECONDS);
+
+             InputStream stream = istreamVersion.getInputStream();
+             int byteCount = 0;
+             while (stream.read() != -1) {
+                 byteCount++;
+             }
+             System.out.println(byteCount);
+        } catch (FileNotFoundException fnf) {
+            System.err.println("Input file not found.");
+
+            System.err.println("FileNotFoundException: " +
+                    fnf.toString());
+            fnf.printStackTrace();
+            System.exit(-1);
+        } catch (RequestTimeoutException rte) {
+            System.err.println("A LOB chunk was either not read or");
+            System.err.println("not written in the alloted time.");
+
+            System.err.println("RequestTimeoutException: " + 
+                rte.toString());
+            rte.printStackTrace();
+            System.exit(-1);
+        } catch (PartialLOBException ple) {
+            System.err.println("Retrieval (getLOB()) only retrieved");
+            System.err.println("a portion of the requested object.");
+
+            System.err.println("PartialLOBException: " + ple.toString());
+            ple.printStackTrace();
+            System.exit(-1);
+        } catch (IOException e) {
+            System.err.println("IO Exception: " + e.toString());
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    protected LOBKV() {}
+} </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="opexception.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="lobapi.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="tablelob_example.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">LOB Operation Exceptions </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Table LOB Example</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

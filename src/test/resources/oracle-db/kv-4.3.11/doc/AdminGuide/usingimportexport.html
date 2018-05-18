@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Using the Export and Import Utilities</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Oracle NoSQL Database Administrator's Guide" />
+    <link rel="up" href="procedures.html" title="Chapter 6. Administrative Procedures" />
+    <link rel="prev" href="datacorrupt.html" title="Recovering from Data Corruption" />
+    <link rel="next" href="provideschema.html" title="Managing Avro Schema" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Using the Export and Import Utilities</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="datacorrupt.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 6. Administrative Procedures</th>
+          <td width="20%" align="right"> <a accesskey="n" href="provideschema.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="usingimportexport"></a>Using the Export and Import Utilities</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="usingimportexport.html#exportingdata">Exporting Data</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="usingimportexport.html#importdata">Importing Data</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="usingimportexport.html#installcloudjars">Installing the Cloud Storage JARs</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+            The <a class="xref" href="utility_command_reference.html#exportutility" title="export">export</a>
+            utility creates a package that contains user data and schema
+            information. You can export either the entire store, or
+            some subset of the tables in the store.
+        </p>
+      <p>
+            The <a class="xref" href="importutility.html" title="import">import</a> utility
+            consumes data from a package written by the export utility. You
+            can import the entire contents of the export package, or you
+            can import a subset of tables contained within the package.
+        </p>
+      <p>
+            Both utilities are designed to be run against a fully installed
+            and configured store. The <code class="literal">export</code> utility will not write
+            information regarding your store's topology. Nor will the
+            <code class="literal">import</code> utility in any way attempt to reinstall or configure a
+            store.
+        </p>
+      <p>
+            Security metadata is also not managed by these utilities. This
+            means that the users and roles are not exported or imported. In
+            order to reconstruct a store, these must be manually created.
+        </p>
+      <p>
+            The <code class="literal">export</code> and <code class="literal">import</code>
+            utilities provide you an alternative way to back up and restore
+            all or part of your store. You can use these utilities instead
+            of, or in addition to, taking snapshots. Data can be exported
+            to either a local file system, or to Oracle Storage Cloud
+            Services.
+        </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+                To use the <code class="literal">export</code> and
+                <code class="literal">import</code> utilities with Oracle Storage
+                Cloud Services, you must download and install Java jar
+                files which provide necessary support. See <a class="xref" href="usingimportexport.html#installcloudjars" title="Installing the Cloud Storage JARs">Installing the Cloud Storage JARs</a> for details.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="exportingdata"></a>Exporting Data</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                You can export a complete store, or a subset of tables,
+                using the <code class="literal">export</code> utility.  For a complete description of
+                this utility, its behavior, and its command line options,
+                see the
+                <a class="xref" href="utility_command_reference.html#exportutility" title="export">export</a>
+                utility.
+            </p>
+        <p>
+                The <code class="literal">export</code> utility exports a single record at a time.  For
+                best results, the <code class="literal">export</code> utility should be used on a store
+                which currently has no write activity.  This utility does
+                not create any kind of snapshot isolation.
+            </p>
+        <p>
+                To export data, you must create a configuration file which
+                identifies the type of export (either local filesystem, or
+                Oracle Storage Cloud Services), and the export destination.
+                If you are exporting to a local filesystem, the directory
+                you provide must currently exist but also must not
+                currently contain an export package. If you are exporting
+                to Oracle Storage Cloud Services, then the container name
+                you provide must not currently exist.
+            </p>
+        <p>
+                The following examples use the local filesystem.
+            </p>
+        <p>
+                To export an entire store:
+            </p>
+        <div class="orderedlist">
+          <ol type="1">
+            <li>
+              <p>
+                        Create a destination directory:
+                    </p>
+              <pre class="programlisting">mkdir /disk1/exports/current</pre>
+            </li>
+            <li>
+              <p>
+                        Create a configuration file with the appropriate
+                        contents. For example, <code class="literal">export-config.txt</code>:
+                    </p>
+              <pre class="programlisting">export-type = LOCAL
+export-package-path = /disk1/exports/current</pre>
+            </li>
+            <li>
+              <p>
+                        Run the export:
+                    </p>
+              <pre class="programlisting">java -jar &lt;KVHOME&gt;/lib/kvtool.jar export -export-all \
+-store kvstore \
+-helper-hosts localhost:5000 -config export-config.txt \
+-security USER/security/admin.security</pre>
+            </li>
+          </ol>
+        </div>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <h3 class="title">Note</h3>
+          <p>
+                     This assumes that you must have followed the steps as mentioned in 
+                     <a class="xref" href="config_remote-access-security.html" title="Configuring Security with Remote Access">Configuring Security 
+        with Remote Access</a>.
+                    </p>
+        </div>
+        <p>
+                Be aware that for a fully populated store, the export
+                process could take a long time. For this reason, you
+                can track the progress of an export by monitoring the
+                contents of <code class="literal">Export.log</code>, which is
+                created in the export package directory.
+            </p>
+        <p>
+                You can also export a single table, or a subset of tables.
+                This export will also include any indices defined for the
+                table. Use the <code class="literal">-table</code> command line
+                option instead of the <code class="literal">-export-all</code>
+                command line option. If you want to export more than one
+                table, comma-separate the table names.
+            </p>
+        <pre class="programlisting">java -jar &lt;KVHOME&gt;/lib/kvtool.jar export \
+-table userTable,inventoryTable -store kvstore \
+-helper-hosts localhost:5000 -config export-config.txt \
+-security USER/security/admin.security</pre>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="importdata"></a>Importing Data</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                You can import a complete store, or a subset of tables,
+                using the <code class="literal">import</code> utility. For a complete
+                description of this utility, its behavior, and its command
+                line options, see the
+                <a class="xref" href="importutility.html" title="import">import</a> utility.
+            </p>
+        <p>
+                The dataset that you use for import must have been created
+                using the export utility. See the
+                <a class="xref" href="utility_command_reference.html#exportutility" title="export">export</a>
+                utility for details.
+            </p>
+        <p>
+                Write activity may be on-going against the store at the
+                time of the import. In this regard, the
+                <code class="literal">import</code> utility is simply another client
+                writing to the store. In the case of a conflict when
+                writing a table row or record, your store data will be in a
+                state defined by which client last wrote the data.
+            </p>
+        <p>
+                If data has reached its time-to-live (TTL) expiration
+                datestamp, the data is not imported.
+            </p>
+        <p>
+                To import data, you must create a configuration file which
+                identifies the type of export (either local filesystem, or
+                Oracle Storage Cloud Services), and the location of the export package.
+                You can also identify the TTL type that you want to use
+                (<code class="literal">ABSOLUTE</code> or
+                <code class="literal">RELATIVE</code>). For production systems,
+                <code class="literal">ABSOLUTE</code> is usually the proper choice,
+                and this is the default.
+            </p>
+        <p>
+                To import the entire contents of an export package:
+            </p>
+        <div class="orderedlist">
+          <ol type="1">
+            <li>
+              <p>
+                        Make sure the store is fully installed and
+                        operational. All security configuration must be
+                        configured for the store. The
+                        <code class="literal">import</code> utility will not install
+                        or configure a store for you.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        Create a configuration file with the appropriate
+                        contents. For example, <code class="literal">import-config.txt</code>:
+                    </p>
+              <pre class="programlisting">export-type = LOCAL
+export-package-path = /disk1/exports/current
+ttl = ABSOLUTE</pre>
+            </li>
+            <li>
+              <p>
+                        Run the import. If you are using a secured store, you 
+                        would have to provide a username and security file which has
+                        full write access to the store:
+                    </p>
+              <pre class="programlisting">java -jar &lt;KVHOME&gt;/lib/kvtool.jar import -import-all \
+-store kvstore \
+-helper-hosts localhost:5000 -config import-config.txt \
+-security USER/security/admin.security</pre>
+            </li>
+          </ol>
+        </div>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <h3 class="title">Note</h3>
+          <p>
+                       This assumes that you must have followed the steps as mentioned in 
+                        <a class="xref" href="config_remote-access-security.html" title="Configuring Security with Remote Access">Configuring Security 
+        with Remote Access</a>.
+                 </p>
+        </div>
+        <p>
+                Be aware that for a fully populated store, the import
+                process could take a long time. For this reason, you
+                can track the progress of an import by checking the
+                Import.log file, which is written to the same
+                directory as is identified by the <code class="literal">export_package_path</code>
+                configuration file parameter.
+            </p>
+        <p>
+                You can also import a single table, or a subset of tables.
+                Use the <code class="literal">-table</code> command line option
+                instead of the <code class="literal">-import-all</code> command line
+                option. If you want to import more than one table,
+                comma-separate the table names.
+            </p>
+        <pre class="programlisting">java -jar &lt;KVHOME&gt;/lib/kvtool.jar import \
+-table userTable,inventoryTable -store kvstore \
+-helper-hosts localhost:5000 \
+-config import-config.txt \
+-security USER/security/admin.security</pre>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="installcloudjars"></a>Installing the Cloud Storage JARs</h3>
+            </div>
+          </div>
+        </div>
+        <p>
+                To use the <code class="literal">export</code> and
+                <code class="literal">import</code> utilities with Oracle Storage
+                Cloud Services, you must download and install Java jar
+                files which provide the necessary support. Do the
+                following:
+            </p>
+        <div class="itemizedlist">
+          <ul type="disc">
+            <li>
+              <p>
+                        Download the Oracle Storage Cloud Service Java SDK
+                        from this location:
+                    </p>
+              <p>
+<a class="ulink" href="http://www.oracle.com/technetwork/topics/cloud/downloads/cloud-service-java-sdk-2121032.html" target="_top">http://www.oracle.com/technetwork/topics/cloud/downloads/cloud-service-java-sdk-2121032.html</a>
+                    </p>
+            </li>
+            <li>
+              <p>
+                        Unzip the downloaded SDK.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        The extracted zip file contains the necessary jar
+                        files in the <code class="literal">lib</code> directory. Copy
+                        the following jar files to the <code class="literal">lib</code>
+                        folder in your Oracle NoSQL Database installation:
+                    </p>
+              <table class="simplelist" border="0" summary="Simple list">
+                <tr>
+                  <td>jersey-client-<span class="emphasis"><em>x.x</em></span>.jar</td>
+                </tr>
+                <tr>
+                  <td>jersey-core-<span class="emphasis"><em>x.x</em></span>.jar</td>
+                </tr>
+                <tr>
+                  <td>jettison-<span class="emphasis"><em>x.x</em></span>.jar</td>
+                </tr>
+                <tr>
+                  <td>oracle.cloud.storage.api-<span class="emphasis"><em>x.x.x</em></span>.jar</td>
+                </tr>
+              </table>
+              <p>
+                        where <span class="emphasis"><em>x.x</em></span> represents the
+                        version number included on the file in the download
+                        package.
+                    </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="datacorrupt.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="procedures.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="provideschema.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Recovering from Data Corruption </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> 
+            
+            <span>Managing Avro Schema</span>
+        </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

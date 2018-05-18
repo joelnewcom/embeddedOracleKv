@@ -1,0 +1,810 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Shell Utility Commands</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="appendixshell.html" title="Appendix A. Introduction to the SQL for Oracle NoSQL Database Shell" />
+    <link rel="prev" href="conf_shell.html" title="Configuring the shell" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Shell Utility Commands</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="conf_shell.html">Prev</a> </td>
+          <th width="60%" align="center">Appendix A. Introduction to the SQL for Oracle NoSQL Database Shell</th>
+          <td width="20%" align="right"> </td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="shell_command_reference"></a>Shell Utility Commands</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <dl>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#connect">connect</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#consistency">consistency</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#describe">describe</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#durability">durability</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#exit">exit</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#help">help</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#history">history</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#import">import</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#load">load</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#mode">mode</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#output">output</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#page">page</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#show">show faults</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#showquery">show query</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#showtables">show tables</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#showusers">show users</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#showroles">show users</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#timeout">timeout</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#timer">timer</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#verbose">verbose</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect2">
+              <a href="shell_command_reference.html#version">version</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+			The following sections describe the utility commands accessed
+			through <code class="literal">"java -jar" &lt;kvhome&gt;/lib/sql.jar
+				&lt;command&gt;"</code>.
+		</p>
+      <p>
+            The interactive prompt for the shell is:
+        </p>
+      <pre class="programlisting">sql-&gt; </pre>
+      <p>
+            The shell comprises a number of commands. All commands accept the
+            following flags:
+        </p>
+      <div class="itemizedlist">
+        <ul type="disc">
+          <li>
+            <p>
+                    -help
+                </p>
+            <p>
+                    Displays online help for the command.
+                </p>
+          </li>
+          <li>
+            <p>
+                    ?
+                </p>
+            <p>
+                    Synonymous with -help. Displays online help for the
+                    command.
+                </p>
+          </li>
+        </ul>
+      </div>
+      <p>
+            The shell commands have the following general format:
+        </p>
+      <div class="orderedlist">
+        <ol type="1">
+          <li>
+            <p>
+                    All commands are structured like this:
+                </p>
+            <pre class="programlisting">sql-&gt; command [arguments] </pre>
+          </li>
+          <li>
+            <p>
+                    All arguments are specified using flags that start with
+                    "-"
+                </p>
+          </li>
+          <li>
+            <p>
+                    Commands and subcommands are case-insensitive and match
+                    on partial strings(prefixes) if possible. The arguments,
+                    however, are case-sensitive.
+                </p>
+          </li>
+        </ol>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="connect"></a>connect</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">connect -host &lt;hostname&gt; -port &lt;port&gt; -name &lt;storeName&gt;
+[-timeout &lt;timeout ms&gt;]
+[-consistency &lt;NONE_REQUIRED(default) |
+                              ABSOLUTE | NONE_REQUIRED_NO_MASTER&gt;]
+[-durability &lt;COMMIT_SYNC(default) |
+                              COMMIT_NO_SYNC | COMMIT_WRITE_NO_SYNC&gt;]
+[-username &lt;user&gt;] [-security &lt;security-file-path&gt;]</pre>
+        <p>
+                Connects to a KVStore to perform data access functions. If
+                the instance is secured, you may need to provide login
+                credentials.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="consistency"></a>consistency</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">consistency [[NONE_REQUIRED | NONE_REQUIRED_NO_MASTER |
+ABSOLUTE] [-time -permissible-lag &lt;time_ms&gt; -timeout &lt;time_ms&gt;]] </pre>
+        <p>
+                Configures the read consistency used for this session.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="describe"></a>describe</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">(describe | desc) as json 
+	table &lt;table_name&gt; (&lt;field_name&gt; (,&lt;field_name&gt;)*)?
+	| index &lt;index_name&gt; on &lt;table_name&gt; </pre>
+        <p>
+                Provides a JSON description of a table or index.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="durability"></a>durability</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">durability [[COMMIT_WRITE_NO_SYNC | COMMIT_SYNC |
+COMMIT_NO_SYNC] | [-master-sync &lt;sync-policy&gt; -replica-sync &lt;sync-policy&gt;
+-replica-ask &lt;ack-policy&gt;]] &lt;sync-policy&gt;: SYNC, NO_SYNC, WRITE_NO_SYNC
+&lt;ack-policy&gt;: ALL, NONE, SIMPLE_MAJORITY</pre>
+        <p>
+                Configures the write durability used for this session.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="exit"></a>exit</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">exit | quit </pre>
+        <p>
+                Exits the interactive command shell.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="help"></a>help</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">help [command] </pre>
+        <p>
+                Displays help message for all shell commands and sql command.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="history"></a>history</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">history [-last &lt;n&gt;] [-from &lt;n&gt;] [-to &lt;n&gt;] </pre>
+        <p>
+                Displays command history. By default all history is
+                displayed. Optional flags are used to choose ranges for display.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="import"></a>import</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">import -table &lt;name&gt; -file &lt;name&gt; [JSON | CSV] </pre>
+        <p>
+                Imports records from the specified file into the named table.
+                The records can be in either JSON or CSV format. If the format
+                is not specified JSON is assumed.
+            </p>
+        <p>
+                Use <code class="literal">-table</code> to specify the name of a table
+                to which the records are loaded. The alternative way to specify
+                the table is to add the table specification "Table:
+                &lt;name&gt;" before its records in the file.
+            </p>
+        <p>
+                For example, a file containing the records of 2 tables
+                "users" and "email":
+            </p>
+        <pre class="programlisting">Table: users
+&lt;records of users&gt;
+...
+Table: emails
+&lt;record of emails&gt;
+...          </pre>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="load"></a>load</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">load -file &lt;path to file&gt;</pre>
+        <p>
+                Load the named file and interpret its contents as a script of
+                commands to be executed. If any command in the script fails
+                execution will end.
+            </p>
+        <p>
+                For example, suppose the following commands are collected in
+                the script file <code class="literal">test.sql</code>:
+            </p>
+        <pre class="programlisting">### Begin Script ###
+load -file test.ddl
+import -table users -file users.json
+### End Script ###</pre>
+        <p>
+                Where the file <code class="literal">test.ddl</code> would contain
+                content like this:
+            </p>
+        <pre class="programlisting">DROP TABLE IF EXISTS users;
+CREATE TABLE users(id INTEGER, firstname STRING, lastname STRING,
+age INTEGER, primary key (id)); </pre>
+        <p>
+                And the file <code class="literal">users.json</code> would contain
+                content like this:
+            </p>
+        <pre class="programlisting">{"id":1,"firstname":"Dean","lastname":"Morrison","age":51}
+{"id":2,"firstname":"Idona","lastname":"Roman","age":36}
+{"id":3,"firstname":"Bruno","lastname":"Nunez","age":49} </pre>
+        <p>
+                Then, the script can be run by using the
+                    <code class="literal">load</code> command in the shell:
+            </p>
+        <pre class="programlisting">&gt; java -jar KVHOME/lib/sql.jar -helper-hosts node01:5000 \
+-store kvstore
+sql-&gt; load -file ./test.sql
+Statement completed successfully.
+Statement completed successfully.
+Loaded 3 rows to users. </pre>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="mode"></a>mode</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">mode [COLUMN | LINE | JSON [-pretty] | CSV] </pre>
+        <p>
+                Sets the output mode of query results. The default value is
+                JSON.
+            </p>
+        <p>
+                For example, a table shown in COLUMN mode:
+            </p>
+        <pre class="programlisting">sql-&gt; mode column;
+sql-&gt; SELECT * from users;
+ +-----+-----------+-----------+-----+
+ | id  | firstname | lastname  | age |
+ +-----+-----------+-----------+-----+
+ |   8 | Len       | Aguirre   |  42 |
+ |  10 | Montana   | Maldonado |  40 |
+ |  24 | Chandler  | Oneal     |  25 |
+ |  30 | Pascale   | Mcdonald  |  35 |
+ |  34 | Xanthus   | Jensen    |  55 |
+ |  35 | Ursula    | Dudley    |  32 |
+ |  39 | Alan      | Chang     |  40 |
+ |   6 | Lionel    | Church    |  30 |
+ |  25 | Alyssa    | Guerrero  |  43 |
+ |  33 | Gannon    | Bray      |  24 |
+ |  48 | Ramona    | Bass      |  43 |
+ |  76 | Maxwell   | Mcleod    |  26 |
+ |  82 | Regina    | Tillman   |  58 |
+ |  96 | Iola      | Herring   |  31 |
+ | 100 | Keane     | Sherman   |  23 |
+ +-----+-----------+-----------+-----+
+ ...
+
+100 rows returned </pre>
+        <p>
+                Empty strings are displayed as an empty cell.
+            </p>
+        <pre class="programlisting">sql-&gt; mode column;
+sql-&gt; SELECT * from tab1 where id = 1;
+ +----+------+----+------+
+ | id |  s1  | s2 |  s3  |
+ +----+------+----+------+
+ |  1 | NULL |    | NULL |
+ +----+------+----+------+
+
+1 row returned</pre>
+        <p>
+                For nested tables, identation is used to indicate the nesting
+                under column mode:
+            </p>
+        <pre class="programlisting">sql-&gt; SELECT * from nested;
++----+-------+------------------------------------------------------------+
+| id | name  |                           details                          |
++----+-------+------------------------------------------------------------+
+|  1 | one   | address                                                    |
+|    |       |     city    | Waitakere                                    |
+|    |       |     country | French Guiana                                |
+|    |       |     zipcode | 7229                                         |
+|    |       | attributes                                                 |
+|    |       |     color   | blue                                         |
+|    |       |     price   | expensive                                    |
+|    |       |     size    | large                                        |
+|    |       | phone       | [(08)2435-0742, (09)8083-8862, (08)0742-2526]|
++----+-------+------------------------------------------------------------+
+|  3 | three | address                                                    |
+|    |       |     city    | Viddalba                                     |
+|    |       |     country | Bhutan                                       |
+|    |       |     zipcode | 280071                                       |
+|    |       | attributes                                                 |
+|    |       |     color   | blue                                         |
+|    |       |     price   | cheap                                        |
+|    |       |     size    | small                                        |
+|    |       | phone       | [(08)5361-2051, (03)5502-9721, (09)7962-8693]|
++----+-------+------------------------------------------------------------+
+... </pre>
+        <p>
+                For example, a table shown in LINE mode, where the result is
+                displayed vertically and one value is shown per line:
+            </p>
+        <pre class="programlisting">sql-&gt; mode line;
+sql-&gt; SELECT * from users;
+
+ &gt; Row 1
+ +-----------+-----------+
+ | id        | 8         |
+ | firstname | Len       |
+ | lastname  | Aguirre   |
+ | age       | 42        |
+ +-----------+-----------+
+
+  &gt; Row 2
+ +-----------+-----------+
+ | id        | 10        |
+ | firstname | Montana   |
+ | lastname  | Maldonado |
+ | age       | 40        |
+ +-----------+-----------+
+
+  &gt; Row 3
+ +-----------+-----------+
+ | id        | 24        |
+ | firstname | Chandler  |
+ | lastname  | Oneal     |
+ | age       | 25        |
+ +-----------+-----------+
+ ...
+100 rows returned </pre>
+        <p>
+                Just as in COLUMN mode, empty strings are displayed as an empty
+                cell:
+            </p>
+        <pre class="programlisting">sql-&gt; mode line;
+sql-&gt; SELECT * from tab1 where id = 1;
+
+ &gt; Row 1
+ +---------+------+
+ | id      | 1    |
+ | s1      | NULL |
+ | s2      |      |
+ | s3      | NULL |
+ +---------+------+
+
+1 row returned</pre>
+        <p>
+                For example, a table shown in JSON mode:
+            </p>
+        <pre class="programlisting">sql-&gt; mode json;
+sql-&gt; SELECT * from users;
+{"id":8,"firstname":"Len","lastname":"Aguirre","age":42}
+{"id":10,"firstname":"Montana","lastname":"Maldonado","age":40}
+{"id":24,"firstname":"Chandler","lastname":"Oneal","age":25}
+{"id":30,"firstname":"Pascale","lastname":"Mcdonald","age":35}
+{"id":34,"firstname":"Xanthus","lastname":"Jensen","age":55}
+{"id":35,"firstname":"Ursula","lastname":"Dudley","age":32}
+{"id":39,"firstname":"Alan","lastname":"Chang","age":40}
+{"id":6,"firstname":"Lionel","lastname":"Church","age":30}
+{"id":25,"firstname":"Alyssa","lastname":"Guerrero","age":43}
+{"id":33,"firstname":"Gannon","lastname":"Bray","age":24}
+{"id":48,"firstname":"Ramona","lastname":"Bass","age":43}
+{"id":76,"firstname":"Maxwell","lastname":"Mcleod","age":26}
+{"id":82,"firstname":"Regina","lastname":"Tillman","age":58}
+{"id":96,"firstname":"Iola","lastname":"Herring","age":31}
+{"id":100,"firstname":"Keane","lastname":"Sherman","age":23}
+{"id":3,"firstname":"Bruno","lastname":"Nunez","age":49}
+{"id":14,"firstname":"Thomas","lastname":"Wallace","age":48}
+{"id":41,"firstname":"Vivien","lastname":"Hahn","age":47}
+...
+100 rows returned </pre>
+        <p>
+                Empty strings are displayed as "".
+            </p>
+        <pre class="programlisting">sql-&gt; mode json;
+sql-&gt; SELECT * from tab1 where id = 1;
+{"id":1,"s1":null,"s2":"","s3":"NULL"}
+
+1 row returned</pre>
+        <p>
+                Finally, a table shown in CSV mode:
+            </p>
+        <pre class="programlisting">sql-&gt; mode csv;
+sql-&gt; SELECT * from users;
+8,Len,Aguirre,42
+10,Montana,Maldonado,40
+24,Chandler,Oneal,25
+30,Pascale,Mcdonald,35
+34,Xanthus,Jensen,55
+35,Ursula,Dudley,32
+39,Alan,Chang,40
+6,Lionel,Church,30
+25,Alyssa,Guerrero,43
+33,Gannon,Bray,24
+48,Ramona,Bass,43
+76,Maxwell,Mcleod,26
+82,Regina,Tillman,58
+96,Iola,Herring,31
+100,Keane,Sherman,23
+3,Bruno,Nunez,49
+14,Thomas,Wallace,48
+41,Vivien,Hahn,47
+...
+100 rows returned </pre>
+        <p>
+                Like in JSON mode, empty strings are displayed as "".
+            </p>
+        <pre class="programlisting">sql-&gt; mode csv;
+sql-&gt; SELECT * from tab1 where id = 1;
+1,NULL,"","NULL"
+
+1 row returned </pre>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+          <h3 class="title">Note</h3>
+          <p>
+                    Only rows that contain simple type values can be
+                    displayed in CSV format. Nested values are not supported.
+                </p>
+        </div>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="output"></a>output</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">output [stdout | file]</pre>
+        <p>
+                Enables or disables output of query results to a file. If no
+                argument is specified, it shows the current output.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="page"></a>page</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">page [on | &lt;n&gt; | off]</pre>
+        <p>
+                Turns query output paging on or off. If specified,
+                    <code class="literal">n</code> is used as the page height.
+            </p>
+        <p>
+                If <code class="literal">n</code> is 0, or "on" is specified, the
+                default page height is used. Setting <code class="literal">n</code> to
+                "off" turns paging off.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="show"></a>show faults</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">show faults [-last] [-command &lt;index&gt;]</pre>
+        <p>
+                Encapsulates commands that display the state of the store and
+                its components.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="showquery"></a>show query</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">show query &lt;statement&gt; </pre>
+        <p>
+               Displays the query plan for a query.
+            </p>
+        <p>
+               For example:
+            </p>
+        <pre class="programlisting">sql-&gt; show query SELECT * from Users;
+RECV([6], 0, 1, 2, 3, 4)
+[
+  DistributionKind : ALL_PARTITIONS,
+  Number of Registers :7,
+  Number of Iterators :12,
+  SFW([6], 0, 1, 2, 3, 4)
+  [
+    FROM:
+    BASE_TABLE([5], 0, 1, 2, 3, 4)
+    [Users via primary index] as $$Users
+
+    SELECT:
+    *
+  ]
+] </pre>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="showtables"></a>show tables</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">show [as json] tables | table &lt;table_name&gt;</pre>
+        <p>
+                Shows either all tables currently existing in the store, or the named table.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="showusers"></a>show users</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">show [as json] users | user &lt;user_name&gt;</pre>
+        <p>
+                Shows either all the users currently existing in the store, or the named user.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="showroles"></a>show users</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">show [as json] roles | role &lt;role_name&gt;</pre>
+        <p>
+                Shows either all the roles currently defined for the store, or the named role.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="timeout"></a>timeout</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">timeout [&lt;timeout_ms&gt;]</pre>
+        <p>
+                Configures or displays the request timeout for this session.
+                If not specified, it shows the current value of request timeout.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="timer"></a>timer</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">timer [on | off]</pre>
+        <p>
+                Turns the measurement and display of execution time for
+                commands on or off. If not specified, it shows the current state
+                of <code class="literal">timer</code>. For example:
+            </p>
+        <pre class="programlisting">sql-&gt; timer on
+sql-&gt; SELECT * from users where id &lt;= 10 ;
+ +----+-----------+-----------+-----+
+ | id | firstname | lastname  | age |
+ +----+-----------+-----------+-----+
+ |  8 | Len       | Aguirre   |  42 |
+ | 10 | Montana   | Maldonado |  40 |
+ |  6 | Lionel    | Church    |  30 |
+ |  3 | Bruno     | Nunez     |  49 |
+ |  2 | Idona     | Roman     |  36 |
+ |  4 | Cooper    | Morgan    |  39 |
+ |  7 | Hanae     | Chapman   |  50 |
+ |  9 | Julie     | Taylor    |  38 |
+ |  1 | Dean      | Morrison  |  51 |
+ |  5 | Troy      | Stuart    |  30 |
+ +----+-----------+-----------+-----+
+
+10 rows returned
+
+Time: 0sec 98ms</pre>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="verbose"></a>verbose</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">verbose [on | off]</pre>
+        <p>
+                Toggles or sets the global verbosity setting. This property
+                can also be set on a per-command basis using the
+                    <code class="literal">-verbose</code> flag.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="version"></a>version</h3>
+            </div>
+          </div>
+        </div>
+        <pre class="programlisting">version </pre>
+        <p>
+                Display client version information.
+            </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="conf_shell.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="appendixshell.html">Up</a>
+          </td>
+          <td width="40%" align="right"> </td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Configuring the shell </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

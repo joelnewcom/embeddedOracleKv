@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Bulk Put Operations</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with Oracle NoSQL Database Tables" />
+    <link rel="up" href="storewrites.html" title="Chapter 6. Writing and Deleting Table Rows" />
+    <link rel="prev" href="rowput.html" title="Writing Rows to a Table in the Store" />
+    <link rel="next" href="timetolive.html" title="Using Time to Live" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Bulk Put Operations</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="rowput.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 6. Writing and Deleting Table Rows</th>
+          <td width="20%" align="right"> <a accesskey="n" href="timetolive.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="bulkput"></a>Bulk Put Operations</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+        Bulk put operations allow you to load records supplied by special
+        purpose streams into the store.
+    </p>
+      <p>
+        The bulk loading of the entries is optimized to make efficient use
+        of hardware resources. As a result, this operation can achieve much
+        higher throughput when compared with single put APIs.
+    </p>
+      <p>
+         The behavior of the bulk put operation with respect to duplicate
+         entries contained in different streams is thus undefined. If the
+         duplicate entries are just present in a single stream, then the
+         first entry will be inserted (if it is not already present) and
+         the second entry and subsequent entries will result in the
+         invocation of <code class="methodname">EntryStream.keyExists(E)</code>
+         method. If duplicates exist across streams, then the first entry
+         to win the race is inserted and subsequent duplicates will result
+         in <code class="methodname">EntryStream.keyExists(E)</code> being invoked
+         on them.
+    </p>
+      <p>
+        To use bulk put, use one of the
+
+        
+        <span>
+            <code class="methodname">TableAPI.put()</code>
+        </span>
+
+        methods that provide bulk put. These accept a set of
+        streams to bulk load data. 
+            <span>
+                The rows within each stream may be associated with different tables.
+            </span>
+    </p>
+      <p>
+        When using these methods, you can also optionally specify a
+        <code class="classname">BulkWriteOptions</code> class instance which allows
+        you to specify the durability, timeout, and timeout unit to
+        configure the bulk put operation.
+    </p>
+      <p>
+      For example, suppose you are loading 1000 rows with 3 input streams:
+    </p>
+      <pre class="programlisting">    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.concurrent.atomic.AtomicLong;
+    import oracle.kv.BulkWriteOptions;
+    import oracle.kv.EntryStream;
+    import oracle.kv.FaultException;
+    import oracle.kv.KVStore;
+    import oracle.kv.KVStoreConfig;
+    import oracle.kv.KVStoreFactory;
+    import oracle.kv.table.Row;
+    import oracle.kv.table.Table;
+    import oracle.kv.table.TableAPI;
+
+    ...
+
+    // KVStore handle creation is omitted for brevity
+
+    ...
+    Integer streamParallelism = 3;
+    Integer perShardParallelism = 3;
+    Integer heapPercent = 30;
+    // In this case, sets the amount of 1000 rows to load
+    int nLoad = 1000;
+
+    BulkWriteOptions bulkWriteOptions =
+                              new BulkWriteOptions(null, 0, null);
+    // Set the number of streams. The default is 1 stream.
+    bulkWriteOptions.setStreamParallelism(streamParallelism);
+    // Set the number of writer threads per shard.
+    // The default is 3 writer threads.
+    bulkWriteOptions.setPerShardParallelism(perShardParallelism);
+    // Set the percentage of max memory used for bulk put.
+    // The default is 40 percent.
+    bulkWriteOptions.setBulkHeapPercent(heapPercent);
+
+    System.err.println("Loading rows to " + TABLE_NAME + "...");
+
+    final List&lt;EntryStream&lt;Row&gt;&gt; streams =
+        new ArrayList&lt;EntryStream&lt;Row&gt;&gt;(streamParallelism);
+    final int num = (nLoad + (streamParallelism - 1)) / streamParallelism;
+    for (int i = 0; i &lt; streamParallelism; i++) {
+        final int min = num * i;
+        final int max = Math.min((min + num) , nLoad);
+        streams.add(new LoadRowStream(i, min, max));
+    }
+
+    final TableAPI tableImpl = store.getTableAPI();
+    tableImpl.put(streams, bulkWriteOptions);
+
+    long total = 0;
+    long keyExists = 0;
+    for (EntryStream&lt;Row&gt; stream: streams) {
+        total += ((LoadRowStream)stream).getCount();
+        keyExists += ((LoadRowStream)stream).getKeyExistsCount();
+    }
+    final String fmt = "Loaded %,d rows to %s, %,d pre-existing.";
+    System.err.println(String.format(fmt, total, TABLE_NAME, keyExists)); </pre>
+      <p>
+       You should implement the stream interface that supplies the data to be
+       batched and loaded into the store. Entries are supplied by a list of
+       <code class="classname">EntryStream</code> instances. Each stream is read
+       sequentially, that is, each
+       <code class="methodname">EntryStream.getNext()</code> is allowed to finish
+       before the next operation is issued. The load operation typically reads
+       from these streams in parallel as determined by
+       <code class="methodname">BulkWriteOptions.getStreamParallelism()</code>.
+  </p>
+      <pre class="programlisting">private class LoadRowStream implements EntryStream&lt;Row&gt; {
+
+    private final String name;
+    private final long index;
+    private final long max;
+    private final long min;
+    private long id;
+    private long count;
+    private final AtomicLong keyExistsCount;
+
+    LoadRowStream(String name, long index, long min, long max) {
+        this.index = index;
+        this.max = max;
+        this.min = min;
+        this.name = name;
+        id = min;
+        count = 0;
+        keyExistsCount = new AtomicLong();
+    }
+
+    @Override
+    public String name() {
+        return name + "-" + index + ": " + min + "~" + max;
+    }
+
+    @Override
+    public Row getNext() {
+        if (id++ == max) {
+            return null;
+        }
+        final Row row = userTable.createRow();
+        row.put("id", id);
+        row.put("name", "name" + id);
+        row.put("age", 20 + id % 50);
+        count++;
+        return row;
+    }
+
+    @Override
+    public void completed() {
+        System.err.println(name() + " completed, loaded: " + count);
+    }
+
+    @Override
+    public void keyExists(Row entry) {
+        keyExistsCount.incrementAndGet();
+    }
+
+    @Override
+    public void catchException(RuntimeException exception, Row entry) {
+        System.err.println(name() + " catch exception: " +
+                           exception.getMessage() + ": " +
+                           entry.toJsonString(false));
+        throw exception;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public long getKeyExistsCount() {
+        return keyExistsCount.get();
+    }
+} </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="rowput.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="storewrites.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="timetolive.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Writing Rows to a Table in the Store </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Using Time to Live</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

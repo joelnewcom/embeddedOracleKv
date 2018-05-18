@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Working With Arrays</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="complextypes.html" title="Chapter 8. Working with complex data" />
+    <link rel="prev" href="orderingbyindex.html" title="Using ORDER BY to Sort Results" />
+    <link rel="next" href="maps.html" title="Working With Maps" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Working With Arrays</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="orderingbyindex.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 8. Working with complex data</th>
+          <td width="20%" align="right"> <a accesskey="n" href="maps.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="arrays"></a>Working With Arrays</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+        You can use slice or filter steps to select elements out of an array.
+        We start with some examples using slice steps.
+      </p>
+      <p>
+        To select and display the second connection of each person, we use:
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname, connections[1]
+AS connection FROM Persons;
+ +----------+------------+
+ | lastname | connection |
+ +----------+------------+
+ | Scully   |          2 |
+ | Smith    |          4 |
+ | Morgan   |          2 |
+ | Anderson |          2 |
+ | Morrison |          2 |
+ +----------+------------+
+
+5 rows returned </pre>
+      <p>
+        In the above example, the slice step <code class="literal">[1]</code> is
+        applied to the connections array. Array elements are numbered
+        starting with 0, so 1 is used to select the second connection.
+      </p>
+      <p>
+        A slice step can also be used to select all array elements whose
+        positions are within a range: [low:high], where low and high are
+        expressions that compute the range boundaries. The low and/or the
+        high expressions may be missing if no low and/or high boundary is
+        desired.
+      </p>
+      <p>
+        For example, the following query returns the lastname and the first
+        3 connections of person 5 as strongconnections:
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname, [connections[0:2]]
+AS strongconnections FROM Persons WHERE id = 5;
+ +----------+-------------------+
+ | lastname | strongconnections |
+ +----------+-------------------+
+ | Scully   | 2                 |
+ |          | 4                 |
+ |          | 1                 |
+ +----------+-------------------+
+
+1 row returned </pre>
+      <p>
+        In the above query, for Person 5, the path expression
+          <code class="literal">connections[0:2]</code> returns the person's first 3
+        connections. Here, the range is [0:2], so 0 is the low expression and 2 is
+        the high expression. The path expression returns its result as a sequence of
+        3 items.
+      </p>
+      <p>
+        The path expression appears inside the SELECT clause, which does not
+        allow expressions that return more than one item. Therefore, the path expression
+        should be enclosed in an array-constructor expression ([]), which creates a
+        new array (single item) containing the 3 connections. Although the query
+        shell displays the elements of this constructed array vertically, the number
+        of rows returned by this query is 1.
+      </p>
+      <p>
+        As mentioned above, you can omit the low or high expression when
+        specifying the range for a slice step. For example the following query
+        specifies a range of [3:] which returns all connections after the third one.
+        Notice that for persons having only 3 connections or less, an empty array is
+        constructed and returned.
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT id, [connections[3:]]
+AS weakConnections FROM Persons;
++----+-----------------+
+| id | weakConnections |
++----+-----------------+
+|  4 | 2               |
++----+-----------------+
+|  3 |                 |
++----+-----------------+
+|  2 |                 |
++----+-----------------+
+|  1 |                 |
++----+-----------------+
+|  5 | 3               |
++----+-----------------+
+
+5 rows returned </pre>
+      <p>
+        As a last example of slice steps, the following query returns the last
+        3 connections of each person. In this query, the slice step is
+          <code class="literal">[size($)-3:]</code>. In this expression, the $ is an
+        implicitly declared variable that references the array that the slice step
+        is applied to. In this example, $ references the connections array. The
+        size() built-in function returns the size (number of elements) of the input
+        array. So, in this example, size($) is the size of the current connections
+        array. Finally, size($)-3 computes the third position from the end of the
+        current connections array.
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT id, [connections[size($)-3:]]
+AS weakConnections FROM Persons;
+ +----+-------------------+
+ | id | weakConnections   |
+ +----+-------------------+
+ |  5 | 4                 |
+ |    | 1                 |
+ |    | 3                 |
+ +----+-------------------+
+ |  4 | 5                 |
+ |    | 1                 |
+ |    | 2                 |
+ +----+-------------------+
+ |  3 | 1                 |
+ |    | 4                 |
+ |    | 2                 |
+ +----+-------------------+
+ |  2 | 1                 |
+ |    | 3                 |
+ +----+-------------------+
+ |  1 | 2                 |
+ |    | 3                 |
+ +----+-------------------+
+
+5 rows returned </pre>
+      <p>
+        We now turn our attention to filter steps on arrays. Like slice steps,
+        filter steps use the square brackets ([]) syntax as well. However, what goes
+        inside the [] is different. With filter steps there is either nothing inside
+        the [] or a single expression that acts as a condition (returns a boolean
+        result). In the former case, all the elements of the array are selected (the
+        array is "unnested"). In the latter case, the condition is applied to each
+        element in turn, and if the result is true, the element is selected,
+        otherwise it is skipped. For example:
+      </p>
+      <p>
+        The following query returns the id and connections of persons who are
+        connected to person 4:
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT id, connections
+FROM Persons p WHERE p.connections[] =any 4;
+ +----+-------------+
+ | id | connections |
+ +----+-------------+
+ |  3 | 1           |
+ |    | 4           |
+ |    | 2           |
+ +----+-------------+
+ |  5 | 2           |
+ |    | 4           |
+ |    | 1           |
+ |    | 3           |
+ +----+-------------+
+
+2 rows returned </pre>
+      <p>
+        In the above query, the expression <code class="literal">p.connections[]</code>
+        returns all the connections of a person. Then, the =any operator returns
+        true if this sequence of connections contains the number 4.
+      </p>
+      <p>
+        The following query returns the id and connections of persons who are
+        connected with any person having an id greater than 4:
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT id, connections FROM Persons p
+WHERE p.connections[] &gt;any 4;
+ +----+-------------+
+ | id | connections |
+ +----+-------------+
+ |  4 | 3           |
+ |    | 5           |
+ |    | 1           |
+ |    | 2           |
+ +----+-------------+
+
+1 row returned </pre>
+      <p>
+        The following query returns, for each person, the person's last name
+        and the phone numbers with area code 339:
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname,
+[ p.address.phones[$element.areacode = 339].number ]
+AS phoneNumbers FROM Persons p;
+ +----------+--------------+
+ | lastname | phoneNumbers |
+ +----------+--------------+
+ | Scully   | 3414578      |
+ +----------+--------------+
+ | Smith    | 4120211      |
+ |          | 8694021      |
+ |          | 1205678      |
+ +----------+--------------+
+ | Morgan   |              |
+ +----------+--------------+
+ | Anderson | 1684972      |
+ +----------+--------------+
+ | Morrison |              |
+ +----------+--------------+
+
+5 rows returned </pre>
+      <p>
+        In the above query, the filter step <code class="literal">[$element.areacode =
+          339]</code> is applied to the phones array of each person. The filter
+        step evaluates the condition <code class="literal">$element.areacode = 339</code> on
+        each element of the array. This condition expression uses the implicitly
+        declared variable $element, which references the current element of the
+        array. Because the whole path expression may return more than one phone
+        number, it is enclosed in an array constructor to collect the selected phone
+        numbers into a single array. An empty array is returned for persons that do
+        not have any phone number in the 339 area code. If we wanted to filter out
+        such persons from the result, we would write the following query:
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname,
+[ p.address.phones[$element.areacode = 339].number ]
+AS phoneNumbers FROM Persons p WHERE p.address.phones.areacode =any 339;
+ +----------+--------------+
+ | lastname | phoneNumbers |
+ +----------+--------------+
+ | Scully   | 3414578      |
+ +----------+--------------+
+ | Smith    | 4120211      |
+ |          | 8694021      |
+ |          | 1205678      |
+ +----------+--------------+
+ | Anderson | 1684972      |
+ +----------+--------------+
+
+3 rows returned </pre>
+      <p>
+        In addition to the implicitly-declared $ and $element variables, the
+        condition inside a filter step can also use the $pos variable (also
+        implicitly declared). $pos references the position within the array
+        of the current element (the element on which the condition is applied). For
+        example, the following query selects the "interesting" connections of each
+        person, where a connection is considered interesting if it is among the 3
+        strongest connections and connects to a person with an id greater or equal
+        to 4.
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT id, [p.connections[$element &gt;= 4 and $pos &lt; 3]]
+AS interestingConnections FROM Persons p;
+ +----+------------------------+
+ | id | interestingConnections |
+ +----+------------------------+
+ |  5 | 4                      |
+ +----+------------------------+
+ |  4 | 5                      |
+ +----+------------------------+
+ |  3 | 4                      |
+ +----+------------------------+
+ |  2 |                        |
+ +----+------------------------+
+ |  1 |                        |
+ +----+------------------------+
+
+5 rows returned </pre>
+      <p>
+        Finally, two arrays can be compared with each other using the usual
+        comparison operators (=, !=, &gt;, &gt;=, &gt;, and &gt;=). For example the
+        following query constructs the array [1,3] and selects persons whose
+        connections array is equal to [1,3].
+      </p>
+      <pre class="programlisting">sql-&gt; SELECT lastname FROM Persons p
+WHERE p.connections = [1,3];
+ +----------+
+ | lastname |
+ +----------+
+ | Anderson |
+ +----------+
+
+1 row returned </pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="orderingbyindex.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="complextypes.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="maps.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Using ORDER BY to Sort Results </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Working With Maps</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

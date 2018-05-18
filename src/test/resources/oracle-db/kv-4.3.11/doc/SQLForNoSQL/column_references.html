@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Column Reference Expression</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="expressions.html" title="Chapter 5. Expressions" />
+    <link rel="prev" href="expressions.html" title="Chapter 5. Expressions" />
+    <link rel="next" href="constantexpressions.html" title="Constant Expressions" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Column Reference Expression</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="expressions.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 5. Expressions</th>
+          <td width="20%" align="right"> <a accesskey="n" href="constantexpressions.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="column_references"></a>Column Reference Expression</h2>
+          </div>
+        </div>
+      </div>
+      <p>
+            A column-reference expression returns the item stored in the
+            specified column within the context row (the row that a WHERE,
+            ORDER BY, or SELECT clause is currently working on).
+        </p>
+      <p>
+            A column-reference expression consists of one identifier, or two
+            identifiers separated by a dot. If there are two ids, the first
+            is considered to be a table name or /alias, and the second a column
+            in that table. A single id refers to a column in the table
+            referenced inside the FROM clause.
+        </p>
+      <p>
+            Notice that child tables in Oracle NoSQL Database have composite names using
+            dot as a separator among multiple ids. As a result, a
+            child-table name cannot be used in a column-reference
+            expression; instead, a table alias must be used to access a
+            child table column using the two-id format. For example, if
+            "Address" is a child table of Persons, then:
+        </p>
+      <pre class="programlisting">SELECT id, p.Address.state FROM Persons p;</pre>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="expressions.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="expressions.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="constantexpressions.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Chapter 5. Expressions </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Constant Expressions</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

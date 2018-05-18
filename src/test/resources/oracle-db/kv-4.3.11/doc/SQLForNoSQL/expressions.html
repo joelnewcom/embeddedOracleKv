@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Chapter 5. Expressions</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.73.2" />
+    <link rel="start" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="up" href="index.html" title="Getting Started with SQL for Oracle NoSQL Database" />
+    <link rel="prev" href="isoftype_operator.html" title="Is-Of-Type Operator" />
+    <link rel="next" href="column_references.html" title="Column Reference Expression" />
+  </head>
+  <body>
+    <div xmlns="" class="navheader">
+      <div class="libver">
+        <p>Library Version 12.1.4.3</p>
+      </div>
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Chapter 5. Expressions</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="isoftype_operator.html">Prev</a> </td>
+          <th width="60%" align="center"> </th>
+          <td width="20%" align="right"> <a accesskey="n" href="column_references.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="chapter" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title"><a id="expressions"></a>Chapter 5. Expressions</h2>
+          </div>
+        </div>
+      </div>
+      <div class="toc">
+        <p>
+          <b>Table of Contents</b>
+        </p>
+        <dl>
+          <dt>
+            <span class="sect1">
+              <a href="expressions.html#cast_expressions">Cast Expressions</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="column_references.html">Column Reference Expression</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="constantexpressions.html">Constant Expressions</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="path-expressions.html">Path Expressions</a>
+            </span>
+          </dt>
+          <dd>
+            <dl>
+              <dt>
+                <span class="sect2">
+                  <a href="path-expressions.html#field-step-expressions">Field Step Expressions</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect2">
+                  <a href="path-expressions.html#mapfilter-step-expressions">Map Filter Step Expressions</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect2">
+                  <a href="path-expressions.html#arrayfilter-step-expressions">Array Filter Step Expressions</a>
+                </span>
+              </dt>
+              <dt>
+                <span class="sect2">
+                  <a href="path-expressions.html#arrayslice-step-expressions">Array Slice Step Expressions</a>
+                </span>
+              </dt>
+            </dl>
+          </dd>
+          <dt>
+            <span class="sect1">
+              <a href="searched_case.html">Searched Case Expressions</a>
+            </span>
+          </dt>
+          <dt>
+            <span class="sect1">
+              <a href="variable_references.html">Variable Reference Expression</a>
+            </span>
+          </dt>
+        </dl>
+      </div>
+      <p>
+        In general, an expression represents a set of operations to be
+        executed in order to produce a result. Expressions are built by
+        combining other subexpressions using operators (arithmetic,
+        logical, value and sequence comparisons), function calls, or other
+        grammatical constructs. The simplest kinds of expressions are
+        constants and references to variables or identifiers.
+    </p>
+      <p>
+        In SQL for Oracle NoSQL Database, the result of any expression is always a sequence of
+        zero or more items. Notice that a single item is considered
+        equivalent to a sequence containing that single item.
+    </p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <h3 class="title">Note</h3>
+        <p>
+            The examples shown in this chapter rely on the sample data
+            shown in <a class="xref" href="introduction_sql.html#exampledata" title="Example Data">Example Data</a>.
+        </p>
+      </div>
+      <div class="sect1" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a id="cast_expressions"></a>Cast Expressions</h2>
+            </div>
+          </div>
+        </div>
+        <p>
+            The cast expression creates, if possible, new items of a given
+            target type from the items of its input sequence. 
+        </p>
+        <pre class="programlisting">CAST (&lt;input_sequence&gt; AS &lt;target_type&gt;&lt;quantifier&gt;)</pre>
+        <p>
+            Cast expressions are evaluated as follows:
+        </p>
+        <div class="orderedlist">
+          <ol type="1">
+            <li>
+              <p>
+					A cardinality check is performed based on the &lt;quantifier&gt;.
+					If &lt;quantifier&gt; is:
+                </p>
+              <div class="itemizedlist">
+                <ul type="disc">
+                  <li>
+                    <p>
+                            <code class="literal">*</code>
+                        </p>
+                    <p>
+                            then &lt;input_sequence&gt; may have any number of items.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            <code class="literal">+</code>
+                        </p>
+                    <p>
+                            then &lt;input_sequence&gt; must have at least one item.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            <code class="literal">?</code>
+                        </p>
+                    <p>
+                            then &lt;input_sequence&gt; must have at most one item.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            No quantifier
+                        </p>
+                    <p>
+                            then &lt;input_sequence&gt; must exactly one item.
+                        </p>
+                  </li>
+                </ul>
+              </div>
+              <p>
+                    If this check fails, an error is raised.
+                </p>
+            </li>
+            <li>
+              <p>
+                    Each input item is cast to the &lt;target_type&gt;: 
+                </p>
+              <div class="itemizedlist">
+                <ul type="disc">
+                  <li>
+                    <p>
+                            If the type of the input item is equal to the target item
+                            type, the cast is a noop: the input item itself is
+                            returned. 
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            If the target type is a wildcard type, the cast
+                            is a noop if the type of the input item is a
+                            subtype of the wildcard type; otherwise an
+                            error is raised. 
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            An error is also raised if the input item can not be
+                            cast to the target type. 
+                        </p>
+                  </li>
+                </ul>
+              </div>
+              <p>
+                    The following rules specify when the various data types
+                    can be cast (see <a class="xref" href="datatypes.html" title="Data Types and Values">Data Types and Values</a>
+                    for a description of the types discussed below):
+                </p>
+              <div class="itemizedlist">
+                <ul type="disc">
+                  <li>
+                    <p>
+                            Every atomic item can be cast to the String
+                            type. 
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            Every numeric item can be cast to every other
+                            numeric type.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            String items may be cast to all other
+                            atomic types. Whether the cast succeeds depends
+                            on whether the actual string value can be
+                            parsed into a value that belongs to the domain
+                            of the target type.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            Timestamp items can be cast to all the
+                            timestamp types. If the target type has a
+                            smaller precision that the input item, the
+                            resulting timestamp is the one closest to the
+                            input timestamp in the target precision. For
+                            example, consider the following 2 timestamps
+                            with precision 3: 2016-11- 01T10:00:00.236 and
+                            2016-11-01T10:00:00.267. The result of casting
+                            these timestamps to precision 1 is:
+                            2016-11-01T10:00:00.2 and
+                            2016-11-01T10:00:00.3, respectively.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            Array items can be cast to array types only. A
+                            new array is created whose type is the target
+                            type, and each element in the input array is
+                            cast to the element type of the target array.
+                            If this cast is successful, the new element is
+                            added to the new array.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            Map items can be cast to map types only. A new
+                            map is created whose type is the target type,
+                            and each field value in the input map is cast
+                            to the value type of the target map. If this
+                            cast is successful, the new field value and the
+                            associated field name are added to the new map.
+                        </p>
+                  </li>
+                  <li>
+                    <p>
+                            Record items may be cast to record types only.
+                            The target type must have the same fields and
+                            in the same order as the type of the input
+                            item. A new record is created whose type is
+                            the target type, and each field value in the
+                            input record is cast to the value type of the
+                            corresponding field in the target type. If this
+                            cast is successful, the new field value and the
+                            associated field name are added to the new
+                            record.
+                        </p>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ol>
+        </div>
+        <p>
+            For example the following selects the last name of users who
+            moved to their current address in 2015 or later. Because there
+            is no literal for Timestamp values, to create such a value a
+            string has to cast to a Timestamp type:
+        </p>
+        <pre class="programlisting">select u.lastName
+from Users u
+where cast (u.moveDate as Timestamp(0)) &gt;=
+	  cast (“2015-01-01T00:00:00” as Timestamp(0)); </pre>
+        <p>
+            For more examples of using the cast expression, see
+            <a class="xref" href="castingdatatypes.html" title="Casting Datatypes">Casting Datatypes</a>.
+        </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="isoftype_operator.html">Prev</a> </td>
+          <td width="20%" align="center"> </td>
+          <td width="40%" align="right"> <a accesskey="n" href="column_references.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Is-Of-Type Operator </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Column Reference Expression</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
