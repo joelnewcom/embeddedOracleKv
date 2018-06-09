@@ -1,57 +1,47 @@
 import oracle.kv.*;
 import oracle.kv.table.TableAPI;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 
 public class Integrationtest {
 
-    private static final int TRESHHOLD_FAULT_ATTEMPTS = 1500;
-    public static final String SCHEMA_INSERT_TABLES_DDL = "schema/insert-tables.ddl";
     private ClassLoader classLoader = getClass().getClassLoader();
-    private Process noSqlDb;
+    private static UUID serverId = UUID.randomUUID();
+
+    @BeforeClass
+    public static void initDB() throws InterruptedException {
+        OracleNoSqlManager oracleNoSqlManagerImpl = OracleNoSqlManagerImpl.build(serverId);
+        OracleNoSqlHolder.addOracleNoSqlManager(oracleNoSqlManagerImpl);
+    }
+
+    @AfterClass
+    public static void stopOracleDB() throws InterruptedException {
+        OracleNoSqlHolder.getOracleNoSqlManager(serverId).stop();
+    }
 
     @Test
-    public void testDB() throws IOException, InterruptedException {
+    public void testDB() {
 
-        final String fullPath = classLoader.getResource("oracle-db/kv-4.3.11/lib/kvstore.jar").getPath().substring(1);
-        ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", fullPath, "kvlite", "-secure-config", "disable");
-        noSqlDb = processBuilder.start();
-        KVStore kvstore = getKvStoreSynchron(TRESHHOLD_FAULT_ATTEMPTS);
+        OracleNoSqlManager oracleNoSqlManager = OracleNoSqlHolder.getOracleNoSqlManager(serverId);
 
-        //  Database is up and running
-        final String fullPathOfSql = classLoader.getResource("oracle-db/kv-4.3.11/lib/sql.jar").getPath().substring(1);
-        final String fullPathOfSchema = classLoader.getResource(SCHEMA_INSERT_TABLES_DDL).getPath().substring(1);
-        ProcessBuilder processBuilderOfSql = new ProcessBuilder("java", "-jar", fullPathOfSql, "-helper-hosts", "localhost:5000", "-store", "kvstore", "load", "-file", fullPathOfSchema);
 
-        Process sqlShell = processBuilderOfSql.start();
-        OutputStream sqlOutPutStream = sqlShell.getOutputStream();
-        while(sqlShell.isAlive()){
-            System.out.print(outputStream(sqlShell.getInputStream()));
-        }
-        sqlShell.waitFor();
-
-        TableAPI tableAPI = kvstore.getTableAPI();
+        TableAPI tableAPI = oracleNoSqlManager.getTableApi();
 //        List<String> operations = getDatabaseDDL(SCHEMA_INSERT_TABLES_DDL);
 
         //StatementResult result = kvstore.;
         //displayResult(result, schema);
 
-        noSqlDb.destroy();
-        noSqlDb.waitFor();
-
-
     }
 
-    private List<String> getDatabaseDDL(String filePath){
-        List<String> keyWords= Arrays.asList("DROP", "CREATE", "ALTER");
+    private List<String> getDatabaseDDL(String filePath) {
+        List<String> keyWords = Arrays.asList("DROP", "CREATE", "ALTER");
         String schema = getContentOfFile(filePath);
         return new ArrayList<>();
 
@@ -114,7 +104,7 @@ public class Integrationtest {
         StringBuilder sb = new StringBuilder();
 
         String line;
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(is));) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is));) {
 
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
