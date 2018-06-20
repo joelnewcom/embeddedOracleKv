@@ -30,8 +30,6 @@ public class Integrationtest {
     public void testDB() {
 
         OracleNoSqlManager oracleNoSqlManager = OracleNoSqlHolder.getOracleNoSqlManager(serverId);
-
-
         TableAPI tableAPI = oracleNoSqlManager.getTableApi();
 //        List<String> operations = getDatabaseDDL(SCHEMA_INSERT_TABLES_DDL);
 
@@ -39,16 +37,6 @@ public class Integrationtest {
         //displayResult(result, schema);
 
     }
-
-    private List<String> getDatabaseDDL(String filePath) {
-        List<String> keyWords = Arrays.asList("DROP", "CREATE", "ALTER");
-        String schema = getContentOfFile(filePath);
-        return new ArrayList<>();
-
-//        String[] splitted = schema.
-
-    }
-
 
     private void displayResult(StatementResult result, String statement) {
         System.out.println("===========================");
